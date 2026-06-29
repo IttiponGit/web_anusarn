@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>บุคลากร | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header topbar">
+    <div class="container nav-container">
+      <div class="brand">
+        <div class="logo">ร</div>
+        <div>
+          <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+          <p>เรียนดี มีวินัย ใฝ่คุณธรรม</p>
+        </div>
+      </div>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนูหลัก" aria-controls="mainNav" aria-expanded="false">☰</button>
+      <nav id="mainNav">
+        <a href="index.html">หน้าแรก</a>
+        <a href="about.html">เกี่ยวกับโรงเรียน</a>
+        <a href="news.html">ข่าวสาร</a>
+        <a href="personnel.html">บุคลากร</a>
+        <a href="contact.html">ติดต่อโรงเรียน</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="section container">
+      <div class="page-header">
+        <h2>บุคลากร</h2>
+        <p>ฝ่ายบริหารและหัวหน้ากลุ่มสาระการเรียนรู้</p>
+      </div>
+
+      <div class="personnel-block">
+        <h3 class="personnel-heading">ฝ่ายบริหาร</h3>
+        <div class="cards three-col" id="executiveList"></div>
+      </div>
+
+      <div class="personnel-block">
+        <h3 class="personnel-heading">หัวหน้ากลุ่มสาระ</h3>
+        <div class="cards heads-grid" id="subjectHeadList"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© 2569 โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      <p>พัฒนาเว็บไซต์ด้วย HTML, CSS และ JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
