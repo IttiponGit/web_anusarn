@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const executiveList = document.getElementById('executiveList');
   const subjectHeadList = document.getElementById('subjectHeadList');
   const personnelPreview = document.getElementById('personnelPreview');
+  const downloadsList = document.getElementById('downloadsList');
 
   if (newsList) {
     loadLatestNews(newsList, 3);
@@ -62,6 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (executiveList || subjectHeadList || personnelPreview) {
     loadPersonnelData({ executiveList, subjectHeadList, personnelPreview });
+  }
+
+  if (downloadsList) {
+    loadDownloads(downloadsList);
   }
 
   const contactForm = document.querySelector('.contact-form');
@@ -252,4 +257,77 @@ async function loadPersonnelData({ executiveList, subjectHeadList, personnelPrev
       personnelPreview.innerHTML = '<p class="news-empty">ไม่สามารถโหลดข้อมูลบุคลากรได้</p>';
     }
   }
+}
+
+async function loadDownloadsData() {
+  try {
+    const response = await fetch('data/downloads.json');
+
+    if (!response.ok) {
+      throw new Error('โหลดข้อมูลเอกสารไม่สำเร็จ');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('โหลดข้อมูลเอกสารไม่สำเร็จ:', error);
+    return null;
+  }
+}
+
+function renderDownloadsError(container, message = 'ไม่สามารถโหลดรายการเอกสารได้') {
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = `<p class="news-empty">${message}</p>`;
+}
+
+function renderDownloads(container, items) {
+  if (!container) {
+    return;
+  }
+
+  if (!Array.isArray(items) || items.length === 0) {
+    renderDownloadsError(container, 'ยังไม่มีรายการเอกสาร');
+    return;
+  }
+
+  container.innerHTML = '';
+
+  const fragment = document.createDocumentFragment();
+
+  items.forEach(item => {
+    const article = document.createElement('article');
+    article.className = 'card download-card';
+
+    const isAvailable = Boolean(item.available && item.file);
+    const actionMarkup = isAvailable
+      ? `<a class="download-action" href="${item.file}" download>ดาวน์โหลดเอกสาร</a>`
+      : '<button class="download-action" type="button" disabled>รอเพิ่มไฟล์</button>';
+
+    article.innerHTML = `
+      <span class="download-category">${item.category || 'เอกสาร'}</span>
+      <h3>${item.title}</h3>
+      <p>${item.description || ''}</p>
+      <div class="download-card-footer">
+        <span class="download-status ${isAvailable ? 'available' : 'pending'}">${isAvailable ? 'พร้อมดาวน์โหลด' : 'รอเพิ่มไฟล์'}</span>
+        ${actionMarkup}
+      </div>
+    `;
+
+    fragment.appendChild(article);
+  });
+
+  container.appendChild(fragment);
+}
+
+async function loadDownloads(container) {
+  const items = await loadDownloadsData();
+
+  if (!items) {
+    renderDownloadsError(container);
+    return;
+  }
+
+  renderDownloads(container, items);
 }

@@ -6,11 +6,11 @@
   <title>โรงเรียนโสตศึกษาอนุสารสุนทร</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class="home-page">
   <header class="site-header topbar">
     <div class="container nav-container">
-      <div class="brand">
-        <div class="logo">ร</div>
+      <div class="brand home-brand">
+        <div class="logo home-logo" aria-hidden="true">ร</div>
         <div>
           <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
           <p>เรียนดี มีวินัย ใฝ่คุณธรรม</p>
@@ -27,43 +27,44 @@
     </div>
   </header>
 
-  <section id="home" class="hero">
-    <div class="container hero-cta-shell">
-      <div class="hero-cta">
-        <span class="badge">ยินดีต้อนรับสู่</span>
-        <div class="hero-actions">
-          <a class="btn primary" href="news.html">อ่านข่าวล่าสุด</a>
-          <a class="btn secondary" href="contact.html">ติดต่อโรงเรียน</a>
-        </div>
+  <section id="home" class="hero home-hero">
+    <div class="container home-hero-grid">
+      <div class="home-hero-content">
+        <span class="badge home-hero-badge">ยินดีต้อนรับสู่</span>
+        <h2 class="home-hero-title">โรงเรียนโสตศึกษาอนุสารสุนทร</h2>
+        <p class="home-hero-description">แหล่งเรียนรู้สำหรับผู้บกพร่องทางการได้ยิน มุ่งพัฒนาผู้เรียนให้มีความรู้ คู่คุณธรรม และทักษะชีวิตในศตวรรษที่ 21</p>
       </div>
+      <article class="home-philosophy-card">
+        <div class="home-philosophy-heading">
+          <h3>ปรัชญาโรงเรียน</h3>
+        </div>
+        <p>“ถึงหนวกใบ้ เรียนรู้ได้ถ้าศึกษา ทุกคนควรเมตตา มองเห็นค่าความเป็นคน”</p>
+      </article>
     </div>
   </section>
 
-  <main class="page-main">
-    <section class="container stats">
-      <div><strong>196</strong><span>นักเรียน</span></div>
-      <div><strong>85</strong><span>บุคลากร</span></div>
-      <div><strong>29</strong><span>ห้องเรียน</span></div>
-      <div><strong>2569</strong><span>ปีการศึกษา</span></div>
+  <main class="page-main home-page-main">
+    <section class="container stats home-stats">
+      <div class="home-stat-card"><span>นักเรียน</span><strong>196</strong></div>
+      <div class="home-stat-card"><span>บุคลากร</span><strong>85</strong></div>
+      <div class="home-stat-card"><span>ห้องเรียน</span><strong>29</strong></div>
+      <div class="home-stat-card"><span>ปีการศึกษา</span><strong>2569</strong></div>
     </section>
 
-    <section id="about" class="section container">
-      <div class="section-title">
+    <section id="about" class="section container home-about-preview">
+      <div class="section-title home-about-title">
         <h2>เกี่ยวกับโรงเรียน</h2>
         <p>มุ่งพัฒนาผู้เรียนให้มีความรู้ คู่คุณธรรม และทักษะในศตวรรษที่ 21</p>
       </div>
-      <div class="cards two-col">
-        <article class="card">
+      <div class="cards two-col home-about-cards">
+        <article class="card home-about-card">
           <h3>วิสัยทัศน์</h3>
           <p>เป็นสถานศึกษาที่ส่งเสริมการเรียนรู้อย่างมีคุณภาพ ใช้เทคโนโลยีอย่างสร้างสรรค์ และพัฒนาผู้เรียนเต็มศักยภาพ</p>
         </article>
-        <article class="card">
+        <article class="card home-about-card">
           <h3>พันธกิจ</h3>
           <p>จัดการเรียนการสอนที่เน้นผู้เรียนเป็นสำคัญ ส่งเสริมคุณธรรม จริยธรรม และสร้างความร่วมมือกับชุมชน</p>
         </article>
-      </div>
-      <div class="news-more-link">
-        <a href="about.html" class="btn secondary">รู้จักโรงเรียนของเรา</a>
       </div>
     </section>
 
@@ -103,9 +104,9 @@
           <p>แบบฟอร์มและเอกสารสำหรับนักเรียน ผู้ปกครอง และบุคลากร</p>
         </div>
         <div class="download-list">
-          <a href="#">แบบฟอร์มสมัครเรียน</a>
-          <a href="#">ปฏิทินการศึกษา</a>
-          <a href="#">ระเบียบการแต่งกาย</a>
+          <a href="downloads.html">แบบฟอร์มสมัครเรียน</a>
+          <a href="downloads.html">ปฏิทินการศึกษา</a>
+          <a href="downloads.html">ระเบียบการแต่งกาย</a>
         </div>
       </div>
     </section>
