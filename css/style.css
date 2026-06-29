@@ -164,9 +164,9 @@ nav a.active::after {
     var(--gradient-soft);
   background-size: auto, auto, auto, 320px 320px, auto;
   color: var(--dark);
-  padding: 84px 0 96px;
+  padding: 84px 0 120px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 .hero::before,
 .page-hero::before {
@@ -272,20 +272,21 @@ nav a.active::after {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-top: -42px;
+  margin-top: -58px;
   position: relative;
-  z-index: 2;
+  z-index: 10;
 }
 .stats div {
   background: white;
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 22px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 20px rgba(26, 84, 144, .12), 0 2px 8px rgba(0, 0, 0, .04);
   text-align: center;
   transition: .25s ease;
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 .stats div::before {
   content: "";
@@ -902,6 +903,7 @@ footer {
   }
   .hero-grid, .contact-grid, .about-intro-grid, .contact-hero-grid, .contact-page-grid { grid-template-columns: 1fr; }
   .stats, .two-col, .three-col, .heads-grid { grid-template-columns: 1fr; }
+  .stats { margin-top: -20px; }
   .news-grid { grid-template-columns: 1fr; }
   .hero { padding: 56px 0 82px; }
   .about-hero-card, .about-summary-card { padding: 24px; }
