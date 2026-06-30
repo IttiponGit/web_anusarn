@@ -1,13 +1,29 @@
 <?php
 
-$host = "localhost";
-$dbname = "anusarn_db";
-$username = "root";
-$password = "";
+// โหลดค่าการเชื่อมต่อจาก config.php
+// ถ้าไม่มีไฟล์ config.php ให้ใช้ค่า default สำหรับ local development
+$configFile = __DIR__ . '/config.php';
+
+if (file_exists($configFile)) {
+    include $configFile;
+} else {
+    // ค่า default สำหรับ local development
+    $host = '127.0.0.1';
+    $port = 3306;
+    $dbname = 'anusarn_db';
+    $username = 'root';
+    $password = '';
+}
 
 try {
+    $dsn = "mysql:host={$host}";
+    if (!empty($port)) {
+        $dsn .= ";port={$port}";
+    }
+    $dsn .= ";dbname={$dbname};charset=utf8mb4";
+
     $pdo = new PDO(
-        "mysql:host={$host};dbname={$dbname};charset=utf8mb4",
+        $dsn,
         $username,
         $password,
         [

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-dashboard-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="auth-badge light">Admin Panel</div>
+        <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="#" aria-disabled="true">ข่าวประชาสัมพันธ์</a>
+        <a href="#" aria-disabled="true">บุคลากร</a>
+        <a href="#" aria-disabled="true">เอกสารดาวน์โหลด</a>
+        <button type="button" id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel">
+        <p class="eyebrow">Dashboard พื้นฐาน</p>
+        <h2>ยินดีต้อนรับเข้าสู่ระบบผู้ดูแล</h2>
+        <p>หน้านี้พร้อมสำหรับต่อยอดไปยังงานจัดการข่าว บุคลากร และเอกสารในขั้นถัดไป</p>
+      </section>
+
+      <p id="statsMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="summary-grid">
+        <article class="summary-card">
+          <span>ข่าวประชาสัมพันธ์</span>
+          <strong id="newsCount">-</strong>
+        </article>
+        <article class="summary-card">
+          <span>บุคลากร</span>
+          <strong id="personnelCount">-</strong>
+        </article>
+        <article class="summary-card">
+          <span>เอกสารดาวน์โหลด</span>
+          <strong id="downloadsCount">-</strong>
+        </article>
+        <article class="summary-card">
+          <span>ผู้ดูแลระบบ</span>
+          <strong id="adminCount">-</strong>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

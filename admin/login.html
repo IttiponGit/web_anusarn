@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-badge">Admin Dashboard</div>
+      <h1>เข้าสู่ระบบผู้ดูแล</h1>
+      <p class="auth-subtitle">โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+
+      <form id="loginForm" class="auth-form" autocomplete="off">
+        <label>
+          <span>ชื่อผู้ใช้</span>
+          <input type="text" name="username" id="username" required />
+        </label>
+
+        <label>
+          <span>รหัสผ่าน</span>
+          <input type="password" name="password" id="password" required />
+        </label>
+
+        <button type="submit" class="primary-btn">เข้าสู่ระบบ</button>
+        <p id="loginMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
