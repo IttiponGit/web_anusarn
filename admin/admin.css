@@ -199,6 +199,126 @@ body {
   font-size: 1.1rem;
 }
 
+.news-list-card,
+.news-form-card {
+  margin-top: 24px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 24px;
+  box-shadow: var(--admin-shadow);
+  padding: 24px;
+}
+
+.news-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.news-list-header h3,
+.news-form-card h3 {
+  margin: 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.news-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.news-table th,
+.news-table td {
+  border-bottom: 1px solid var(--admin-border);
+  text-align: left;
+  padding: 12px;
+  vertical-align: top;
+}
+
+.news-table th {
+  color: var(--admin-blue-dark);
+  background: #f6fbff;
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-btn,
+.secondary-btn {
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.table-btn {
+  background: #ffffff;
+}
+
+.delete-news-btn {
+  border-color: #e6c2c2;
+  color: #9b2c2c;
+}
+
+.news-form {
+  display: grid;
+  gap: 14px;
+}
+
+.news-form label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.news-form input,
+.news-form textarea,
+.news-form select {
+  width: 100%;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.news-form input:focus,
+.news-form textarea:focus,
+.news-form select:focus {
+  border-color: var(--admin-blue);
+  box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.12);
+}
+
+.news-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.news-form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.secondary-btn {
+  background: #f8fbff;
+  color: var(--admin-blue-dark);
+}
+
+.error-message {
+  color: #b42318;
+}
+
 @media (max-width: 900px) {
   .dashboard-layout {
     grid-template-columns: 1fr;
@@ -209,6 +329,15 @@ body {
   }
 
   .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .news-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .news-form-grid {
     grid-template-columns: 1fr;
   }
 }

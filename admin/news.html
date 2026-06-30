@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จัดการข่าวประชาสัมพันธ์ | Admin</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-news-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="auth-badge light">Admin Panel</div>
+        <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="news.html" aria-current="page">ข่าวประชาสัมพันธ์</a>
+        <a href="#" aria-disabled="true">บุคลากร</a>
+        <a href="#" aria-disabled="true">เอกสารดาวน์โหลด</a>
+        <button type="button" id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel news-hero">
+        <p class="eyebrow">News Management</p>
+        <h2>ระบบจัดการข่าวประชาสัมพันธ์</h2>
+        <p>เพิ่ม แก้ไข และลบรายการข่าวได้จากหน้านี้</p>
+      </section>
+
+      <p id="newsMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="news-list-card">
+        <div class="news-list-header">
+          <h3>รายการข่าวทั้งหมด</h3>
+          <button type="button" id="addNewsBtn" class="primary-btn">เพิ่มข่าว</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="news-table" aria-label="ตารางรายการข่าว">
+            <thead>
+              <tr>
+                <th>หัวข้อ</th>
+                <th>หมวดหมู่</th>
+                <th>วันที่</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody">
+              <tr>
+                <td colspan="5">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="newsFormCard" class="news-form-card" hidden>
+        <h3 id="newsFormTitle">เพิ่มข่าว</h3>
+        <form id="newsForm" class="news-form" autocomplete="off">
+          <input type="hidden" id="newsId" />
+
+          <label>
+            <span>หัวข้อข่าว</span>
+            <input type="text" id="newsTitle" required />
+          </label>
+
+          <label>
+            <span>สรุปข่าว</span>
+            <textarea id="newsSummary" rows="3" required></textarea>
+          </label>
+
+          <label>
+            <span>เนื้อหาข่าว</span>
+            <textarea id="newsContent" rows="6" required></textarea>
+          </label>
+
+          <div class="news-form-grid">
+            <label>
+              <span>วันที่</span>
+              <input type="text" id="newsDate" required />
+            </label>
+
+            <label>
+              <span>หมวดหมู่</span>
+              <input type="text" id="newsCategory" required />
+            </label>
+          </div>
+
+          <label>
+            <span>รูปภาพ (path)</span>
+            <input type="text" id="newsImage" placeholder="images/news/technology.svg" required />
+          </label>
+
+          <label>
+            <span>สถานะ</span>
+            <select id="newsStatus" required>
+              <option value="published">published</option>
+              <option value="draft">draft</option>
+              <option value="archived">archived</option>
+            </select>
+          </label>
+
+          <div class="news-form-actions">
+            <button type="submit" class="primary-btn" id="saveNewsBtn">บันทึก</button>
+            <button type="button" class="secondary-btn" id="cancelNewsBtn">ยกเลิก</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
