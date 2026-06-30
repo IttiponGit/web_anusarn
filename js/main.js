@@ -78,18 +78,128 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+const NEWS_API_URL = 'api/news.php';
+const NEWS_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/news.php';
+const NEWS_FALLBACK_URL = 'data/news.json';
+
+function getNewsApiUrl() {
+  const hostname = window.location.hostname;
+
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return NEWS_API_LOCALHOST_URL;
+  }
+
+  return NEWS_API_URL;
+}
+
+function buildNewsApiRequestUrl(id = null) {
+  const url = new URL(getNewsApiUrl(), window.location.href);
+
+  if (id !== null && id !== undefined) {
+    url.searchParams.set('id', String(id));
+  }
+
+  return url.toString();
+}
+
+async function fetchNewsJson(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`โหลดข่าวไม่สำเร็จ: ${url}`);
+  }
+
+  return await response.json();
+}
+
+function extractNewsList(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+
+  if (payload && Array.isArray(payload.data)) {
+    return payload.data;
+  }
+
+  return null;
+}
+
+function extractApiNewsList(payload) {
+  if (payload && payload.success === true && Array.isArray(payload.data)) {
+    return payload.data;
+  }
+
+  return null;
+}
+
+function extractApiNewsItem(payload) {
+  if (payload && payload.success === true && payload.data && !Array.isArray(payload.data)) {
+    return payload.data;
+  }
+
+  return null;
+}
+
+function extractNewsItem(payload, id) {
+  if (payload && payload.data && !Array.isArray(payload.data)) {
+    return payload.data;
+  }
+
+  const items = extractNewsList(payload);
+
+  if (!items) {
+    return null;
+  }
+
+  return items.find(newsItem => Number(newsItem.id) === id) || null;
+}
+
 async function loadNewsData() {
   try {
-    const response = await fetch('data/news.json');
+    const payload = await fetchNewsJson(buildNewsApiRequestUrl());
+    const items = extractApiNewsList(payload);
 
-    if (!response.ok) {
-      throw new Error('โหลดไฟล์ข่าวไม่สำเร็จ');
+    if (items) {
+      return items;
     }
 
-    return await response.json();
+    throw new Error('รูปแบบข้อมูลข่าวจาก API ไม่ถูกต้อง');
   } catch (error) {
-    console.error('โหลดข่าวไม่สำเร็จ:', error);
-    return null;
+    console.error('โหลดข่าวจาก API ไม่สำเร็จ, กำลัง fallback ไปใช้ JSON:', error);
+
+    try {
+      const fallbackPayload = await fetchNewsJson(NEWS_FALLBACK_URL);
+      return extractNewsList(fallbackPayload);
+    } catch (fallbackError) {
+      console.error('โหลดข่าวจากไฟล์สำรองไม่สำเร็จ:', fallbackError);
+      return null;
+    }
+  }
+}
+
+async function loadNewsItem(id) {
+  try {
+    const payload = await fetchNewsJson(buildNewsApiRequestUrl(id));
+    const item = extractApiNewsItem(payload);
+
+    if (item) {
+      return { item, loaded: true };
+    }
+
+    throw new Error('รูปแบบข้อมูลข่าวรายตัวจาก API ไม่ถูกต้อง');
+  } catch (error) {
+    console.error('โหลดข่าวรายตัวจาก API ไม่สำเร็จ, กำลัง fallback ไปใช้ JSON:', error);
+
+    try {
+      const fallbackPayload = await fetchNewsJson(NEWS_FALLBACK_URL);
+      return {
+        item: extractNewsItem(fallbackPayload, id),
+        loaded: true
+      };
+    } catch (fallbackError) {
+      console.error('โหลดข่าวรายตัวจากไฟล์สำรองไม่สำเร็จ:', fallbackError);
+      return { item: null, loaded: false };
+    }
   }
 }
 
@@ -161,19 +271,25 @@ async function loadAllNews(container) {
 async function loadNewsDetail(container) {
   const params = new URLSearchParams(window.location.search);
   const id = Number(params.get('id'));
-  const items = await loadNewsData();
 
-  if (!items) {
+  if (!Number.isInteger(id) || id <= 0) {
+    container.innerHTML = '<p class="news-empty">ไม่พบข่าวที่คุณเลือก</p>';
+    return;
+  }
+
+  const result = await loadNewsItem(id);
+
+  if (!result.loaded) {
     renderNewsError(container);
     return;
   }
 
-  const item = items.find(newsItem => Number(newsItem.id) === id);
-
-  if (!item) {
+  if (!result.item) {
     container.innerHTML = '<p class="news-empty">ไม่พบข่าวที่คุณเลือก</p>';
     return;
   }
+
+  const item = result.item;
 
   container.innerHTML = `
     <article class="card news-detail-card">
