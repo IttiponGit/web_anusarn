@@ -1314,7 +1314,7 @@ footer {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(92deg, rgba(241, 248, 255, 0.84) 0%, rgba(241, 248, 255, 0.72) 36%, rgba(241, 248, 255, 0.45) 64%, rgba(241, 248, 255, 0.20) 100%);
+  background: linear-gradient(92deg, rgba(224, 238, 252, 0.74) 0%, rgba(224, 238, 252, 0.58) 36%, rgba(224, 238, 252, 0.34) 64%, rgba(224, 238, 252, 0.14) 100%);
   pointer-events: none;
 }
 
@@ -1348,17 +1348,20 @@ footer {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(47, 128, 183, 0.26);
   box-shadow: 0 6px 16px rgba(18, 49, 79, 0.10);
-  color: #1a5490;
+  color: #0f3a63;
   font-size: .92rem;
   font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.45);
 }
 
 .home-page .home-hero-title {
   margin: 12px 0 10px;
   font-size: clamp(1.65rem, 1.55vw + 1rem, 2.35rem);
   line-height: 1.18;
-  color: #12314f;
+  color: #0a2f52;
+  font-weight: 800;
   letter-spacing: -0.01em;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.42);
 }
 
 .home-page .home-hero-description {
@@ -1366,17 +1369,23 @@ footer {
   max-width: 580px;
   font-size: .96rem;
   line-height: 1.7;
-  color: #51687e;
+  color: #061f35;
+  font-weight: 600;
+  text-shadow:
+    0 1px 1px rgba(255, 255, 255, 0.68),
+    0 0 4px rgba(255, 255, 255, 0.42),
+    0 0 9px rgba(255, 255, 255, 0.24);
+  -webkit-text-stroke: 0.32px rgba(255, 255, 255, 0.46);
 }
 
 .home-page .home-philosophy-card {
   margin: 0;
   padding: 16px 18px;
   border-radius: 16px;
-  background: rgba(255,255,255,.88);
-  border: 1px solid rgba(47, 128, 183, 0.22);
-  box-shadow: 0 12px 26px rgba(18, 49, 79, 0.11);
-  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.74);
+  border: 1px solid rgba(47, 128, 183, 0.24);
+  box-shadow: 0 10px 22px rgba(18, 49, 79, 0.11);
+  backdrop-filter: blur(7px);
   align-self: center;
 }
 
@@ -1390,12 +1399,14 @@ footer {
 .home-page .home-philosophy-heading h3 {
   margin: 0;
   font-size: 1rem;
-  color: #12314f;
+  color: #0a2f52;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
 .home-page .home-philosophy-card p {
   margin: 0;
-  color: #4f6275;
+  color: #1b446b;
   font-size: .9rem;
   line-height: 1.62;
 }
