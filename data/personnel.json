@@ -3,69 +3,82 @@
     {
       "name": "นายกฤตเกษม ผัดขัน",
       "position": "ผู้อำนวยการ",
-      "initial": "ผอ"
+      "initial": "ผอ",
+      "image": "images/personnel/1.KRITKASEM-director.jpg"
     },
     {
       "name": "นางสาวดวงเดือน คำมูลสุข",
       "position": "รองผู้อำนวยการกลุ่มบริหารงานวิชาการ/ทั่วไป",
-      "initial": "วช"
+      "initial": "วช",
+      "image": "images/personnel/3.DUANGDUEAN-deputydirector .jpg"
     },
     {
       "name": "นางปิฐินนท์ จันทร์รัตน์",
       "position": "รองผู้อำนวยการฝ่ายแผนงานและงบประมาณ",
-      "initial": "งป"
+      "initial": "งป",
+      "image": "images/personnel/2.PITHINON-deputydirector.jpg"
     }
   ],
   "heads": [
     {
+      "department": "ภาษาไทย",
+      "name": "นางศุภาพิชญ์ ตาคำมา",
+      "initial": "ทย",
+      "image": "images/personnel/4.SUPHAPHIT-thai.jpg"
+    },
+    {
       "department": "คณิตศาสตร์",
       "name": "นางอัมพร แสนปวน",
-      "initial": "คณ"
+      "initial": "คณ",
+      "image": "images/personnel/5.AMPORN-math.jpg"
     },
     {
       "department": "วิทยาศาสตร์และเทคโนโลยี",
       "name": "นายอิทธิพล ต๊ะศรี",
-      "initial": "วท"
-    },
-    {
-      "department": "ภาษาต่างประเทศ",
-      "name": "นางสุทธินี แสงแสน",
-      "initial": "ตป"
-    },
-    {
-      "department": "ภาษาไทย",
-      "name": "นางศุภาพิชญ์ ตาคำมา",
-      "initial": "ทย"
+      "initial": "วท",
+      "image": "images/personnel/6.ITTIPON-science.jpg"
     },
     {
       "department": "สังคมศึกษา ศาสนาและวัฒนธรรม",
       "name": "นายผดุงเวศน์ กาวิโล",
-      "initial": "สค"
+      "initial": "สค",
+      "image": "images/personnel/7.PHADOONGWET-social.jpg"
     },
     {
-      "department": "ศิลปะ",
-      "name": "นายชินกฤต สืบสาย",
-      "initial": "ศล"
+      "department": "ภาษาต่างประเทศ",
+      "name": "นางสุทธินี แสงแสน",
+      "initial": "ตป",
+      "image": "images/personnel/8.SUTHINEE-eng.jpg"
     },
     {
       "department": "สุขศึกษาและพลศึกษา",
       "name": "นางวันเพ็ญ บุญเรือง",
-      "initial": "สพ"
+      "initial": "สพ",
+      "image": "images/personnel/9.WANPEN-health.jpg"
     },
     {
       "department": "การงานอาชีพ",
       "name": "นางพรนิภา กันธวงศ์",
-      "initial": "กง"
+      "initial": "กง",
+      "image": "images/personnel/10.PORNNIPA-career.jpg"
+    },
+    {
+      "department": "ศิลปะ",
+      "name": "นายชินกฤต สืบสาย",
+      "initial": "ศล",
+      "image": "images/personnel/11.CHINNAKIT-art.jpg"
     },
     {
       "department": "ปฐมวัย",
       "name": "นางสาวณัชชา กรมแสง",
-      "initial": "ปฐ"
+      "initial": "ปฐ",
+      "image": "images/personnel/12.NUTCHA-childhood.jpg"
     },
     {
       "department": "พัฒนาภาษามือไทย",
       "name": "นางสุภาภรณ์ พันธ์วิไล",
-      "initial": "มท"
+      "initial": "มท",
+      "image": "images/personnel/13.SUPHAPHORN-tsl.jpg"
     }
   ]
 }

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadsList = document.getElementById('downloadsList');
 
   if (newsList) {
-    loadLatestNews(newsList, 3);
+    loadLatestNews(newsList, 4);
   }
 
   if (allNewsList) {
@@ -193,6 +193,36 @@ async function loadNewsDetail(container) {
   `;
 }
 
+function createPersonnelAvatar(person) {
+  const imagePath = typeof person.image === 'string' ? person.image.trim() : '';
+
+  return `
+    <div class="personnel-media${imagePath ? '' : ' fallback'}">
+      <img src="${imagePath}" alt="${person.name}" class="personnel-photo" loading="lazy" decoding="async">
+      <div class="avatar personnel-avatar-fallback">${person.initial}</div>
+    </div>
+  `;
+}
+
+function bindPersonnelImageFallback(container) {
+  if (!container) {
+    return;
+  }
+
+  container.querySelectorAll('.personnel-media').forEach(media => {
+    const img = media.querySelector('.personnel-photo');
+
+    if (!img || !img.getAttribute('src')) {
+      media.classList.add('fallback');
+      return;
+    }
+
+    img.addEventListener('error', () => {
+      media.classList.add('fallback');
+    }, { once: true });
+  });
+}
+
 async function loadPersonnelData({ executiveList, subjectHeadList, personnelPreview }) {
   try {
     const response = await fetch('data/personnel.json');
@@ -204,29 +234,35 @@ async function loadPersonnelData({ executiveList, subjectHeadList, personnelPrev
     const data = await response.json();
 
     if (executiveList) {
+      executiveList.innerHTML = '';
       data.executives.forEach(person => {
         executiveList.innerHTML += `
           <article class="card personnel-card executive-card">
-            <div class="avatar">${person.initial}</div>
+            ${createPersonnelAvatar(person)}
             <span class="role-label">ฝ่ายบริหาร</span>
             <h3>${person.name}</h3>
             <p>${person.position}</p>
           </article>
         `;
       });
+
+      bindPersonnelImageFallback(executiveList);
     }
 
     if (subjectHeadList) {
+      subjectHeadList.innerHTML = '';
       data.heads.forEach(person => {
         subjectHeadList.innerHTML += `
           <article class="card personnel-card subject-card">
-            <div class="avatar">${person.initial}</div>
+            ${createPersonnelAvatar(person)}
             <span class="role-label">หัวหน้ากลุ่มสาระ</span>
             <h3>${person.name}</h3>
             <p>${person.department}</p>
           </article>
         `;
       });
+
+      bindPersonnelImageFallback(subjectHeadList);
     }
 
     if (personnelPreview) {
@@ -235,12 +271,14 @@ async function loadPersonnelData({ executiveList, subjectHeadList, personnelPrev
       previewExecutives.forEach(person => {
         personnelPreview.innerHTML += `
           <article class="card personnel-card executive-card">
-            <div class="avatar">${person.initial}</div>
+            ${createPersonnelAvatar(person)}
             <h3>${person.name}</h3>
             <p>${person.position}</p>
           </article>
         `;
       });
+
+      bindPersonnelImageFallback(personnelPreview);
     }
   } catch (error) {
     console.error('โหลดข้อมูลบุคลากรไม่สำเร็จ:', error);
