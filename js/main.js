@@ -341,13 +341,7 @@ function bindPersonnelImageFallback(container) {
 
 async function loadPersonnelData({ executiveList, subjectHeadList, personnelPreview }) {
   try {
-    const response = await fetch('data/personnel.json');
-
-    if (!response.ok) {
-      throw new Error('โหลดข้อมูลบุคลากรไม่สำเร็จ');
-    }
-
-    const data = await response.json();
+    const data = await loadPersonnelSourceData();
 
     if (executiveList) {
       executiveList.innerHTML = '';
@@ -410,6 +404,94 @@ async function loadPersonnelData({ executiveList, subjectHeadList, personnelPrev
     if (personnelPreview) {
       personnelPreview.innerHTML = '<p class="news-empty">ไม่สามารถโหลดข้อมูลบุคลากรได้</p>';
     }
+  }
+}
+
+const PERSONNEL_API_URL = 'api/personnel.php';
+const PERSONNEL_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/personnel.php';
+const PERSONNEL_FALLBACK_URL = 'data/personnel.json';
+
+function getPersonnelApiUrl() {
+  const hostname = window.location.hostname;
+
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return PERSONNEL_API_LOCALHOST_URL;
+  }
+
+  return PERSONNEL_API_URL;
+}
+
+function normalizePersonnelData(payload) {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  if (Array.isArray(payload.executives) && Array.isArray(payload.heads)) {
+    return payload;
+  }
+
+  if (!(payload.success === true && Array.isArray(payload.data))) {
+    return null;
+  }
+
+  const executives = [];
+  const heads = [];
+
+  payload.data.forEach(person => {
+    if (!person || typeof person !== 'object') {
+      return;
+    }
+
+    const department = typeof person.department === 'string' ? person.department.trim() : '';
+    const groupName = typeof person.group_name === 'string' ? person.group_name.trim() : '';
+
+    const normalized = {
+      name: person.name || '',
+      position: person.position || '',
+      department,
+      initial: person.initial || '',
+      image: person.image || ''
+    };
+
+    if (department === 'ฝ่ายบริหาร') {
+      executives.push(normalized);
+      return;
+    }
+
+    if (department === 'หัวหน้ากลุ่มสาระ') {
+      heads.push({
+        ...normalized,
+        department: groupName || department
+      });
+    }
+  });
+
+  return { executives, heads };
+}
+
+async function fetchPersonnelSource(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`โหลดข้อมูลบุคลากรไม่สำเร็จ: ${url}`);
+  }
+
+  const payload = await response.json();
+  const normalized = normalizePersonnelData(payload);
+
+  if (!normalized) {
+    throw new Error('รูปแบบข้อมูลบุคลากรไม่ถูกต้อง');
+  }
+
+  return normalized;
+}
+
+async function loadPersonnelSourceData() {
+  try {
+    return await fetchPersonnelSource(getPersonnelApiUrl());
+  } catch (error) {
+    console.error('โหลดบุคลากรจาก API ไม่สำเร็จ, กำลัง fallback ไปใช้ JSON:', error);
+    return await fetchPersonnelSource(PERSONNEL_FALLBACK_URL);
   }
 }
 
