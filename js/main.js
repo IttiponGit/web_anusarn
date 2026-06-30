@@ -495,18 +495,92 @@ async function loadPersonnelSourceData() {
   }
 }
 
+const DOWNLOADS_API_URL = 'api/downloads.php';
+const DOWNLOADS_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/downloads.php';
+const DOWNLOADS_FALLBACK_URL = 'data/downloads.json';
+
+function getDownloadsApiUrl() {
+  const hostname = window.location.hostname;
+
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return DOWNLOADS_API_LOCALHOST_URL;
+  }
+
+  return DOWNLOADS_API_URL;
+}
+
+function normalizeDownloadItem(item) {
+  if (!item || typeof item !== 'object') {
+    return null;
+  }
+
+  const fallbackFile = typeof item.file === 'string' ? item.file : '';
+  const fileUrl = typeof item.file_url === 'string' ? item.file_url : fallbackFile;
+  const buttonText = typeof item.button_text === 'string' ? item.button_text : 'ดาวน์โหลดเอกสาร';
+  const displayOrder = Number.isFinite(Number(item.display_order))
+    ? Number(item.display_order)
+    : Number(item.id) || 0;
+
+  return {
+    id: item.id ?? null,
+    title: item.title || '',
+    description: item.description || '',
+    category: item.category || 'เอกสาร',
+    file_url: fileUrl,
+    button_text: buttonText,
+    display_order: displayOrder
+  };
+}
+
+function normalizeDownloadsPayload(payload) {
+  const rawItems = Array.isArray(payload)
+    ? payload
+    : payload && payload.success === true && Array.isArray(payload.data)
+      ? payload.data
+      : null;
+
+  if (!rawItems) {
+    return null;
+  }
+
+  return rawItems
+    .map(normalizeDownloadItem)
+    .filter(Boolean)
+    .sort((a, b) => a.display_order - b.display_order);
+}
+
 async function loadDownloadsData() {
   try {
-    const response = await fetch('data/downloads.json');
+    const response = await fetch(getDownloadsApiUrl());
 
     if (!response.ok) {
-      throw new Error('โหลดข้อมูลเอกสารไม่สำเร็จ');
+      throw new Error('โหลดข้อมูลเอกสารจาก API ไม่สำเร็จ');
     }
 
-    return await response.json();
+    const payload = await response.json();
+    const normalized = normalizeDownloadsPayload(payload);
+
+    if (!normalized) {
+      throw new Error('รูปแบบข้อมูลเอกสารจาก API ไม่ถูกต้อง');
+    }
+
+    return normalized;
   } catch (error) {
-    console.error('โหลดข้อมูลเอกสารไม่สำเร็จ:', error);
-    return null;
+    console.error('โหลดเอกสารจาก API ไม่สำเร็จ, กำลัง fallback ไปใช้ JSON:', error);
+
+    try {
+      const fallbackResponse = await fetch(DOWNLOADS_FALLBACK_URL);
+
+      if (!fallbackResponse.ok) {
+        throw new Error('โหลดข้อมูลเอกสารสำรองไม่สำเร็จ');
+      }
+
+      const fallbackPayload = await fallbackResponse.json();
+      return normalizeDownloadsPayload(fallbackPayload);
+    } catch (fallbackError) {
+      console.error('โหลดข้อมูลเอกสารจากไฟล์สำรองไม่สำเร็จ:', fallbackError);
+      return null;
+    }
   }
 }
 
@@ -536,9 +610,13 @@ function renderDownloads(container, items) {
     const article = document.createElement('article');
     article.className = 'card download-card';
 
-    const isAvailable = Boolean(item.available && item.file);
+    const fileUrl = typeof item.file_url === 'string' ? item.file_url.trim() : '';
+    const isAvailable = fileUrl.length > 0;
+    const buttonText = isAvailable
+      ? ((typeof item.button_text === 'string' && item.button_text.trim()) || 'ดาวน์โหลดเอกสาร')
+      : 'รอเพิ่มไฟล์';
     const actionMarkup = isAvailable
-      ? `<a class="download-action" href="${item.file}" download>ดาวน์โหลดเอกสาร</a>`
+      ? `<a class="download-action" href="${fileUrl}" download>${buttonText}</a>`
       : '<button class="download-action" type="button" disabled>รอเพิ่มไฟล์</button>';
 
     article.innerHTML = `
