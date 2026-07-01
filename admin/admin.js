@@ -63,6 +63,10 @@
   const personnelDepartment = document.getElementById('personnelDepartment');
   const personnelGroupName = document.getElementById('personnelGroupName');
   const personnelImage = document.getElementById('personnelImage');
+  const personnelImageFile = document.getElementById('personnelImageFile');
+  const uploadPersonnelImageBtn = document.getElementById('uploadPersonnelImageBtn');
+  const personnelImagePreviewWrap = document.getElementById('personnelImagePreviewWrap');
+  const personnelImagePreview = document.getElementById('personnelImagePreview');
   const personnelDisplayOrder = document.getElementById('personnelDisplayOrder');
   const personnelStatus = document.getElementById('personnelStatus');
   const cancelPersonnelBtn = document.getElementById('cancelPersonnelBtn');
@@ -514,12 +518,62 @@
     personnelMessage.classList.toggle('error-message', isError);
   }
 
+  function showPersonnelImagePreview(pathOrUrl) {
+    if (!personnelImagePreview || !personnelImagePreviewWrap) {
+      return;
+    }
+
+    const value = String(pathOrUrl || '').trim();
+    if (!value) {
+      personnelImagePreview.removeAttribute('src');
+      personnelImagePreviewWrap.hidden = true;
+      return;
+    }
+
+    const isAbsoluteOrSpecialUrl = /^(?:https?:)?\/\//i.test(value)
+      || value.startsWith('/')
+      || value.startsWith('../')
+      || value.startsWith('data:')
+      || value.startsWith('blob:');
+    const previewSrc = isAbsoluteOrSpecialUrl ? value : `../${value}`;
+    personnelImagePreview.src = previewSrc;
+    personnelImagePreviewWrap.hidden = false;
+  }
+
+  function isAllowedPersonnelImageFile(file) {
+    if (!file) {
+      return false;
+    }
+
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    const lowerName = String(file.name || '').toLowerCase();
+    const hasAllowedExtension = /\.(jpg|jpeg|png|webp|gif)$/i.test(lowerName);
+    const hasAllowedMimeType = allowedMimeTypes.includes(String(file.type || '').toLowerCase());
+
+    return hasAllowedExtension && hasAllowedMimeType;
+  }
+
   function showPersonnelForm(isOpen) {
     if (!personnelFormCard) {
       return;
     }
 
     personnelFormCard.hidden = !isOpen;
+  }
+
+  function setSelectValueFromOptions(selectElement, rawValue) {
+    if (!selectElement) {
+      return;
+    }
+
+    const value = String(rawValue || '').trim();
+    const hasMatchingOption = Array.from(selectElement.options).some((optionElement) => optionElement.value === value);
+    selectElement.value = hasMatchingOption ? value : '';
+  }
+
+  function normalizePersonnelGroupName(rawValue) {
+    const value = String(rawValue || '').trim();
+    return value === 'ฝ่ายบริหาร' ? 'ผู้บริหาร' : value;
   }
 
   function clearPersonnelForm() {
@@ -531,6 +585,7 @@
     personnelId.value = '';
     personnelDisplayOrder.value = '0';
     personnelStatus.value = 'active';
+    showPersonnelImagePreview('');
   }
 
   function openCreatePersonnelForm() {
@@ -620,25 +675,82 @@
   }
 
   function fillPersonnelForm(personnel) {
+    const personnelPath = String(personnel.path || personnel.image || '').trim();
+
     personnelId.value = personnel.id || '';
     personnelName.value = personnel.name || '';
     personnelPosition.value = personnel.position || '';
-    personnelDepartment.value = personnel.department || '';
-    personnelGroupName.value = personnel.group_name || '';
-    personnelImage.value = personnel.image || '';
+    setSelectValueFromOptions(personnelDepartment, personnel.department || '');
+    setSelectValueFromOptions(personnelGroupName, normalizePersonnelGroupName(personnel.group_name || ''));
+    personnelImage.value = personnelPath;
     personnelDisplayOrder.value = String(Number(personnel.display_order ?? 0));
     personnelStatus.value = personnel.status || 'active';
+    showPersonnelImagePreview(personnelPath);
+  }
+
+  function handlePersonnelImageFileSelect() {
+    if (!personnelImageFile || !personnelImageFile.files || personnelImageFile.files.length === 0) {
+      return;
+    }
+
+    const selectedFile = personnelImageFile.files[0];
+    if (!isAllowedPersonnelImageFile(selectedFile)) {
+      setPersonnelMessage('รองรับเฉพาะไฟล์รูปภาพ JPG, JPEG, PNG, WEBP และ GIF', true);
+      personnelImageFile.value = '';
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    showPersonnelImagePreview(objectUrl);
+    setPersonnelMessage('');
+  }
+
+  async function handleUploadPersonnelImage() {
+    if (!personnelImageFile || !personnelImageFile.files || personnelImageFile.files.length === 0) {
+      setPersonnelMessage('กรุณาเลือกรูปภาพก่อนอัปโหลด', true);
+      return;
+    }
+
+    const selectedFile = personnelImageFile.files[0];
+    if (!isAllowedPersonnelImageFile(selectedFile)) {
+      setPersonnelMessage('รองรับเฉพาะไฟล์รูปภาพ JPG, JPEG, PNG, WEBP และ GIF', true);
+      return;
+    }
+
+    setPersonnelMessage('กำลังอัปโหลดรูปภาพ...');
+
+    try {
+      const result = await uploadFileViaApi(selectedFile, {
+        category: 'personnel_image',
+      });
+
+      if (!result) {
+        return;
+      }
+
+      if (result.file_type && result.file_type !== 'image') {
+        throw new Error('ไฟล์ที่อัปโหลดต้องเป็นรูปภาพเท่านั้น');
+      }
+
+      personnelImage.value = result.file_path || '';
+      showPersonnelImagePreview(result.file_path || '');
+      setPersonnelMessage('อัปโหลดรูปภาพสำเร็จ');
+    } catch (error) {
+      setPersonnelMessage(error.message, true);
+    }
   }
 
   function readPersonnelFormPayload() {
     const parsedDisplayOrder = Number(personnelDisplayOrder.value);
+    const imageValue = personnelImage.value.trim();
+
     return {
       id: personnelId.value ? Number(personnelId.value) : undefined,
       name: personnelName.value.trim(),
       position: personnelPosition.value.trim(),
       department: personnelDepartment.value.trim(),
       group_name: personnelGroupName.value.trim(),
-      image: personnelImage.value.trim(),
+      image: imageValue,
       display_order: Number.isFinite(parsedDisplayOrder) ? parsedDisplayOrder : NaN,
       status: personnelStatus.value.trim(),
     };
@@ -749,6 +861,27 @@
 
     if (personnelForm) {
       personnelForm.addEventListener('submit', handlePersonnelFormSubmit);
+    }
+
+    if (personnelImageFile) {
+      personnelImageFile.addEventListener('change', handlePersonnelImageFileSelect);
+    }
+
+    if (uploadPersonnelImageBtn) {
+      uploadPersonnelImageBtn.addEventListener('click', handleUploadPersonnelImage);
+    }
+
+    if (personnelImagePreview) {
+      personnelImagePreview.addEventListener('error', () => {
+        personnelImagePreview.removeAttribute('src');
+        personnelImagePreviewWrap.hidden = true;
+      });
+    }
+
+    if (personnelImage) {
+      personnelImage.addEventListener('input', () => {
+        showPersonnelImagePreview(personnelImage.value);
+      });
     }
 
     personnelTableBody.addEventListener('click', async (event) => {

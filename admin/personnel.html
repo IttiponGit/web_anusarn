@@ -57,7 +57,7 @@
               <tr>
                 <th>ชื่อ</th>
                 <th>ตำแหน่ง</th>
-                <th>แผนก</th>
+                <th>กลุ่มสาระ</th>
                 <th>กลุ่ม</th>
                 <th>ลำดับ</th>
                 <th>สถานะ</th>
@@ -90,15 +90,31 @@
             </label>
 
             <label>
-              <span>แผนก</span>
-              <input type="text" id="personnelDepartment" required />
+              <span>กลุ่มสาระ</span>
+              <select id="personnelDepartment" required>
+                <option value="" selected>-- เลือกกลุ่มสาระ --</option>
+                <option value="กลุ่มสาระการเรียนรู้ภาษาไทย">กลุ่มสาระการเรียนรู้ภาษาไทย</option>
+                <option value="กลุ่มสาระการเรียนรู้คณิตศาสตร์">กลุ่มสาระการเรียนรู้คณิตศาสตร์</option>
+                <option value="กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี">กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี</option>
+                <option value="กลุ่มสาระการเรียนรู้สังคมศึกษา ศาสนาและวัฒนธรรม">กลุ่มสาระการเรียนรู้สังคมศึกษา ศาสนาและวัฒนธรรม</option>
+                <option value="กลุ่มสาระการเรียนรู้สุขศึกษาและพลศึกษา">กลุ่มสาระการเรียนรู้สุขศึกษาและพลศึกษา</option>
+                <option value="กลุ่มสาระการเรียนรู้ศิลปะ">กลุ่มสาระการเรียนรู้ศิลปะ</option>
+                <option value="กลุ่มสาระการเรียนรู้การงานอาชีพ">กลุ่มสาระการเรียนรู้การงานอาชีพ</option>
+                <option value="กลุ่มสาระการเรียนรู้ภาษาต่างประเทศ">กลุ่มสาระการเรียนรู้ภาษาต่างประเทศ</option>
+              </select>
             </label>
           </div>
 
           <div class="news-form-grid">
             <label>
               <span>กลุ่ม (group_name)</span>
-              <input type="text" id="personnelGroupName" required />
+              <select id="personnelGroupName" required>
+                <option value="" selected>-- เลือกกลุ่ม --</option>
+                <option value="ผู้บริหาร">ผู้บริหาร</option>
+                <option value="ครูผู้สอน">ครูผู้สอน</option>
+                <option value="บุคลากรทางการศึกษา">บุคลากรทางการศึกษา</option>
+                <option value="เจ้าหน้าที่สนับสนุน">เจ้าหน้าที่สนับสนุน</option>
+              </select>
             </label>
 
             <label>
@@ -108,9 +124,20 @@
           </div>
 
           <label>
-            <span>รูปภาพ (path)</span>
-            <input type="text" id="personnelImage" placeholder="images/personnel/1.KRITKASEM-director.jpg" required />
+            <span>รูปภาพ</span>
+            <input type="text" id="personnelImage" placeholder="uploads/images/personnel-001.jpg" required />
           </label>
+
+          <div class="upload-field-group">
+            <label>
+              <span>อัปโหลดรูปบุคลากร</span>
+              <input type="file" id="personnelImageFile" accept=".jpg,.jpeg,.png,.webp,.gif,image/*" />
+            </label>
+            <button type="button" class="secondary-btn" id="uploadPersonnelImageBtn">อัปโหลดรูปภาพ</button>
+            <div class="image-preview-wrap" id="personnelImagePreviewWrap" hidden>
+              <img id="personnelImagePreview" class="image-preview" alt="ตัวอย่างรูปบุคลากร" />
+            </div>
+          </div>
 
           <label>
             <span>สถานะ</span>

@@ -34,6 +34,11 @@ function parse_json_body(): array
     return is_array($data) ? $data : [];
 }
 
+function starts_with(string $haystack, string $needle): bool
+{
+    return $needle === '' || strpos($haystack, $needle) === 0;
+}
+
 function normalize_personnel_payload(array $input): array
 {
     $displayOrder = filter_var($input['display_order'] ?? null, FILTER_VALIDATE_INT, [
@@ -47,7 +52,7 @@ function normalize_personnel_payload(array $input): array
         'position' => trim((string)($input['position'] ?? '')),
         'department' => trim((string)($input['department'] ?? '')),
         'group_name' => trim((string)($input['group_name'] ?? '')),
-        'image' => trim((string)($input['image'] ?? '')),
+        'image' => trim((string)($input['image'] ?? ($input['path'] ?? ''))),
         'display_order' => $displayOrder,
         'status' => trim((string)($input['status'] ?? 'active')),
     ];
@@ -71,7 +76,47 @@ function validate_personnel_payload(array $payload): ?string
         return 'Invalid status';
     }
 
+    if (!is_valid_personnel_image_path($payload['image'])) {
+        return 'Invalid image path';
+    }
+
     return null;
+}
+
+function is_valid_personnel_image_path(string $imagePath): bool
+{
+    $path = trim($imagePath);
+    if ($path === '') {
+        return false;
+    }
+
+    if (strpos($path, '://') !== false) {
+        return false;
+    }
+
+    if (starts_with($path, '/') || starts_with($path, '../')) {
+        return false;
+    }
+
+    $allowedPrefixes = [
+        'uploads/images/',
+        'uploads/personnel/',
+        'images/personnel/',
+    ];
+
+    $hasAllowedPrefix = false;
+    foreach ($allowedPrefixes as $prefix) {
+        if (starts_with($path, $prefix)) {
+            $hasAllowedPrefix = true;
+            break;
+        }
+    }
+
+    if (!$hasAllowedPrefix) {
+        return false;
+    }
+
+    return preg_match('/\.(jpg|jpeg|png|webp|gif)$/i', $path) === 1;
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -95,7 +140,7 @@ try {
             ]);
         }
 
-        $baseSql = 'SELECT id, name, position, department, group_name, image, display_order, status, created_at, updated_at FROM personnel';
+        $baseSql = 'SELECT `id`, `name`, `position`, `department`, `group_name`, `image`, `display_order`, `status`, `created_at`, `updated_at` FROM `personnel`';
 
         if ($idProvided) {
             $stmt = $pdo->prepare($baseSql . ' WHERE id = :id LIMIT 1');
@@ -138,7 +183,7 @@ try {
         }
 
         $insertStmt = $pdo->prepare(
-            'INSERT INTO personnel (name, position, department, group_name, image, display_order, status)
+            'INSERT INTO `personnel` (`name`, `position`, `department`, `group_name`, `image`, `display_order`, `status`)
              VALUES (:name, :position, :department, :group_name, :image, :display_order, :status)'
         );
         $insertStmt->execute([
@@ -170,7 +215,21 @@ try {
             ]);
         }
 
+        $existingStmt = $pdo->prepare('SELECT `image` FROM `personnel` WHERE `id` = :id LIMIT 1');
+        $existingStmt->execute([':id' => (int) $id]);
+        $existingPersonnel = $existingStmt->fetch();
+
+        if (!$existingPersonnel) {
+            json_response(404, [
+                'success' => false,
+                'error' => 'Personnel not found'
+            ]);
+        }
+
         $payload = normalize_personnel_payload($input);
+        if ($payload['image'] === '') {
+            $payload['image'] = trim((string) ($existingPersonnel['image'] ?? ''));
+        }
         $validationError = validate_personnel_payload($payload);
 
         if ($validationError !== null) {
@@ -181,15 +240,16 @@ try {
         }
 
         $updateStmt = $pdo->prepare(
-            'UPDATE personnel
-             SET name = :name,
-                 position = :position,
-                 department = :department,
-                 group_name = :group_name,
-                 image = :image,
-                 display_order = :display_order,
-                 status = :status
-             WHERE id = :id'
+            'UPDATE `personnel`
+             SET `name` = :name,
+                 `position` = :position,
+                 `department` = :department,
+                 `group_name` = :group_name,
+                 `image` = :image,
+                 `display_order` = :display_order,
+                 `status` = :status,
+                 `updated_at` = CURRENT_TIMESTAMP
+             WHERE `id` = :id'
         );
         $updateStmt->execute([
             ':id' => (int) $id,
@@ -203,7 +263,7 @@ try {
         ]);
 
         if ($updateStmt->rowCount() === 0) {
-            $existsStmt = $pdo->prepare('SELECT id FROM personnel WHERE id = :id LIMIT 1');
+            $existsStmt = $pdo->prepare('SELECT `id` FROM `personnel` WHERE `id` = :id LIMIT 1');
             $existsStmt->execute([':id' => (int) $id]);
             $exists = $existsStmt->fetchColumn();
 
@@ -232,14 +292,14 @@ try {
         ]);
     }
 
-    $deactivateStmt = $pdo->prepare('UPDATE personnel SET status = :status WHERE id = :id');
+    $deactivateStmt = $pdo->prepare('UPDATE `personnel` SET `status` = :status WHERE `id` = :id');
     $deactivateStmt->execute([
         ':status' => 'inactive',
         ':id' => (int) $id,
     ]);
 
     if ($deactivateStmt->rowCount() === 0) {
-        $existsStmt = $pdo->prepare('SELECT id FROM personnel WHERE id = :id LIMIT 1');
+        $existsStmt = $pdo->prepare('SELECT `id` FROM `personnel` WHERE `id` = :id LIMIT 1');
         $existsStmt->execute([':id' => (int) $id]);
         $exists = $existsStmt->fetchColumn();
 
@@ -255,8 +315,10 @@ try {
         'success' => true
     ]);
 } catch (Throwable $e) {
+    error_log('personnel_admin.php error: ' . $e->getMessage());
     json_response(500, [
         'success' => false,
-        'error' => 'Failed to manage personnel'
+        'error' => 'Failed to manage personnel',
+        'message' => $e->getMessage()
     ]);
 }
