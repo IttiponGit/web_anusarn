@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จัดการบุคลากร | Admin</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-personnel-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="auth-badge light">Admin Panel</div>
+        <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="news.html">ข่าวประชาสัมพันธ์</a>
+        <a href="personnel.html" aria-current="page">บุคลากร</a>
+        <a href="#" aria-disabled="true">เอกสารดาวน์โหลด</a>
+        <button type="button" id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel news-hero">
+        <p class="eyebrow">Personnel Management</p>
+        <h2>ระบบจัดการบุคลากร</h2>
+        <p>เพิ่ม แก้ไข และปิดใช้งานรายการบุคลากรได้จากหน้านี้</p>
+      </section>
+
+      <p id="personnelMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="news-list-card">
+        <div class="news-list-header">
+          <h3>รายการบุคลากรทั้งหมด</h3>
+          <button type="button" id="addPersonnelBtn" class="primary-btn">เพิ่มบุคลากร</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="news-table" aria-label="ตารางรายการบุคลากร">
+            <thead>
+              <tr>
+                <th>ชื่อ</th>
+                <th>ตำแหน่ง</th>
+                <th>แผนก</th>
+                <th>กลุ่ม</th>
+                <th>ลำดับ</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="personnelTableBody">
+              <tr>
+                <td colspan="7">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="personnelFormCard" class="news-form-card" hidden>
+        <h3 id="personnelFormTitle">เพิ่มบุคลากร</h3>
+        <form id="personnelForm" class="news-form" autocomplete="off">
+          <input type="hidden" id="personnelId" />
+
+          <label>
+            <span>ชื่อ-นามสกุล</span>
+            <input type="text" id="personnelName" required />
+          </label>
+
+          <div class="news-form-grid">
+            <label>
+              <span>ตำแหน่ง</span>
+              <input type="text" id="personnelPosition" required />
+            </label>
+
+            <label>
+              <span>แผนก</span>
+              <input type="text" id="personnelDepartment" required />
+            </label>
+          </div>
+
+          <div class="news-form-grid">
+            <label>
+              <span>กลุ่ม (group_name)</span>
+              <input type="text" id="personnelGroupName" required />
+            </label>
+
+            <label>
+              <span>ลำดับแสดงผล (display_order)</span>
+              <input type="number" id="personnelDisplayOrder" min="0" step="1" required />
+            </label>
+          </div>
+
+          <label>
+            <span>รูปภาพ (path)</span>
+            <input type="text" id="personnelImage" placeholder="images/personnel/1.KRITKASEM-director.jpg" required />
+          </label>
+
+          <label>
+            <span>สถานะ</span>
+            <select id="personnelStatus" required>
+              <option value="active">active</option>
+              <option value="inactive">inactive</option>
+            </select>
+          </label>
+
+          <div class="news-form-actions">
+            <button type="submit" class="primary-btn" id="savePersonnelBtn">บันทึก</button>
+            <button type="button" class="secondary-btn" id="cancelPersonnelBtn">ยกเลิก</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

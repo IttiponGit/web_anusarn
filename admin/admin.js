@@ -1,5 +1,6 @@
 (function () {
   const NEWS_API_URL = '../api/admin/news_admin.php';
+  const PERSONNEL_API_URL = '../api/admin/personnel_admin.php';
 
   const loginForm = document.getElementById('loginForm');
   const loginMessage = document.getElementById('loginMessage');
@@ -25,6 +26,21 @@
   const newsImage = document.getElementById('newsImage');
   const newsStatus = document.getElementById('newsStatus');
   const cancelNewsBtn = document.getElementById('cancelNewsBtn');
+  const personnelTableBody = document.getElementById('personnelTableBody');
+  const personnelMessage = document.getElementById('personnelMessage');
+  const addPersonnelBtn = document.getElementById('addPersonnelBtn');
+  const personnelFormCard = document.getElementById('personnelFormCard');
+  const personnelForm = document.getElementById('personnelForm');
+  const personnelFormTitle = document.getElementById('personnelFormTitle');
+  const personnelId = document.getElementById('personnelId');
+  const personnelName = document.getElementById('personnelName');
+  const personnelPosition = document.getElementById('personnelPosition');
+  const personnelDepartment = document.getElementById('personnelDepartment');
+  const personnelGroupName = document.getElementById('personnelGroupName');
+  const personnelImage = document.getElementById('personnelImage');
+  const personnelDisplayOrder = document.getElementById('personnelDisplayOrder');
+  const personnelStatus = document.getElementById('personnelStatus');
+  const cancelPersonnelBtn = document.getElementById('cancelPersonnelBtn');
 
   async function fetchMe() {
     const response = await fetch('../api/admin/me.php', {
@@ -341,6 +357,272 @@
     });
   }
 
+  function setPersonnelMessage(message, isError = false) {
+    if (!personnelMessage) {
+      return;
+    }
+
+    personnelMessage.textContent = message;
+    personnelMessage.classList.toggle('error-message', isError);
+  }
+
+  function showPersonnelForm(isOpen) {
+    if (!personnelFormCard) {
+      return;
+    }
+
+    personnelFormCard.hidden = !isOpen;
+  }
+
+  function clearPersonnelForm() {
+    if (!personnelForm) {
+      return;
+    }
+
+    personnelForm.reset();
+    personnelId.value = '';
+    personnelDisplayOrder.value = '0';
+    personnelStatus.value = 'active';
+  }
+
+  function openCreatePersonnelForm() {
+    clearPersonnelForm();
+    if (personnelFormTitle) {
+      personnelFormTitle.textContent = 'เพิ่มบุคลากร';
+    }
+    showPersonnelForm(true);
+  }
+
+  async function requestPersonnelApi(url, options = {}) {
+    const response = await fetch(url, {
+      credentials: 'same-origin',
+      ...options,
+    });
+
+    if (response.status === 401) {
+      window.location.href = 'login.html';
+      return null;
+    }
+
+    let data = null;
+
+    try {
+      data = await response.json();
+    } catch (error) {
+      throw new Error('Invalid server response');
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+    }
+
+    return data;
+  }
+
+  function renderPersonnelTable(list) {
+    if (!personnelTableBody) {
+      return;
+    }
+
+    if (!Array.isArray(list) || list.length === 0) {
+      personnelTableBody.innerHTML = '<tr><td colspan="7">ยังไม่มีรายการบุคลากร</td></tr>';
+      return;
+    }
+
+    personnelTableBody.innerHTML = list.map((item) => `
+      <tr>
+        <td>${escapeHtml(item.name)}</td>
+        <td>${escapeHtml(item.position)}</td>
+        <td>${escapeHtml(item.department)}</td>
+        <td>${escapeHtml(item.group_name)}</td>
+        <td>${escapeHtml(item.display_order)}</td>
+        <td>${escapeHtml(item.status || '-')}</td>
+        <td>
+          <div class="row-actions">
+            <button type="button" class="table-btn edit-personnel-btn" data-id="${item.id}">แก้ไข</button>
+            <button type="button" class="table-btn delete-news-btn delete-personnel-btn" data-id="${item.id}">ปิดใช้งาน</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function fetchPersonnelList() {
+    if (!personnelTableBody) {
+      return;
+    }
+
+    personnelTableBody.innerHTML = '<tr><td colspan="7">กำลังโหลดข้อมูล...</td></tr>';
+
+    try {
+      const result = await requestPersonnelApi(PERSONNEL_API_URL);
+      if (!result) {
+        return;
+      }
+      renderPersonnelTable(result.data || []);
+    } catch (error) {
+      personnelTableBody.innerHTML = '<tr><td colspan="7">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+      setPersonnelMessage(error.message, true);
+    }
+  }
+
+  async function loadPersonnelDetail(id) {
+    const result = await requestPersonnelApi(`${PERSONNEL_API_URL}?id=${id}`);
+    return result ? result.data : null;
+  }
+
+  function fillPersonnelForm(personnel) {
+    personnelId.value = personnel.id || '';
+    personnelName.value = personnel.name || '';
+    personnelPosition.value = personnel.position || '';
+    personnelDepartment.value = personnel.department || '';
+    personnelGroupName.value = personnel.group_name || '';
+    personnelImage.value = personnel.image || '';
+    personnelDisplayOrder.value = String(Number(personnel.display_order ?? 0));
+    personnelStatus.value = personnel.status || 'active';
+  }
+
+  function readPersonnelFormPayload() {
+    const parsedDisplayOrder = Number(personnelDisplayOrder.value);
+    return {
+      id: personnelId.value ? Number(personnelId.value) : undefined,
+      name: personnelName.value.trim(),
+      position: personnelPosition.value.trim(),
+      department: personnelDepartment.value.trim(),
+      group_name: personnelGroupName.value.trim(),
+      image: personnelImage.value.trim(),
+      display_order: Number.isFinite(parsedDisplayOrder) ? parsedDisplayOrder : NaN,
+      status: personnelStatus.value.trim(),
+    };
+  }
+
+  async function handleEditPersonnel(id) {
+    setPersonnelMessage('กำลังโหลดข้อมูลบุคลากร...');
+    try {
+      const personnel = await loadPersonnelDetail(id);
+      if (!personnel) {
+        return;
+      }
+
+      fillPersonnelForm(personnel);
+      if (personnelFormTitle) {
+        personnelFormTitle.textContent = 'แก้ไขบุคลากร';
+      }
+      showPersonnelForm(true);
+      setPersonnelMessage('');
+    } catch (error) {
+      setPersonnelMessage(error.message, true);
+    }
+  }
+
+  async function handleDeletePersonnel(id) {
+    const confirmed = window.confirm('ยืนยันการปิดใช้งานบุคลากรนี้ใช่หรือไม่?');
+    if (!confirmed) {
+      return;
+    }
+
+    setPersonnelMessage('กำลังอัปเดตสถานะ...');
+
+    try {
+      await requestPersonnelApi(PERSONNEL_API_URL, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      setPersonnelMessage('ปิดใช้งานบุคลากรเรียบร้อยแล้ว');
+      await fetchPersonnelList();
+    } catch (error) {
+      setPersonnelMessage(error.message, true);
+    }
+  }
+
+  async function handlePersonnelFormSubmit(event) {
+    event.preventDefault();
+
+    const payload = readPersonnelFormPayload();
+    const isEditMode = Boolean(payload.id);
+
+    if (!Number.isInteger(payload.display_order) || payload.display_order < 0) {
+      setPersonnelMessage('กรุณากรอก display_order เป็นเลขจำนวนเต็มตั้งแต่ 0 ขึ้นไป', true);
+      return;
+    }
+
+    setPersonnelMessage('กำลังบันทึกข้อมูล...');
+
+    try {
+      await requestPersonnelApi(PERSONNEL_API_URL, {
+        method: isEditMode ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+      });
+
+      setPersonnelMessage(isEditMode ? 'แก้ไขบุคลากรเรียบร้อยแล้ว' : 'เพิ่มบุคลากรเรียบร้อยแล้ว');
+      showPersonnelForm(false);
+      clearPersonnelForm();
+      await fetchPersonnelList();
+    } catch (error) {
+      setPersonnelMessage(error.message, true);
+    }
+  }
+
+  async function initPersonnelPage() {
+    const admin = await fetchMe();
+
+    if (!admin) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    if (adminName) {
+      adminName.textContent = `${admin.full_name} (${admin.role})`;
+    }
+
+    await fetchPersonnelList();
+
+    if (addPersonnelBtn) {
+      addPersonnelBtn.addEventListener('click', () => {
+        openCreatePersonnelForm();
+        setPersonnelMessage('');
+      });
+    }
+
+    if (cancelPersonnelBtn) {
+      cancelPersonnelBtn.addEventListener('click', () => {
+        showPersonnelForm(false);
+        clearPersonnelForm();
+        setPersonnelMessage('');
+      });
+    }
+
+    if (personnelForm) {
+      personnelForm.addEventListener('submit', handlePersonnelFormSubmit);
+    }
+
+    personnelTableBody.addEventListener('click', async (event) => {
+      const editBtn = event.target.closest('.edit-personnel-btn');
+      if (editBtn) {
+        const id = Number(editBtn.dataset.id);
+        if (id > 0) {
+          await handleEditPersonnel(id);
+        }
+        return;
+      }
+
+      const deleteBtn = event.target.closest('.delete-personnel-btn');
+      if (deleteBtn) {
+        const id = Number(deleteBtn.dataset.id);
+        if (id > 0) {
+          await handleDeletePersonnel(id);
+        }
+      }
+    });
+  }
+
   function renderDashboardStats(stats) {
     if (!newsCount || !personnelCount || !downloadsCount || !adminCount) {
       return;
@@ -424,6 +706,10 @@
 
   if (newsTableBody) {
     initNewsPage();
+  }
+
+  if (personnelTableBody) {
+    initPersonnelPage();
   }
 
   if (logoutBtn) {
