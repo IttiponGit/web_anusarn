@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จัดการเอกสารดาวน์โหลด | Admin</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-downloads-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div>
+        <div class="auth-badge light">Admin Panel</div>
+        <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="dashboard.html">แดชบอร์ด</a>
+        <a href="news.html">ข่าวประชาสัมพันธ์</a>
+        <a href="personnel.html">บุคลากร</a>
+        <a href="downloads.html" aria-current="page">เอกสารดาวน์โหลด</a>
+        <button type="button" id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel news-hero">
+        <p class="eyebrow">Downloads Management</p>
+        <h2>ระบบจัดการเอกสารดาวน์โหลด</h2>
+        <p>เพิ่ม แก้ไข และปิดใช้งานเอกสารดาวน์โหลดได้จากหน้านี้</p>
+      </section>
+
+      <p id="downloadsMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="news-list-card">
+        <div class="news-list-header">
+          <h3>รายการเอกสารทั้งหมด</h3>
+          <button type="button" id="addDownloadBtn" class="primary-btn">เพิ่มเอกสาร</button>
+        </div>
+
+        <div class="table-wrap admin-table-wrapper">
+          <table class="news-table admin-table admin-table-downloads" aria-label="ตารางรายการเอกสารดาวน์โหลด">
+            <thead>
+              <tr>
+                <th>หัวข้อ</th>
+                <th>หมวดหมู่</th>
+                <th>ไฟล์</th>
+                <th>ปุ่ม</th>
+                <th>ลำดับ</th>
+                <th>สถานะ</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="downloadsTableBody">
+              <tr>
+                <td colspan="7">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="downloadsFormCard" class="news-form-card" hidden>
+        <h3 id="downloadsFormTitle">เพิ่มเอกสาร</h3>
+        <form id="downloadsForm" class="news-form" autocomplete="off">
+          <input type="hidden" id="downloadId" />
+
+          <label>
+            <span>หัวข้อเอกสาร</span>
+            <input type="text" id="downloadTitle" required />
+          </label>
+
+          <label>
+            <span>คำอธิบาย</span>
+            <textarea id="downloadDescription" rows="4"></textarea>
+          </label>
+
+          <div class="news-form-grid">
+            <label>
+              <span>หมวดหมู่</span>
+              <input type="text" id="downloadCategory" required />
+            </label>
+
+            <label>
+              <span>ลำดับแสดงผล (display_order)</span>
+              <input type="number" id="downloadDisplayOrder" min="0" step="1" required />
+            </label>
+          </div>
+
+          <label>
+            <span>ไฟล์ (file_url)</span>
+            <input type="text" id="downloadFileUrl" placeholder="files/example.pdf" />
+          </label>
+
+          <label>
+            <span>ข้อความปุ่ม (button_text)</span>
+            <input type="text" id="downloadButtonText" placeholder="ดาวน์โหลดเอกสาร" />
+          </label>
+
+          <label>
+            <span>สถานะ</span>
+            <select id="downloadStatus" required>
+              <option value="active">active</option>
+              <option value="inactive">inactive</option>
+            </select>
+          </label>
+
+          <div class="news-form-actions">
+            <button type="submit" class="primary-btn" id="saveDownloadBtn">บันทึก</button>
+            <button type="button" class="secondary-btn" id="cancelDownloadBtn">ยกเลิก</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
