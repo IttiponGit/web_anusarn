@@ -75,6 +75,7 @@
         <h3 id="newsFormTitle">เพิ่มข่าว</h3>
         <form id="newsForm" class="news-form" autocomplete="off">
           <input type="hidden" id="newsId" />
+          <input type="hidden" id="newsUploadId" />
 
           <label>
             <span>หัวข้อข่าว</span>
@@ -107,6 +108,17 @@
             <span>รูปภาพ (path)</span>
             <input type="text" id="newsImage" placeholder="images/news/technology.svg" required />
           </label>
+
+          <div class="upload-field-group">
+            <label>
+              <span>อัปโหลดรูปข่าว</span>
+              <input type="file" id="newsImageFile" accept=".jpg,.jpeg,.png,.webp,.gif,image/*" />
+            </label>
+            <button type="button" class="secondary-btn" id="uploadNewsImageBtn">อัปโหลดรูปภาพ</button>
+            <div class="image-preview-wrap" id="newsImagePreviewWrap" hidden>
+              <img id="newsImagePreview" class="image-preview" alt="ตัวอย่างรูปข่าว" />
+            </div>
+          </div>
 
           <label>
             <span>สถานะ</span>

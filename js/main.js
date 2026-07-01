@@ -79,16 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const NEWS_API_URL = 'api/news.php';
-const NEWS_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/news.php';
 const NEWS_FALLBACK_URL = 'data/news.json';
 
 function getNewsApiUrl() {
-  const hostname = window.location.hostname;
-
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return NEWS_API_LOCALHOST_URL;
-  }
-
   return NEWS_API_URL;
 }
 
@@ -408,16 +401,9 @@ async function loadPersonnelData({ executiveList, subjectHeadList, personnelPrev
 }
 
 const PERSONNEL_API_URL = 'api/personnel.php';
-const PERSONNEL_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/personnel.php';
 const PERSONNEL_FALLBACK_URL = 'data/personnel.json';
 
 function getPersonnelApiUrl() {
-  const hostname = window.location.hostname;
-
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return PERSONNEL_API_LOCALHOST_URL;
-  }
-
   return PERSONNEL_API_URL;
 }
 
@@ -496,16 +482,9 @@ async function loadPersonnelSourceData() {
 }
 
 const DOWNLOADS_API_URL = 'api/downloads.php';
-const DOWNLOADS_API_LOCALHOST_URL = 'http://anusarn-deaf.ac.th/api/downloads.php';
 const DOWNLOADS_FALLBACK_URL = 'data/downloads.json';
 
 function getDownloadsApiUrl() {
-  const hostname = window.location.hostname;
-
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return DOWNLOADS_API_LOCALHOST_URL;
-  }
-
   return DOWNLOADS_API_URL;
 }
 

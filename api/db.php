@@ -10,7 +10,7 @@ if (file_exists($configFile)) {
     // ค่า default สำหรับ local development
     $host = '127.0.0.1';
     $port = 3306;
-    $dbname = 'anusarn_db';
+    $dbname = 'anu_sarn_db';
     $username = 'root';
     $password = '';
 }

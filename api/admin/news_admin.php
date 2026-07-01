@@ -36,6 +36,8 @@ function parse_json_body(): array
 
 function normalize_news_payload(array $input): array
 {
+    $uploadId = filter_var($input['upload_id'] ?? null, FILTER_VALIDATE_INT);
+
     return [
         'title' => trim((string)($input['title'] ?? '')),
         'summary' => trim((string)($input['summary'] ?? '')),
@@ -44,7 +46,97 @@ function normalize_news_payload(array $input): array
         'category' => trim((string)($input['category'] ?? '')),
         'image' => trim((string)($input['image'] ?? '')),
         'status' => trim((string)($input['status'] ?? 'published')),
+        'upload_id' => ($uploadId !== false && $uploadId !== null && $uploadId > 0) ? (int) $uploadId : null,
     ];
+}
+
+function link_upload_to_news(PDO $pdo, int $newsId, ?int $uploadId, string $imagePath): void
+{
+    $imagePath = trim($imagePath);
+    if ($imagePath === '') {
+        return;
+    }
+
+    if ($uploadId !== null) {
+        $stmt = $pdo->prepare(
+            'UPDATE uploads
+             SET related_type = :related_type,
+                 related_id = :related_id
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            ':related_type' => 'news',
+            ':related_id' => $newsId,
+            ':id' => $uploadId,
+        ]);
+        return;
+    }
+
+    if (strpos($imagePath, 'uploads/') !== 0) {
+        return;
+    }
+
+    $stmt = $pdo->prepare(
+        'UPDATE uploads
+         SET related_type = :related_type,
+             related_id = :related_id
+         WHERE file_path = :file_path
+         ORDER BY id DESC
+         LIMIT 1'
+    );
+
+    $stmt->execute([
+        ':related_type' => 'news',
+        ':related_id' => $newsId,
+        ':file_path' => $imagePath,
+    ]);
+}
+
+function cleanup_replaced_news_image(PDO $pdo, int $newsId, string $oldPath, string $newPath): void
+{
+    $oldPath = trim($oldPath);
+    $newPath = trim($newPath);
+
+    if ($oldPath === '' || $oldPath === $newPath) {
+        return;
+    }
+
+    if (strpos($oldPath, 'uploads/') !== 0) {
+        return;
+    }
+
+    $newsRefStmt = $pdo->prepare('SELECT COUNT(*) FROM news WHERE image = :image AND id <> :id');
+    $newsRefStmt->execute([
+        ':image' => $oldPath,
+        ':id' => $newsId,
+    ]);
+    $newsRefCount = (int) $newsRefStmt->fetchColumn();
+
+    if ($newsRefCount > 0) {
+        return;
+    }
+
+    $downloadRefStmt = $pdo->prepare('SELECT COUNT(*) FROM downloads WHERE file_url = :file_url');
+    $downloadRefStmt->execute([
+        ':file_url' => $oldPath,
+    ]);
+    $downloadRefCount = (int) $downloadRefStmt->fetchColumn();
+
+    if ($downloadRefCount > 0) {
+        return;
+    }
+
+    $projectRoot = dirname(__DIR__, 2);
+    $absolutePath = $projectRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $oldPath);
+
+    if (is_file($absolutePath)) {
+        @unlink($absolutePath);
+    }
+
+    $deleteUploadStmt = $pdo->prepare('DELETE FROM uploads WHERE file_path = :file_path');
+    $deleteUploadStmt->execute([
+        ':file_path' => $oldPath,
+    ]);
 }
 
 function validate_news_payload(array $payload): ?string
@@ -174,6 +266,8 @@ try {
             ]);
         }
 
+        link_upload_to_news($pdo, $nextId, $payload['upload_id'], $payload['image']);
+
         json_response(201, [
             'success' => true,
             'data' => [
@@ -202,6 +296,19 @@ try {
                 'error' => $validationError
             ]);
         }
+
+        $oldImageStmt = $pdo->prepare('SELECT image FROM news WHERE id = :id LIMIT 1');
+        $oldImageStmt->execute([':id' => (int) $id]);
+        $existingNews = $oldImageStmt->fetch();
+
+        if (!$existingNews) {
+            json_response(404, [
+                'success' => false,
+                'error' => 'News not found'
+            ]);
+        }
+
+        $oldImagePath = (string) ($existingNews['image'] ?? '');
 
         if ($hasStatusColumn) {
             $updateStmt = $pdo->prepare(
@@ -246,6 +353,9 @@ try {
                 ':image' => $payload['image'],
             ]);
         }
+
+        link_upload_to_news($pdo, (int) $id, $payload['upload_id'], $payload['image']);
+        cleanup_replaced_news_image($pdo, (int) $id, $oldImagePath, $payload['image']);
 
         if ($updateStmt->rowCount() === 0) {
             $existsStmt = $pdo->prepare('SELECT id FROM news WHERE id = :id LIMIT 1');

@@ -1,6 +1,8 @@
 (function () {
   const NEWS_API_URL = '../api/admin/news_admin.php';
   const PERSONNEL_API_URL = '../api/admin/personnel_admin.php';
+  const DOWNLOADS_API_URL = '../api/admin/downloads_admin.php';
+  const UPLOAD_API_URL = '../api/admin/upload.php';
 
   const loginForm = document.getElementById('loginForm');
   const loginMessage = document.getElementById('loginMessage');
@@ -24,8 +26,31 @@
   const newsDate = document.getElementById('newsDate');
   const newsCategory = document.getElementById('newsCategory');
   const newsImage = document.getElementById('newsImage');
+  const newsUploadId = document.getElementById('newsUploadId');
+  const newsImageFile = document.getElementById('newsImageFile');
+  const uploadNewsImageBtn = document.getElementById('uploadNewsImageBtn');
+  const newsImagePreviewWrap = document.getElementById('newsImagePreviewWrap');
+  const newsImagePreview = document.getElementById('newsImagePreview');
   const newsStatus = document.getElementById('newsStatus');
   const cancelNewsBtn = document.getElementById('cancelNewsBtn');
+  const downloadsTableBody = document.getElementById('downloadsTableBody');
+  const downloadsMessage = document.getElementById('downloadsMessage');
+  const addDownloadBtn = document.getElementById('addDownloadBtn');
+  const downloadsFormCard = document.getElementById('downloadsFormCard');
+  const downloadsForm = document.getElementById('downloadsForm');
+  const downloadsFormTitle = document.getElementById('downloadsFormTitle');
+  const downloadId = document.getElementById('downloadId');
+  const downloadUploadId = document.getElementById('downloadUploadId');
+  const downloadTitle = document.getElementById('downloadTitle');
+  const downloadDescription = document.getElementById('downloadDescription');
+  const downloadCategory = document.getElementById('downloadCategory');
+  const downloadDisplayOrder = document.getElementById('downloadDisplayOrder');
+  const downloadFileUrl = document.getElementById('downloadFileUrl');
+  const downloadFile = document.getElementById('downloadFile');
+  const uploadDownloadFileBtn = document.getElementById('uploadDownloadFileBtn');
+  const downloadButtonText = document.getElementById('downloadButtonText');
+  const downloadStatus = document.getElementById('downloadStatus');
+  const cancelDownloadBtn = document.getElementById('cancelDownloadBtn');
   const personnelTableBody = document.getElementById('personnelTableBody');
   const personnelMessage = document.getElementById('personnelMessage');
   const addPersonnelBtn = document.getElementById('addPersonnelBtn');
@@ -100,6 +125,61 @@
       .replace(/'/g, '&#039;');
   }
 
+  function showImagePreview(pathOrUrl) {
+    if (!newsImagePreview || !newsImagePreviewWrap) {
+      return;
+    }
+
+    const value = String(pathOrUrl || '').trim();
+    if (!value) {
+      newsImagePreview.removeAttribute('src');
+      newsImagePreviewWrap.hidden = true;
+      return;
+    }
+
+    const previewSrc = value.startsWith('uploads/') ? `../${value}` : value;
+    newsImagePreview.src = previewSrc;
+    newsImagePreviewWrap.hidden = false;
+  }
+
+  async function uploadFileViaApi(file, { category, relatedType, relatedId }) {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (category) {
+      formData.append('category', category);
+    }
+    if (relatedType) {
+      formData.append('related_type', relatedType);
+    }
+    if (Number.isInteger(relatedId) && relatedId > 0) {
+      formData.append('related_id', String(relatedId));
+    }
+
+    const response = await fetch(UPLOAD_API_URL, {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin',
+    });
+
+    if (response.status === 401) {
+      window.location.href = 'login.html';
+      return null;
+    }
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (error) {
+      throw new Error('Invalid upload response');
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || data.error || 'อัปโหลดไฟล์ไม่สำเร็จ');
+    }
+
+    return data;
+  }
+
   function setNewsMessage(message, isError = false) {
     if (!newsMessage) {
       return;
@@ -124,7 +204,11 @@
 
     newsForm.reset();
     newsId.value = '';
+    if (newsUploadId) {
+      newsUploadId.value = '';
+    }
     newsStatus.value = 'published';
+    showImagePreview('');
   }
 
   function openCreateNewsForm() {
@@ -219,10 +303,16 @@
     newsDate.value = news.date || '';
     newsCategory.value = news.category || '';
     newsImage.value = news.image || '';
+    if (newsUploadId) {
+      newsUploadId.value = '';
+    }
     newsStatus.value = news.status || 'published';
+    showImagePreview(news.image || '');
   }
 
   function readNewsFormPayload() {
+    const parsedUploadId = Number(newsUploadId ? newsUploadId.value : '');
+
     return {
       id: newsId.value ? Number(newsId.value) : undefined,
       title: newsTitle.value.trim(),
@@ -232,7 +322,51 @@
       category: newsCategory.value.trim(),
       image: newsImage.value.trim(),
       status: newsStatus.value.trim(),
+      upload_id: Number.isInteger(parsedUploadId) && parsedUploadId > 0 ? parsedUploadId : undefined,
     };
+  }
+
+  function handleNewsImageFileSelect() {
+    if (!newsImageFile || !newsImageFile.files || newsImageFile.files.length === 0) {
+      return;
+    }
+
+    const selectedFile = newsImageFile.files[0];
+    const objectUrl = URL.createObjectURL(selectedFile);
+    showImagePreview(objectUrl);
+  }
+
+  async function handleUploadNewsImage() {
+    if (!newsImageFile || !newsImageFile.files || newsImageFile.files.length === 0) {
+      setNewsMessage('กรุณาเลือกรูปภาพก่อนอัปโหลด', true);
+      return;
+    }
+
+    const selectedFile = newsImageFile.files[0];
+    const relatedId = Number(newsId.value);
+
+    setNewsMessage('กำลังอัปโหลดรูปภาพ...');
+
+    try {
+      const result = await uploadFileViaApi(selectedFile, {
+        category: 'news_image',
+        relatedType: 'news',
+        relatedId: Number.isInteger(relatedId) && relatedId > 0 ? relatedId : undefined,
+      });
+
+      if (!result) {
+        return;
+      }
+
+      newsImage.value = result.file_path || '';
+      if (newsUploadId) {
+        newsUploadId.value = String(result.upload_id || '');
+      }
+      showImagePreview(result.file_path || '');
+      setNewsMessage('อัปโหลดรูปภาพสำเร็จ');
+    } catch (error) {
+      setNewsMessage(error.message, true);
+    }
   }
 
   async function handleEditNews(id) {
@@ -335,6 +469,20 @@
 
     if (newsForm) {
       newsForm.addEventListener('submit', handleNewsFormSubmit);
+    }
+
+    if (newsImageFile) {
+      newsImageFile.addEventListener('change', handleNewsImageFileSelect);
+    }
+
+    if (uploadNewsImageBtn) {
+      uploadNewsImageBtn.addEventListener('click', handleUploadNewsImage);
+    }
+
+    if (newsImage) {
+      newsImage.addEventListener('input', () => {
+        showImagePreview(newsImage.value);
+      });
     }
 
     newsTableBody.addEventListener('click', async (event) => {
@@ -623,6 +771,363 @@
     });
   }
 
+  function setDownloadsMessage(message, isError = false) {
+    if (!downloadsMessage) {
+      return;
+    }
+
+    downloadsMessage.textContent = message;
+    downloadsMessage.classList.toggle('error-message', isError);
+  }
+
+  function showDownloadsForm(isOpen) {
+    if (!downloadsFormCard) {
+      return;
+    }
+
+    downloadsFormCard.hidden = !isOpen;
+  }
+
+  function clearDownloadsForm() {
+    if (!downloadsForm) {
+      return;
+    }
+
+    downloadsForm.reset();
+    downloadId.value = '';
+    if (downloadUploadId) {
+      downloadUploadId.value = '';
+    }
+    downloadDisplayOrder.value = '0';
+    downloadStatus.value = 'active';
+  }
+
+  function openCreateDownloadForm() {
+    clearDownloadsForm();
+    if (downloadsFormTitle) {
+      downloadsFormTitle.textContent = 'เพิ่มเอกสาร';
+    }
+    showDownloadsForm(true);
+  }
+
+  async function requestDownloadsApi(url, options = {}) {
+    const response = await fetch(url, {
+      credentials: 'same-origin',
+      ...options,
+    });
+
+    if (response.status === 401) {
+      window.location.href = 'login.html';
+      return null;
+    }
+
+    let data = null;
+
+    try {
+      data = await response.json();
+    } catch (error) {
+      throw new Error('Invalid server response');
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+    }
+
+    return data;
+  }
+
+  function renderDownloadsTable(list) {
+    if (!downloadsTableBody) {
+      return;
+    }
+
+    if (!Array.isArray(list) || list.length === 0) {
+      downloadsTableBody.innerHTML = '<tr><td colspan="7">ยังไม่มีรายการเอกสาร</td></tr>';
+      return;
+    }
+
+    downloadsTableBody.innerHTML = list.map((item) => {
+      const filePath = item.file_url || '-';
+      const mimeType = typeof item.upload_mime_type === 'string' ? item.upload_mime_type : '';
+      const fileTypeRaw = typeof item.upload_file_type === 'string' ? item.upload_file_type : '';
+      const fileType = fileTypeRaw ? fileTypeRaw.toUpperCase() : 'N/A';
+      const fileSize = Number(item.upload_file_size);
+      const formattedFileSize = Number.isFinite(fileSize) && fileSize > 0 ? formatFileSize(fileSize) : 'N/A';
+
+      return `
+      <tr>
+        <td>${escapeHtml(item.title)}</td>
+        <td>${escapeHtml(item.category)}</td>
+        <td>
+          <div>${escapeHtml(filePath)}</div>
+          <div class="download-meta-badges">
+            <span class="meta-badge">ชนิด: ${escapeHtml(fileType)}</span>
+            <span class="meta-badge">ขนาด: ${escapeHtml(formattedFileSize)}</span>
+            <span class="meta-badge">MIME: ${escapeHtml(mimeType || 'N/A')}</span>
+          </div>
+        </td>
+        <td>${escapeHtml(item.button_text || '-')}</td>
+        <td>${escapeHtml(item.display_order ?? '-')}</td>
+        <td>${escapeHtml(item.status || '-')}</td>
+        <td>
+          <div class="row-actions">
+            <button type="button" class="table-btn edit-download-btn" data-id="${item.id}">แก้ไข</button>
+            <button type="button" class="table-btn delete-news-btn delete-download-btn" data-id="${item.id}">ปิดใช้งาน</button>
+          </div>
+        </td>
+      </tr>
+    `;
+    }).join('');
+  }
+
+  function formatFileSize(bytes) {
+    if (!Number.isFinite(bytes) || bytes <= 0) {
+      return '0 B';
+    }
+
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let value = bytes;
+    let index = 0;
+
+    while (value >= 1024 && index < units.length - 1) {
+      value /= 1024;
+      index += 1;
+    }
+
+    const rounded = index === 0 ? String(Math.round(value)) : value.toFixed(2);
+    return `${rounded} ${units[index]}`;
+  }
+
+  async function fetchDownloadsList() {
+    if (!downloadsTableBody) {
+      return;
+    }
+
+    downloadsTableBody.innerHTML = '<tr><td colspan="7">กำลังโหลดข้อมูล...</td></tr>';
+
+    try {
+      const result = await requestDownloadsApi(DOWNLOADS_API_URL);
+      if (!result) {
+        return;
+      }
+      renderDownloadsTable(result.data || []);
+    } catch (error) {
+      downloadsTableBody.innerHTML = '<tr><td colspan="7">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+      setDownloadsMessage(error.message, true);
+    }
+  }
+
+  async function loadDownloadDetail(id) {
+    const result = await requestDownloadsApi(`${DOWNLOADS_API_URL}?id=${id}`);
+    return result ? result.data : null;
+  }
+
+  function fillDownloadsForm(item) {
+    downloadId.value = item.id || '';
+    if (downloadUploadId) {
+      downloadUploadId.value = '';
+    }
+    downloadTitle.value = item.title || '';
+    downloadDescription.value = item.description || '';
+    downloadCategory.value = item.category || '';
+    downloadDisplayOrder.value = String(Number(item.display_order ?? 0));
+    downloadFileUrl.value = item.file_url || '';
+    downloadButtonText.value = item.button_text || 'ดาวน์โหลดเอกสาร';
+    downloadStatus.value = item.status || 'active';
+  }
+
+  function readDownloadsFormPayload() {
+    const parsedDisplayOrder = Number(downloadDisplayOrder.value);
+    const parsedUploadId = Number(downloadUploadId ? downloadUploadId.value : '');
+    const fileUrl = downloadFileUrl.value.trim();
+    let buttonText = downloadButtonText.value.trim();
+
+    if (fileUrl !== '' && (buttonText === '' || buttonText === 'รอเพิ่มไฟล์')) {
+      buttonText = 'ดาวน์โหลด';
+    }
+
+    return {
+      id: downloadId.value ? Number(downloadId.value) : undefined,
+      title: downloadTitle.value.trim(),
+      description: downloadDescription.value.trim(),
+      category: downloadCategory.value.trim(),
+      file_url: fileUrl,
+      button_text: buttonText,
+      display_order: Number.isFinite(parsedDisplayOrder) ? parsedDisplayOrder : NaN,
+      status: downloadStatus.value.trim(),
+      upload_id: Number.isInteger(parsedUploadId) && parsedUploadId > 0 ? parsedUploadId : undefined,
+    };
+  }
+
+  async function handleUploadDownloadFile() {
+    if (!downloadFile || !downloadFile.files || downloadFile.files.length === 0) {
+      setDownloadsMessage('กรุณาเลือกไฟล์เอกสารก่อนอัปโหลด', true);
+      return;
+    }
+
+    const selectedFile = downloadFile.files[0];
+    const relatedId = Number(downloadId.value);
+
+    setDownloadsMessage('กำลังอัปโหลดไฟล์...');
+
+    try {
+      const result = await uploadFileViaApi(selectedFile, {
+        category: 'download_file',
+        relatedType: 'downloads',
+        relatedId: Number.isInteger(relatedId) && relatedId > 0 ? relatedId : undefined,
+      });
+
+      if (!result) {
+        return;
+      }
+
+      downloadFileUrl.value = result.file_path || '';
+      if (downloadUploadId) {
+        downloadUploadId.value = String(result.upload_id || '');
+      }
+      if (downloadButtonText) {
+        const currentButtonText = downloadButtonText.value.trim();
+        if (currentButtonText === '' || currentButtonText === 'รอเพิ่มไฟล์') {
+          downloadButtonText.value = 'ดาวน์โหลด';
+        }
+      }
+      setDownloadsMessage('อัปโหลดไฟล์สำเร็จ');
+    } catch (error) {
+      setDownloadsMessage(error.message, true);
+    }
+  }
+
+  async function handleEditDownload(id) {
+    setDownloadsMessage('กำลังโหลดข้อมูลเอกสาร...');
+    try {
+      const item = await loadDownloadDetail(id);
+      if (!item) {
+        return;
+      }
+
+      fillDownloadsForm(item);
+      if (downloadsFormTitle) {
+        downloadsFormTitle.textContent = 'แก้ไขเอกสาร';
+      }
+      showDownloadsForm(true);
+      setDownloadsMessage('');
+    } catch (error) {
+      setDownloadsMessage(error.message, true);
+    }
+  }
+
+  async function handleDeleteDownload(id) {
+    const confirmed = window.confirm('ยืนยันการปิดใช้งานเอกสารนี้ใช่หรือไม่?');
+    if (!confirmed) {
+      return;
+    }
+
+    setDownloadsMessage('กำลังอัปเดตสถานะ...');
+
+    try {
+      await requestDownloadsApi(DOWNLOADS_API_URL, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      setDownloadsMessage('ปิดใช้งานเอกสารเรียบร้อยแล้ว');
+      await fetchDownloadsList();
+    } catch (error) {
+      setDownloadsMessage(error.message, true);
+    }
+  }
+
+  async function handleDownloadsFormSubmit(event) {
+    event.preventDefault();
+
+    const payload = readDownloadsFormPayload();
+    const isEditMode = Boolean(payload.id);
+
+    if (!Number.isInteger(payload.display_order) || payload.display_order < 0) {
+      setDownloadsMessage('กรุณากรอก display_order เป็นเลขจำนวนเต็มตั้งแต่ 0 ขึ้นไป', true);
+      return;
+    }
+
+    setDownloadsMessage('กำลังบันทึกข้อมูล...');
+
+    try {
+      await requestDownloadsApi(DOWNLOADS_API_URL, {
+        method: isEditMode ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+      });
+
+      setDownloadsMessage(isEditMode ? 'แก้ไขเอกสารเรียบร้อยแล้ว' : 'เพิ่มเอกสารเรียบร้อยแล้ว');
+      showDownloadsForm(false);
+      clearDownloadsForm();
+      await fetchDownloadsList();
+    } catch (error) {
+      setDownloadsMessage(error.message, true);
+    }
+  }
+
+  async function initDownloadsPage() {
+    const admin = await fetchMe();
+
+    if (!admin) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    if (adminName) {
+      adminName.textContent = `${admin.full_name} (${admin.role})`;
+    }
+
+    await fetchDownloadsList();
+
+    if (addDownloadBtn) {
+      addDownloadBtn.addEventListener('click', () => {
+        openCreateDownloadForm();
+        setDownloadsMessage('');
+      });
+    }
+
+    if (cancelDownloadBtn) {
+      cancelDownloadBtn.addEventListener('click', () => {
+        showDownloadsForm(false);
+        clearDownloadsForm();
+        setDownloadsMessage('');
+      });
+    }
+
+    if (downloadsForm) {
+      downloadsForm.addEventListener('submit', handleDownloadsFormSubmit);
+    }
+
+    if (uploadDownloadFileBtn) {
+      uploadDownloadFileBtn.addEventListener('click', handleUploadDownloadFile);
+    }
+
+    downloadsTableBody.addEventListener('click', async (event) => {
+      const editBtn = event.target.closest('.edit-download-btn');
+      if (editBtn) {
+        const id = Number(editBtn.dataset.id);
+        if (id > 0) {
+          await handleEditDownload(id);
+        }
+        return;
+      }
+
+      const deleteBtn = event.target.closest('.delete-download-btn');
+      if (deleteBtn) {
+        const id = Number(deleteBtn.dataset.id);
+        if (id > 0) {
+          await handleDeleteDownload(id);
+        }
+      }
+    });
+  }
+
   function renderDashboardStats(stats) {
     if (!newsCount || !personnelCount || !downloadsCount || !adminCount) {
       return;
@@ -710,6 +1215,10 @@
 
   if (personnelTableBody) {
     initPersonnelPage();
+  }
+
+  if (downloadsTableBody) {
+    initDownloadsPage();
   }
 
   if (logoutBtn) {

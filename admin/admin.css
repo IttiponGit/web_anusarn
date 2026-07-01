@@ -421,6 +421,53 @@ body {
   color: var(--admin-blue-dark);
 }
 
+.upload-field-group {
+  display: grid;
+  gap: 8px;
+  border: 1px dashed var(--admin-border);
+  border-radius: 12px;
+  padding: 10px;
+  background: #f8fbff;
+}
+
+.upload-field-group .secondary-btn {
+  justify-self: start;
+}
+
+.image-preview-wrap {
+  margin-top: 4px;
+}
+
+.image-preview {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--admin-border);
+  background: #ffffff;
+}
+
+.download-meta-badges {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #bdd7f0;
+  background: #edf6ff;
+  color: #1f4972;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .error-message {
   color: #b42318;
 }
