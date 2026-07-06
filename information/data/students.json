@@ -1,0 +1,29 @@
+{
+  "totalStudents": 195,
+  "byGender": {
+    "male": 102,
+    "female": 93
+  },
+  "byLevel": [
+    {
+      "level": "อนุบาล",
+      "count": 32,
+      "classrooms": 5
+    },
+    {
+      "level": "ประถมศึกษา",
+      "count": 88,
+      "classrooms": 12
+    },
+    {
+      "level": "มัธยมศึกษาตอนต้น",
+      "count": 46,
+      "classrooms": 7
+    },
+    {
+      "level": "มัธยมศึกษาตอนปลาย",
+      "count": 29,
+      "classrooms": 5
+    }
+  ]
+}

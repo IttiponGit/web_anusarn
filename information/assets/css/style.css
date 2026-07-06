@@ -1,0 +1,240 @@
+﻿:root {
+  --school-blue-900: #244f9e;
+  --school-blue-800: #2f6fdb;
+  --school-blue-700: #3a82f6;
+  --school-gray-100: #f8f9fc;
+  --school-gray-200: #e3e6f0;
+  --school-gray-500: #858796;
+  --school-text: #5a5c69;
+  --school-heading: #2e3a59;
+  --sidebar-width: 260px;
+  --topbar-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Sarabun", "Tahoma", sans-serif;
+  color: var(--school-text);
+  background: var(--school-gray-100);
+}
+
+.layout-shell {
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, var(--school-blue-900) 10%, var(--school-blue-800) 100%);
+  color: #fff;
+  z-index: 1030;
+  padding: 1rem 0.9rem;
+  overflow-y: auto;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.35);
+}
+
+.sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  text-align: center;
+}
+
+.sidebar-brand h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sidebar-brand p {
+  margin: 0.25rem 0 0;
+  opacity: 0.9;
+  font-size: 0.92rem;
+}
+
+.sidebar-brand::before {
+  content: "\f19f";
+  font-family: bootstrap-icons;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 0.45rem;
+  font-size: 1.2rem;
+}
+
+.app-menu .nav-link,
+.mobile-menu .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.35rem;
+  padding: 0.58rem 0.7rem;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 500;
+  transition: all 0.18s ease;
+}
+
+.app-menu .nav-link:hover,
+.app-menu .nav-link.active,
+.mobile-menu .nav-link:hover,
+.mobile-menu .nav-link.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.app-menu .nav-link.active,
+.mobile-menu .nav-link.active {
+  font-weight: 700;
+  border-left: 0.22rem solid #fff;
+}
+
+.app-menu .nav-link i,
+.mobile-menu .nav-link i {
+  width: 18px;
+  text-align: center;
+}
+
+.content-area {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+}
+
+.app-topbar {
+  height: var(--topbar-height);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-width);
+  background: #ffffff;
+  border-bottom: 1px solid #eaecf4;
+  z-index: 1025;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.08);
+}
+
+.page-content {
+  padding: calc(var(--topbar-height) + 1.25rem) 1.25rem 1.25rem;
+}
+
+.hero-panel {
+  border: 1px solid #e3e6f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5ff 100%);
+  box-shadow: 0 0.15rem 1.1rem 0 rgba(58, 59, 69, 0.07);
+}
+
+.hero-panel h1,
+.hero-panel .h3 {
+  color: var(--school-heading);
+}
+
+.section-card {
+  border: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.05rem 0 rgba(58, 59, 69, 0.1);
+  border-radius: 0.45rem;
+}
+
+.section-card .card-body h2,
+.section-card .card-body h3,
+.section-card .card-body h5,
+.section-card .card-body h6 {
+  color: var(--school-heading);
+}
+
+.kpi-card {
+  border-left: 0.25rem solid var(--school-blue-800);
+}
+
+.kpi-card.kpi-success {
+  border-left-color: #1cc88a;
+}
+
+.kpi-card.kpi-info {
+  border-left-color: #36b9cc;
+}
+
+.kpi-card.kpi-warning {
+  border-left-color: #f6c23e;
+}
+
+.summary-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf3ff;
+  color: var(--school-blue-800);
+  font-size: 1.2rem;
+}
+
+.quick-menu .list-group-item {
+  border: 1px solid #e3e6f0;
+  border-radius: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+.quick-menu .list-group-item:hover {
+  background: #f5f8ff;
+}
+
+.table thead th {
+  background: #f2f6fc;
+  color: #4e73df;
+}
+
+.chart-box {
+  min-height: 320px;
+}
+
+.chart-box canvas {
+  max-height: 300px;
+}
+
+.footer-note {
+  color: var(--school-gray-500);
+  font-size: 0.95rem;
+}
+
+.mobile-sidebar {
+  background: linear-gradient(180deg, var(--school-blue-900), var(--school-blue-800));
+  color: #fff;
+}
+
+.mobile-sidebar .offcanvas-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mobile-sidebar .btn-close {
+  filter: invert(1);
+}
+
+.app-topbar .h6 {
+  color: var(--school-heading);
+}
+
+@media (max-width: 991.98px) {
+  .content-area {
+    margin-left: 0;
+  }
+
+  .app-topbar {
+    left: 0;
+  }
+
+  .page-content {
+    padding: calc(var(--topbar-height) + 1rem) 0.95rem 1rem;
+  }
+}

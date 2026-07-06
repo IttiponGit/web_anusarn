@@ -1,0 +1,27 @@
+{
+  "totalPersonnel": 74,
+  "teacherCount": 52,
+  "supportCount": 22,
+  "byPosition": [
+    {
+      "position": "ผู้บริหาร",
+      "count": 3,
+      "percent": 4.05
+    },
+    {
+      "position": "ครูผู้สอน",
+      "count": 52,
+      "percent": 70.27
+    },
+    {
+      "position": "ครูผู้ช่วย",
+      "count": 8,
+      "percent": 10.81
+    },
+    {
+      "position": "บุคลากรสนับสนุน",
+      "count": 11,
+      "percent": 14.87
+    }
+  ]
+}
