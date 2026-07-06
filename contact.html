@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="ติดต่อโรงเรียนโสตศึกษาอนุสารสุนทร จังหวัดเชียงใหม่ พร้อมที่อยู่ โทรศัพท์ โทรสาร อีเมล เวลาทำการ และแผนที่" />
+  <link rel="canonical" href="https://anusarn-deaf.ac.th/contact.html" />
+  <meta property="og:title" content="ติดต่อโรงเรียน | โรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <meta property="og:description" content="ติดต่อโรงเรียนโสตศึกษาอนุสารสุนทร จังหวัดเชียงใหม่ พร้อมที่อยู่ โทรศัพท์ โทรสาร อีเมล เวลาทำการ และแผนที่" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://anusarn-deaf.ac.th/contact.html" />
+  <meta property="og:image" content="https://anusarn-deaf.ac.th/images/logo-school.png" />
+  <meta property="og:site_name" content="โรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <meta property="og:locale" content="th_TH" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>ติดต่อโรงเรียน | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "โรงเรียนโสตศึกษาอนุสารสุนทร",
+      "url": "https://anusarn-deaf.ac.th/",
+      "logo": "https://anusarn-deaf.ac.th/images/logo-school.png",
+      "sameAs": [
+        "https://www.facebook.com/Anusarnsunthorn"
+      ]
+    }
+  </script>
+</head>
+<body>
+  <header class="site-header topbar">
+    <div class="container nav-container">
+      <div class="brand">
+        <img src="images/logo-school.png" alt="โลโก้โรงเรียนโสตศึกษาอนุสารสุนทร" class="site-logo-img" />
+        <div>
+          <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+          <p>เรียนดี มีวินัย ใฝ่คุณธรรม</p>
+        </div>
+      </div>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนูหลัก" aria-controls="mainNav" aria-expanded="false">☰</button>
+      <nav id="mainNav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="about.html">เกี่ยวกับโรงเรียน</a>
+        <a href="news.html">ข่าวสาร</a>
+        <a href="personnel.html">บุคลากร</a>
+        <a href="downloads.html">เอกสารดาวน์โหลด</a>
+        <a href="contact.html">ติดต่อโรงเรียน</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="section container">
+      <div class="section-header">
+        <h1>ติดต่อโรงเรียน</h1>
+        <p>ข้อมูลการติดต่อและช่องทางการประสานงาน</p>
+      </div>
+      <div id="contactContent" class="contact-page-grid" aria-live="polite" aria-busy="true">
+        <div class="card">
+          <h3>ช่องทางการติดต่อ</h3>
+          <p id="contactStatus" class="form-message">กำลังโหลดข้อมูลติดต่อ...</p>
+          <div id="contactDetails" hidden>
+            <p id="schoolNameText" class="contact-school-name"></p>
+          <div class="contact-detail-list">
+            <div class="contact-item">
+              <span class="contact-label">ที่ตั้ง</span>
+              <p id="contactAddress"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">โทรศัพท์</span>
+              <p id="contactPhone"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">โทรสาร</span>
+              <p id="contactFax"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">E-mail</span>
+              <p id="contactEmail"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">Website</span>
+              <p id="contactWebsite"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">เวลาทำการ</span>
+              <p id="contactWorkingHours"></p>
+            </div>
+            <div class="contact-item">
+              <span class="contact-label">Facebook Page</span>
+              <p id="contactFacebook"></p>
+            </div>
+          </div>
+          </div>
+          <p id="contactFallbackMessage" class="form-message" hidden>ไม่สามารถโหลดข้อมูลติดต่อได้ในขณะนี้ กรุณาลองใหม่อีกครั้งในภายหลัง</p>
+        </div>
+
+        <div class="card map-card">
+          <h3>แผนที่โรงเรียน</h3>
+          <p id="mapStatus" class="form-message">กำลังโหลดข้อมูลแผนที่...</p>
+          <div id="mapEmbedWrap" hidden>
+            <iframe id="contactMapFrame" title="แผนที่โรงเรียนโสตศึกษาอนุสารสุนทร" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="map-actions">
+              <a id="contactMapLink" href="#" target="_blank" rel="noopener noreferrer">เปิด Google Maps</a>
+            </div>
+          </div>
+          <div id="mapFallback" class="map-placeholder" hidden>
+            <p>ยังไม่มีแผนที่แบบฝัง</p>
+            <p>กรุณาใช้ลิงก์ Google Maps ด้านล่างเพื่อเปิดตำแหน่งโรงเรียน</p>
+            <a id="contactMapFallbackLink" href="#" target="_blank" rel="noopener noreferrer">เปิด Google Maps</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© 2569 โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      <p>พัฒนาเว็บไซต์ด้วย HTML, CSS และ JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
+

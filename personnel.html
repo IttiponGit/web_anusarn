@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="ข้อมูลบุคลากรฝ่ายบริหารและหัวหน้ากลุ่มสาระของโรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <link rel="canonical" href="https://anusarn-deaf.ac.th/personnel.html" />
+  <meta property="og:title" content="บุคลากร | โรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <meta property="og:description" content="ข้อมูลบุคลากรฝ่ายบริหารและหัวหน้ากลุ่มสาระของโรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://anusarn-deaf.ac.th/personnel.html" />
+  <meta property="og:image" content="https://anusarn-deaf.ac.th/images/logo-school.png" />
+  <meta property="og:site_name" content="โรงเรียนโสตศึกษาอนุสารสุนทร" />
+  <meta property="og:locale" content="th_TH" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>บุคลากร | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "โรงเรียนโสตศึกษาอนุสารสุนทร",
+      "url": "https://anusarn-deaf.ac.th/",
+      "logo": "https://anusarn-deaf.ac.th/images/logo-school.png",
+      "sameAs": [
+        "https://www.facebook.com/Anusarnsunthorn"
+      ]
+    }
+  </script>
+</head>
+<body class="personnel-page">
+  <header class="site-header topbar">
+    <div class="container nav-container">
+      <div class="brand">
+        <img src="images/logo-school.png" alt="โลโก้โรงเรียนโสตศึกษาอนุสารสุนทร" class="site-logo-img" />
+        <div>
+          <h1>โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+          <p>เรียนดี มีวินัย ใฝ่คุณธรรม</p>
+        </div>
+      </div>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนูหลัก" aria-controls="mainNav" aria-expanded="false">☰</button>
+      <nav id="mainNav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="about.html">เกี่ยวกับโรงเรียน</a>
+        <a href="news.html">ข่าวสาร</a>
+        <a href="personnel.html">บุคลากร</a>
+        <a href="downloads.html">เอกสารดาวน์โหลด</a>
+        <a href="contact.html">ติดต่อโรงเรียน</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="section container">
+      <noscript>
+        <p class="news-empty">หน้านี้ต้องใช้ JavaScript เพื่อแสดงรายการบุคลากรล่าสุด</p>
+      </noscript>
+      <div class="page-header">
+        <h2>บุคลากร</h2>
+        <p>ฝ่ายบริหารและหัวหน้ากลุ่มสาระการเรียนรู้</p>
+      </div>
+
+      <div class="personnel-block">
+        <h3 class="personnel-heading">ฝ่ายบริหาร</h3>
+        <div class="cards three-col" id="executiveList" aria-live="polite" aria-busy="true">
+          <p class="news-empty loading-text">กำลังโหลดข้อมูลฝ่ายบริหาร...</p>
+        </div>
+      </div>
+
+      <div class="personnel-block">
+        <h3 class="personnel-heading">หัวหน้ากลุ่มสาระ</h3>
+        <div class="cards heads-grid" id="subjectHeadList" aria-live="polite" aria-busy="true">
+          <p class="news-empty loading-text">กำลังโหลดข้อมูลหัวหน้ากลุ่มสาระ...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© 2569 โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      <p>พัฒนาเว็บไซต์ด้วย HTML, CSS และ JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

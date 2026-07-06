@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>ข้อมูลติดต่อโรงเรียน | Admin</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-contact-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-logo-wrap">
+            <img src="../images/logo-school.png" alt="โลโก้โรงเรียน" class="brand-logo" />
+          </div>
+          <div class="auth-badge light">Admin Panel</div>
+          <h1 class="school-name">โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        </div>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="dashboard.html" class="nav-link nav-dashboard">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z" /></svg>
+          <span>แดชบอร์ด</span>
+        </a>
+        <a href="news.html" class="nav-link nav-news">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8v10l-18 8zM7 12v6M9 18c0 1.1-.9 2-2 2h-1" /></svg>
+          <span>ข่าวประชาสัมพันธ์</span>
+        </a>
+        <a href="personnel.html" class="nav-link nav-personnel">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11A4 4 0 1 0 8.5 3a4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+          <span>บุคลากร</span>
+        </a>
+        <a href="downloads.html" class="nav-link nav-downloads">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 12v6M9 15l3 3 3-3" /></svg>
+          <span>เอกสารดาวน์โหลด</span>
+        </a>
+        <a href="contact.html" class="nav-link nav-contact" aria-current="page">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /><path d="M22 7 12 13 2 7" /></svg>
+          <span>ข้อมูลติดต่อโรงเรียน</span>
+        </a>
+        <button type="button" id="logoutBtn" class="logout-btn">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+          <span>ออกจากระบบ</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel page-header contact-hero">
+        <p class="eyebrow">Contact Management</p>
+        <h2 class="page-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /><path d="M22 7 12 13 2 7" /></svg>
+          <span>ข้อมูลติดต่อโรงเรียน</span>
+        </h2>
+        <p>ปรับข้อมูลติดต่อและแผนที่สำหรับหน้า contact ของเว็บไซต์</p>
+      </section>
+
+      <p id="contactMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="news-form-card contact-form-card" aria-labelledby="contactFormTitle">
+        <h3 id="contactFormTitle">แก้ไขข้อมูลติดต่อ</h3>
+        <form id="contactForm" class="news-form" autocomplete="off">
+          <div class="news-form-grid contact-form-grid">
+            <label>
+              <span>ชื่อโรงเรียน</span>
+              <input type="text" id="schoolName" required />
+            </label>
+
+            <label>
+              <span>โทรศัพท์</span>
+              <input type="text" id="phone" />
+            </label>
+          </div>
+
+          <label>
+            <span>ที่อยู่</span>
+            <textarea id="address" rows="3" required></textarea>
+          </label>
+
+          <div class="news-form-grid contact-form-grid">
+            <label>
+              <span>โทรสาร</span>
+              <input type="text" id="fax" />
+            </label>
+
+            <label>
+              <span>อีเมล</span>
+              <input type="email" id="email" placeholder="name@example.com" />
+            </label>
+          </div>
+
+          <div class="news-form-grid contact-form-grid">
+            <label>
+              <span>เว็บไซต์</span>
+              <input type="url" id="website" placeholder="https://example.com" />
+            </label>
+
+            <label>
+              <span>Facebook Page</span>
+              <input type="url" id="facebookUrl" placeholder="https://www.facebook.com/..." />
+            </label>
+          </div>
+
+          <label>
+            <span>เวลาทำการ</span>
+            <input type="text" id="workingHours" placeholder="วันจันทร์–ศุกร์ เวลา 08.00–16.00 น." />
+          </label>
+
+          <div class="news-form-grid contact-form-grid">
+            <label>
+              <span>ลิงก์ Google Maps</span>
+              <input type="url" id="mapUrl" placeholder="https://maps.google.com/..." />
+            </label>
+
+            <label>
+              <span>ลิงก์แผนที่แบบฝัง</span>
+              <input type="url" id="mapEmbedUrl" placeholder="https://www.google.com/maps/embed?..." />
+            </label>
+          </div>
+
+          <div class="news-form-actions">
+            <button type="submit" class="primary-btn btn-with-icon" id="saveContactBtn">
+              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+              <span>บันทึกข้อมูลติดต่อ</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+DirectoryIndex index.html index.php
+
+Options -Indexes
+
+# Block Git metadata
+RedirectMatch 404 /\.git
+
+# Remove old spam URLs from search index
+RedirectMatch 410 ^/shopdetail/
+RedirectMatch 410 ^/build/
+RedirectMatch 410 ^/wp-content/
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Force HTTPS + non-www on production domain only.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?anusarn-deaf\.ac\.th$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.anusarn-deaf\.ac\.th$ [NC]
+RewriteRule ^ https://anusarn-deaf.ac.th%{REQUEST_URI} [R=301,L,NE]
+
+# Do not rewrite existing files or directories.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+</IfModule>

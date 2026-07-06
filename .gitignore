@@ -1,0 +1,30 @@
+# Database Configuration
+# ห้ามปล่อยไฟล์นี้ไปที่ Git เพราะมีข้อมูลเชื่อมต่อฐานข้อมูล
+api/config.php
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Node modules (ถ้าใช้ npm)
+node_modules/

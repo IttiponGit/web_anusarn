@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>จัดการเอกสารดาวน์โหลด | Admin</title>
+  <script>
+    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data || !data.success || !data.logged_in) {
+          window.location.replace('login.html');
+        }
+      })
+      .catch(() => {
+        window.location.replace('login.html');
+      });
+  </script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-downloads-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-logo-wrap">
+            <img src="../images/logo-school.png" alt="โลโก้โรงเรียน" class="brand-logo" />
+          </div>
+          <div class="auth-badge light">Admin Panel</div>
+          <h1 class="school-name">โรงเรียนโสตศึกษาอนุสารสุนทร</h1>
+        </div>
+        <p id="adminName" class="sidebar-user">กำลังโหลดข้อมูลผู้ใช้...</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="เมนูผู้ดูแล">
+        <a href="dashboard.html" class="nav-link nav-dashboard">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z" /></svg>
+          <span>แดชบอร์ด</span>
+        </a>
+        <a href="news.html" class="nav-link nav-news">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8v10l-18 8zM7 12v6M9 18c0 1.1-.9 2-2 2h-1" /></svg>
+          <span>ข่าวประชาสัมพันธ์</span>
+        </a>
+        <a href="personnel.html" class="nav-link nav-personnel">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M8.5 11A4 4 0 1 0 8.5 3a4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+          <span>บุคลากร</span>
+        </a>
+        <a href="downloads.html" class="nav-link nav-downloads" aria-current="page">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 12v6M9 15l3 3 3-3" /></svg>
+          <span>เอกสารดาวน์โหลด</span>
+        </a>
+        <a href="contact.html" class="nav-link nav-contact">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /><path d="M22 7 12 13 2 7" /></svg>
+          <span>ข้อมูลติดต่อโรงเรียน</span>
+        </a>
+        <button type="button" id="logoutBtn" class="logout-btn">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+          <span>ออกจากระบบ</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <section class="hero-panel page-header news-hero">
+        <p class="eyebrow">Downloads Management</p>
+        <h2 class="page-title">
+          <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M12 12v6M9 15l3 3 3-3" /></svg>
+          <span>ระบบจัดการเอกสารดาวน์โหลด</span>
+        </h2>
+        <p>เพิ่ม แก้ไข และลบเอกสารดาวน์โหลดได้จากหน้านี้</p>
+      </section>
+
+      <p id="downloadsMessage" class="form-message" aria-live="polite"></p>
+
+      <section class="news-list-card">
+        <div class="news-list-header">
+          <h3>รายการเอกสารทั้งหมด</h3>
+          <button type="button" id="addDownloadBtn" class="primary-btn btn-with-icon">
+            <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            <span>เพิ่มเอกสาร</span>
+          </button>
+        </div>
+
+        <div class="table-wrap admin-table-wrapper">
+          <table class="news-table admin-table admin-table-downloads" aria-label="ตารางรายการเอกสารดาวน์โหลด">
+            <thead>
+              <tr>
+                <th>หัวข้อ</th>
+                <th>หมวดหมู่</th>
+                <th>ไฟล์</th>
+                <th>ปุ่ม</th>
+                <th>ลำดับ</th>
+                <th class="col-status">สถานะ</th>
+                <th class="col-actions">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="downloadsTableBody">
+              <tr>
+                <td colspan="7">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="downloadsFormCard" class="news-form-card" hidden>
+        <h3 id="downloadsFormTitle">เพิ่มเอกสาร</h3>
+        <form id="downloadsForm" class="news-form" autocomplete="off">
+          <input type="hidden" id="downloadId" />
+          <input type="hidden" id="downloadUploadId" />
+
+          <label>
+            <span>หัวข้อเอกสาร</span>
+            <input type="text" id="downloadTitle" required />
+          </label>
+
+          <label>
+            <span>คำอธิบาย</span>
+            <textarea id="downloadDescription" rows="4"></textarea>
+          </label>
+
+          <div class="news-form-grid">
+            <label>
+              <span>หมวดหมู่</span>
+              <select id="downloadCategory" required>
+                <option value="งานรับสมัคร">งานรับสมัคร</option>
+                <option value="เอกสารโรงเรียน">เอกสารโรงเรียน</option>
+                <option value="แบบฟอร์ม">แบบฟอร์ม</option>
+                <option value="ประกาศ">ประกาศ</option>
+                <option value="คำสั่ง">คำสั่ง</option>
+                <option value="คู่มือ">คู่มือ</option>
+                <option value="รายงาน">รายงาน</option>
+                <option value="อื่น ๆ">อื่น ๆ</option>
+              </select>
+            </label>
+
+            <label>
+              <span>ลำดับแสดงผล (display_order)</span>
+              <input type="number" id="downloadDisplayOrder" min="0" step="1" required />
+            </label>
+          </div>
+
+          <label>
+            <span>ไฟล์ (file_url)</span>
+            <input type="text" id="downloadFileUrl" placeholder="files/example.pdf" />
+          </label>
+
+          <div class="upload-field-group">
+            <label>
+              <span>อัปโหลดไฟล์เอกสาร</span>
+              <input type="file" id="downloadFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+            </label>
+            <button type="button" class="secondary-btn" id="uploadDownloadFileBtn">อัปโหลดไฟล์</button>
+          </div>
+
+          <label>
+            <span>ข้อความปุ่ม (button_text)</span>
+            <input type="text" id="downloadButtonText" placeholder="ดาวน์โหลดเอกสาร" />
+          </label>
+
+          <label>
+            <span>สถานะ</span>
+            <select id="downloadStatus" name="status" required>
+              <option value="publish">publish</option>
+              <option value="draft">draft</option>
+              <option value="archived">archived</option>
+            </select>
+          </label>
+
+          <div class="news-form-actions">
+            <button type="submit" class="primary-btn btn-with-icon" id="saveDownloadBtn">
+              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+              <span>บันทึก</span>
+            </button>
+            <button type="button" class="secondary-btn" id="cancelDownloadBtn">ยกเลิก</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

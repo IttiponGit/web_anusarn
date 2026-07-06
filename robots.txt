@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /database/
+Disallow: /data/
+
+Sitemap: https://anusarn-deaf.ac.th/sitemap-main.xml
