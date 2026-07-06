@@ -12,24 +12,33 @@
   <div class="layout-shell">
     <aside class="app-sidebar d-none d-lg-flex flex-column">
       <div class="sidebar-brand">
-        <h1>สารสนเทศโรงเรียน</h1>
-        <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        <div>
+          <h1>สารสนเทศโรงเรียน</h1>
+          <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        </div>
+      </div>
+      <div class="sidebar-meta">
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+        <span class="badge rounded-pill">Dashboard</span>
       </div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
     </aside>
 
     <div class="content-area">
       <header class="app-topbar d-flex align-items-center">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-outline-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 topbar-shell">
+            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
               <i class="bi bi-list"></i>
             </button>
-            <div>
-              <h2 class="h6 mb-0">หน้าแรกสารสนเทศ</h2>
-              <small class="text-secondary">ปีการศึกษา <span data-academic-year>2569</span></small>
+            <div class="d-flex flex-column">
+              <h1 class="page-title" id="pageTitle">หน้าแรก</h1>
+              <p class="page-subtitle" id="pageSubtitle">ภาพรวมสำคัญของระบบสารสนเทศสถานศึกษา</p>
             </div>
           </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-block">
+            <ol class="breadcrumb" id="breadcrumbTrail"></ol>
+          </nav>
         </div>
       </header>
 
@@ -37,30 +46,150 @@
         <div class="container-fluid">
           <div id="errorBox" class="alert alert-danger d-none"></div>
 
-          <section class="hero-panel rounded-4 p-4 p-lg-5 mb-4">
-            <h1 class="fw-bold mb-2">ระบบสารสนเทศสถานศึกษา</h1>
-            <p class="mb-2"><span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> ปีการศึกษา <strong data-academic-year>2569</strong></p>
-            <p class="mb-0 text-secondary">ติดตามข้อมูลสำคัญของโรงเรียนในรูปแบบที่อ่านง่ายและปรับปรุงได้จากไฟล์ข้อมูลกลาง</p>
+          <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
+            <div class="row align-items-center g-4">
+              <div class="col-xl-8">
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">School Dashboard</span>
+                <h2 class="display-6 fw-bold mb-3" id="heroTitle">ระบบสารสนเทศโรงเรียนโสตศึกษาอนุสารสุนทร</h2>
+                <p class="lead mb-3" id="heroSubtitle">สรุปข้อมูลสำคัญแบบอ่านง่าย ใช้ Bootstrap 5, Sidebar, Card และกราฟสำหรับการติดตามภาพรวมสถานศึกษา</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="badge rounded-pill bg-white text-primary px-3 py-2">โรงเรียน <span id="heroSchoolName" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span></span>
+                  <span class="badge rounded-pill bg-white text-primary px-3 py-2">ปีการศึกษา <span id="heroYear" data-academic-year>2569</span></span>
+                </div>
+              </div>
+              <div class="col-xl-4">
+                <div class="summary-grid">
+                  <div class="summary-chip">
+                    <span class="label">นักเรียน</span>
+                    <strong>-</strong>
+                  </div>
+                  <div class="summary-chip">
+                    <span class="label">บุคลากร</span>
+                    <strong>-</strong>
+                  </div>
+                  <div class="summary-chip">
+                    <span class="label">ห้องเรียน</span>
+                    <strong>-</strong>
+                  </div>
+                  <div class="summary-chip">
+                    <span class="label">ช่วงชั้น</span>
+                    <strong>-</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section class="row g-3 mb-4">
-            <div class="col-12 col-sm-6 col-xl-3"><div class="card section-card kpi-card h-100"><div class="card-body"><span class="summary-icon mb-2"><i class="bi bi-people-fill"></i></span><h3 class="h5 mb-1" id="sumStudents">-</h3><p class="mb-0 text-secondary">จำนวนนักเรียน</p></div></div></div>
-            <div class="col-12 col-sm-6 col-xl-3"><div class="card section-card kpi-card kpi-success h-100"><div class="card-body"><span class="summary-icon mb-2"><i class="bi bi-person-badge-fill"></i></span><h3 class="h5 mb-1" id="sumPersonnel">-</h3><p class="mb-0 text-secondary">จำนวนบุคลากร</p></div></div></div>
-            <div class="col-12 col-sm-6 col-xl-3"><div class="card section-card kpi-card kpi-info h-100"><div class="card-body"><span class="summary-icon mb-2"><i class="bi bi-building"></i></span><h3 class="h5 mb-1" id="sumClassrooms">-</h3><p class="mb-0 text-secondary">จำนวนห้องเรียน</p></div></div></div>
-            <div class="col-12 col-sm-6 col-xl-3"><div class="card section-card kpi-card kpi-warning h-100"><div class="card-body"><span class="summary-icon mb-2"><i class="bi bi-calendar2-week-fill"></i></span><h3 class="h5 mb-1" id="sumYear">-</h3><p class="mb-0 text-secondary">ปีการศึกษา</p></div></div></div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="metric-card metric-blue h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="metric-icon"><i class="bi bi-people-fill"></i></span>
+                    <span class="badge badge-soft-primary">ภาพรวม</span>
+                  </div>
+                  <div class="metric-value mb-1" id="sumStudents">195</div>
+                  <div class="metric-label">จำนวนนักเรียน</div>
+                  <div class="metric-note mt-2">ข้อมูลจากไฟล์ JSON กลาง</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="metric-card metric-green h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="metric-icon"><i class="bi bi-person-badge-fill"></i></span>
+                    <span class="badge badge-soft-success">บุคลากร</span>
+                  </div>
+                  <div class="metric-value mb-1" id="sumPersonnel">74</div>
+                  <div class="metric-label">จำนวนบุคลากร</div>
+                  <div class="metric-note mt-2">ครูและบุคลากรสนับสนุน</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="metric-card metric-yellow h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="metric-icon"><i class="bi bi-building"></i></span>
+                    <span class="badge badge-soft-warning">อาคารเรียน</span>
+                  </div>
+                  <div class="metric-value mb-1" id="sumClassrooms">29</div>
+                  <div class="metric-label">จำนวนห้องเรียน</div>
+                  <div class="metric-note mt-2">รองรับการจัดการเรียนรู้หลายระดับ</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="metric-card metric-purple h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="metric-icon"><i class="bi bi-calendar2-week-fill"></i></span>
+                    <span class="badge badge-soft-purple">ปีล่าสุด</span>
+                  </div>
+                  <div class="metric-value mb-1" id="sumYear">2569</div>
+                  <div class="metric-label">ปีการศึกษา</div>
+                  <div class="metric-note mt-2">ข้อมูลประจำปี 2569</div>
+                </div>
+              </div>
+            </div>
           </section>
 
-          <section class="row g-3">
-            <div class="col-lg-7">
-              <div class="card section-card mb-3"><div class="card-body"><h2 class="h5">ข้อมูลสรุป</h2><p class="mb-2"><strong>ช่วงชั้นที่เปิดสอน:</strong> <span id="levelRange">-</span></p><p class="mb-2"><strong>อัตลักษณ์:</strong> <span id="identityText">-</span></p><p class="mb-0"><strong>วิสัยทัศน์:</strong> <span id="visionText">-</span></p></div></div>
-              <div class="card section-card chart-box"><div class="card-body"><h2 class="h5">กราฟภาพรวมสถานศึกษา</h2><canvas id="homeSummaryChart"></canvas></div></div>
+          <section class="row g-3 mb-3">
+            <div class="col-xl-7">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <h3 class="h5 mb-0"><i class="bi bi-bar-chart-line me-2 text-primary"></i>กราฟภาพรวมสถานศึกษา</h3>
+                  <span class="badge badge-soft-primary">Bootstrap 5 + Chart.js</span>
+                </div>
+                <div class="card-body chart-box">
+                  <canvas id="homeSummaryChart"></canvas>
+                </div>
+              </div>
             </div>
-            <div class="col-lg-5">
-              <div class="card section-card quick-menu h-100"><div class="card-body"><h2 class="h5">เมนูลัด</h2><div class="list-group" id="quickMenu"></div></div></div>
+            <div class="col-xl-5">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <h3 class="h5 mb-0"><i class="bi bi-lightning-charge me-2 text-primary"></i>ข้อมูลสำคัญ</h3>
+                  <span class="badge badge-soft-success">Overview</span>
+                </div>
+                <div class="card-body">
+                  <div class="soft-card p-3 mb-3">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="icon-circle icon-blue flex-shrink-0"><i class="bi bi-flag-fill"></i></span>
+                      <div>
+                        <div class="item-title mb-1">ช่วงชั้นที่เปิดสอน</div>
+                        <div class="item-desc" id="homeLevelLead">อนุบาล 2 ถึงมัธยมศึกษาปีที่ 6</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="soft-card p-3 mb-3">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="icon-circle icon-purple flex-shrink-0"><i class="bi bi-badge-ad-fill"></i></span>
+                      <div>
+                        <div class="item-title mb-1">อัตลักษณ์</div>
+                        <div class="item-desc" id="homeIdentityLead">มีวินัย รักสะอาด มารยาทงาม</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="soft-card p-3">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="icon-circle icon-green flex-shrink-0"><i class="bi bi-stars"></i></span>
+                      <div>
+                        <div class="item-title mb-1">วิสัยทัศน์</div>
+                        <div class="item-desc" id="homeVisionLead">สถานศึกษาสร้างสุข ที่จัดการศึกษาอย่างมีคุณภาพ ภายในปี พ.ศ. 2570</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group feature-list mt-3" id="quickMenu"></div>
+                </div>
+              </div>
             </div>
           </section>
 
-          <footer class="mt-4"><p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p></footer>
+          <footer class="mt-4 pb-1">
+            <p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p>
+          </footer>
         </div>
       </main>
     </div>
@@ -68,11 +197,16 @@
 
   <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+      <div>
+        <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+        <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      </div>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <p class="small mb-3" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      <div class="sidebar-meta mb-3">
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+      </div>
       <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
     </div>
   </div>
