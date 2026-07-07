@@ -18,9 +18,9 @@
   --school-shadow: 0 0.75rem 1.8rem rgba(15, 23, 42, 0.08);
   --sidebar-width: 250px;
   --topbar-height: 64px;
-  --chart-height: 280px;
-  --chart-height-sm: 250px;
-  --chart-height-mobile: 220px;
+  --chart-height: 350px;
+  --chart-height-sm: 313px;
+  --chart-height-mobile: 275px;
 }
 
 * {
@@ -174,6 +174,35 @@ body::before {
   color: var(--school-blue-700);
 }
 
+.main-site-link {
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 0.7rem;
+  padding: 0.62rem 0.75rem;
+  margin-top: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.main-site-link i {
+  width: 1.1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.main-site-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateX(2px);
+}
+
 .content-area {
   margin-left: var(--sidebar-width);
   min-height: 100vh;
@@ -298,6 +327,12 @@ body::before {
   padding: 1rem;
 }
 
+.metric-card > .card-body {
+  min-height: inherit;
+  display: flex;
+  align-items: center;
+}
+
 .section-card h1,
 .section-card h2,
 .section-card h3,
@@ -325,7 +360,7 @@ body::before {
   overflow: hidden;
   color: #fff;
   border: none;
-  min-height: 112px;
+  min-height: 88px;
 }
 
 .metric-card::after {
@@ -361,6 +396,7 @@ body::before {
 .metric-icon {
   width: 2.45rem;
   height: 2.45rem;
+  flex: 0 0 auto;
   border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
@@ -368,6 +404,33 @@ body::before {
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.16);
   font-size: 1.05rem;
+}
+
+.metric-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.metric-card .badge {
+  background: rgba(255, 255, 255, 0.86);
+  color: #172554;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0.35rem 0.9rem rgba(15, 23, 42, 0.12);
+  font-weight: 700;
+}
+
+.metric-card .badge-soft-success {
+  color: #14532d;
+}
+
+.metric-card .badge-soft-warning {
+  color: #78350f;
+}
+
+.metric-card .badge-soft-purple {
+  color: #3b0764;
 }
 
 .metric-value {
@@ -379,13 +442,197 @@ body::before {
 .metric-label {
   color: rgba(255, 255, 255, 0.88);
   font-size: 0.84rem;
+  font-weight: 600;
   line-height: 1.35;
+  min-width: 0;
+}
+
+.metric-label .metric-value {
+  display: inline-block;
+  margin-left: 0.45rem;
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .metric-note {
   color: rgba(255, 255, 255, 0.78);
   font-size: 0.78rem;
   line-height: 1.35;
+}
+
+body[data-page="home"] .metric-card {
+  min-height: 128px;
+}
+
+body[data-page="home"] .metric-card > .card-body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "head head"
+    "value label"
+    "value note";
+  align-items: center;
+  gap: 0.18rem 0.9rem;
+}
+
+body[data-page="home"] .metric-card .card-body > .d-flex {
+  grid-area: head;
+  min-width: 0;
+  margin-bottom: 0.55rem !important;
+}
+
+body[data-page="home"] .metric-card .badge {
+  max-width: 58%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.25;
+  text-align: center;
+}
+
+body[data-page="home"] .metric-value {
+  grid-area: value;
+  min-width: 3.8rem;
+  margin-bottom: 0 !important;
+  font-size: clamp(1.85rem, 2.35vw, 2.45rem);
+}
+
+body[data-page="home"] .metric-label {
+  grid-area: label;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+body[data-page="home"] .metric-note {
+  grid-area: note;
+  max-width: 100%;
+  margin-top: 0 !important;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.award-card {
+  position: relative;
+  min-height: 172px;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: #fff;
+  box-shadow: var(--school-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow: hidden;
+}
+
+.award-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -1.8rem -1.8rem auto;
+  width: 7.2rem;
+  height: 7.2rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.award-card-head,
+.award-title,
+.award-meta,
+.award-summary {
+  position: relative;
+  z-index: 1;
+}
+
+.award-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.award-year {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.22rem 0.52rem;
+  background: rgba(255, 255, 255, 0.86);
+  color: #172554;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.award-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.02rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.award-meta {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.award-summary {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.award-section {
+  padding: 1rem;
+  border: 1px solid var(--school-border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: var(--school-shadow);
+}
+
+.award-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.award-section-head h3 {
+  color: var(--school-text);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.award-section-desc {
+  color: var(--school-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.award-card-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.award-category-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.22rem 0.52rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.15;
 }
 
 .basic-info-card {
@@ -437,15 +684,15 @@ body::before {
 }
 
 .performance-info-card {
-  min-height: 150px;
+  min-height: 108px;
   padding: 1rem;
   border-radius: 1rem;
   color: #fff;
   box-shadow: var(--school-shadow);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0.45rem;
+  justify-content: flex-start;
+  gap: 0.7rem;
   overflow-wrap: anywhere;
 }
 
@@ -468,6 +715,7 @@ body::before {
 .performance-info-icon {
   width: 2.35rem;
   height: 2.35rem;
+  flex: 0 0 auto;
   border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
@@ -477,11 +725,19 @@ body::before {
   font-size: 1rem;
 }
 
+.performance-info-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
 .performance-info-label {
   color: rgba(255, 255, 255, 0.88);
   font-size: 0.86rem;
   font-weight: 600;
   line-height: 1.35;
+  min-width: 0;
 }
 
 .performance-info-value {
@@ -491,6 +747,13 @@ body::before {
   line-height: 1.15;
 }
 
+.performance-info-label .performance-info-value {
+  display: inline-block;
+  margin-left: 0.45rem;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
 .performance-info-note {
   color: rgba(255, 255, 255, 0.78);
   font-size: 0.78rem;
@@ -498,7 +761,7 @@ body::before {
 }
 
 .personnel-info-card {
-  min-height: 128px;
+  min-height: 88px;
   padding: 1rem;
   border-radius: 1rem;
   color: #fff;
@@ -525,6 +788,7 @@ body::before {
 .personnel-info-icon {
   width: 2.35rem;
   height: 2.35rem;
+  flex: 0 0 auto;
   border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
@@ -534,11 +798,35 @@ body::before {
   font-size: 1rem;
 }
 
+.personnel-info-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.personnel-info-card .badge {
+  background: rgba(255, 255, 255, 0.86);
+  color: #172554;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0.35rem 0.9rem rgba(15, 23, 42, 0.12);
+  font-weight: 700;
+}
+
+.personnel-info-card .badge-soft-success {
+  color: #14532d;
+}
+
+.personnel-info-card .badge-soft-purple {
+  color: #3b0764;
+}
+
 .personnel-info-label {
   color: rgba(255, 255, 255, 0.86);
   font-size: 0.84rem;
   font-weight: 600;
   line-height: 1.35;
+  min-width: 0;
 }
 
 .personnel-info-value {
@@ -546,6 +834,13 @@ body::before {
   font-size: 1.45rem;
   font-weight: 800;
   line-height: 1.15;
+}
+
+.personnel-info-label .personnel-info-value {
+  display: inline-block;
+  margin-left: 0.45rem;
+  font-size: 1.06rem;
+  line-height: 1;
 }
 
 .soft-card {
@@ -618,6 +913,74 @@ body::before {
 .chart-box-pie {
   height: var(--chart-height-sm);
   max-height: var(--chart-height-sm);
+}
+
+body[data-page="students"] .nav-pills,
+body[data-page="academic"] .nav-pills {
+  flex-wrap: wrap;
+}
+
+body[data-page="students"] .nav-pills .nav-link,
+body[data-page="academic"] .nav-pills .nav-link {
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.45rem 0.7rem;
+}
+
+body[data-page="students"] .soft-card,
+body[data-page="academic"] .soft-card {
+  border-radius: 0.6rem;
+}
+
+body[data-page="students"] .metric-card {
+  min-height: 92px;
+}
+
+body[data-page="students"] .metric-card > .card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.1rem;
+}
+
+body[data-page="students"] .student-metric-line {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  width: 100%;
+}
+
+body[data-page="students"] .student-metric-text {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.85rem;
+  min-width: 0;
+  width: 100%;
+}
+
+body[data-page="students"] .metric-label {
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+body[data-page="students"] .metric-value {
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: clamp(1.85rem, 2.4vw, 2.45rem);
+  font-weight: 900;
+  line-height: 1;
+  margin: 0;
+}
+
+body[data-page="students"] .metric-icon {
+  width: 2.55rem;
+  height: 2.55rem;
 }
 
 .table {
@@ -698,6 +1061,63 @@ body::before {
 
 .feature-list .list-group-item:last-child {
   margin-bottom: 0;
+}
+
+body[data-page="direction"] .section-card .card-header .badge {
+  display: none;
+}
+
+body[data-page="performance"] .section-card .card-header .badge {
+  display: none;
+}
+
+body[data-page="personnel"] .section-card .card-header .badge {
+  display: none;
+}
+
+body[data-page="personnel"] .personnel-chart-box {
+  height: 488px;
+  max-height: 488px;
+  padding: 1rem 1.1rem 0.8rem;
+}
+
+body[data-page="personnel"] .personnel-chart-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2.25rem;
+  row-gap: 0.5rem;
+  padding: 0 1.1rem 1rem;
+}
+
+body[data-page="personnel"] .personnel-legend-item {
+  display: grid;
+  grid-template-columns: 0.7rem minmax(9.5rem, 12.5rem) auto;
+  align-items: center;
+  column-gap: 0.45rem;
+  min-width: 0;
+  color: #334155;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+body[data-page="personnel"] .personnel-legend-swatch {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 0 3px rgba(148, 163, 184, 0.2);
+}
+
+body[data-page="personnel"] .personnel-legend-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+body[data-page="personnel"] .personnel-legend-count {
+  color: #0f172a;
+  font-weight: 800;
+  justify-self: start;
+  white-space: nowrap;
 }
 
 .feature-list .item-title {
@@ -787,8 +1207,8 @@ body::before {
 
   .chart-box,
   .chart-card {
-    height: 245px;
-    max-height: 245px;
+    height: 306px;
+    max-height: 306px;
   }
 }
 
@@ -834,7 +1254,13 @@ body::before {
   }
 
   .metric-card {
-    min-height: 96px;
+    min-height: 82px;
+  }
+
+  .performance-info-card,
+  .personnel-info-card {
+    min-height: 82px;
+    padding: 0.85rem;
   }
 
   .metric-value {
@@ -853,6 +1279,16 @@ body::before {
   .chart-box-pie {
     height: var(--chart-height-mobile);
     max-height: var(--chart-height-mobile);
+  }
+
+  body[data-page="personnel"] .personnel-chart-box {
+    height: 412px;
+    max-height: 412px;
+  }
+
+  body[data-page="personnel"] .personnel-chart-legend {
+    grid-template-columns: 1fr;
+    padding: 0 0.85rem 0.9rem;
   }
 
   .table {

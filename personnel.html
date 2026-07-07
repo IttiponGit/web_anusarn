@@ -42,10 +42,23 @@
       <button class="menu-btn" id="menuBtn" type="button" aria-label="เปิดเมนูหลัก" aria-controls="mainNav" aria-expanded="false">☰</button>
       <nav id="mainNav" aria-label="เมนูหลัก">
         <a href="index.html">หน้าแรก</a>
-        <a href="about.html">เกี่ยวกับโรงเรียน</a>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">เกี่ยวกับโรงเรียน</button>
+          <div class="nav-dropdown-menu">
+            <a href="about.html">ประวัติโรงเรียน</a>
+            <a href="about.html#general-info">ข้อมูลพื้นฐาน</a>
+            <a href="about.html#education-strategy">วิสัยทัศน์ / พันธกิจ</a>
+            <a href="personnel.html">บุคลากร</a>
+          </div>
+        </div>
         <a href="news.html">ข่าวสาร</a>
-        <a href="personnel.html">บุคลากร</a>
-        <a href="downloads.html">เอกสารดาวน์โหลด</a>
+        <div class="nav-dropdown">
+          <button class="nav-dropdown-toggle" type="button" aria-expanded="false">ข้อมูลและเอกสาร</button>
+          <div class="nav-dropdown-menu">
+            <a href="/information/">สารสนเทศโรงเรียน</a>
+            <a href="downloads.html">เอกสารดาวน์โหลด</a>
+          </div>
+        </div>
         <a href="contact.html">ติดต่อโรงเรียน</a>
       </nav>
     </div>
@@ -80,7 +93,6 @@
   <footer class="site-footer">
     <div class="container footer-content">
       <p>© 2569 โรงเรียนโสตศึกษาอนุสารสุนทร</p>
-      <p>พัฒนาเว็บไซต์ด้วย HTML, CSS และ JavaScript</p>
     </div>
   </footer>
 

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ข้อมูลวิชาการ | โรงเรียนโสตศึกษาอนุสารสุนทร</title>
+  <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-page="academic">
+  <div class="layout-shell">
+    <aside class="app-sidebar d-none d-lg-flex flex-column">
+      <div class="sidebar-brand">
+        <div>
+          <h1>สารสนเทศโรงเรียน</h1>
+          <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        </div>
+      </div>
+      <div class="sidebar-meta">
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+        <span class="badge rounded-pill">วิชาการ</span>
+      </div>
+      <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
+      <a class="main-site-link" href="../../"><i class="bi bi-house-door-fill"></i><span>กลับเว็บไซต์หลัก</span></a>
+    </aside>
+
+    <div class="content-area">
+      <header class="app-topbar d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 topbar-shell">
+            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+              <i class="bi bi-list"></i>
+            </button>
+            <div class="d-flex flex-column">
+              <h1 class="page-title" id="pageTitle">ข้อมูลวิชาการ</h1>
+              <p class="page-subtitle" id="pageSubtitle">หลักสูตร ผลสัมฤทธิ์ O-NET NT และการสำเร็จการศึกษา</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-block"><ol class="breadcrumb" id="breadcrumbTrail"></ol></nav>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="container-fluid">
+          <div id="errorBox" class="alert alert-danger d-none"></div>
+
+          <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
+            <div class="row align-items-center g-4">
+              <div class="col-xl-8">
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Academic Dashboard</span>
+                <h2 class="display-6 fw-bold mb-3" id="heroTitle">ข้อมูลวิชาการ</h2>
+                <p class="lead mb-0" id="heroSubtitle">หลักสูตรสถานศึกษา ผลสัมฤทธิ์ทางการเรียน O-NET NT และการสำเร็จการศึกษา</p>
+              </div>
+              <div class="col-xl-4">
+                <div class="summary-grid">
+                  <div class="summary-chip"><span class="label">หลักสูตร</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">กลุ่มสาระ</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">O-NET</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">สำเร็จการศึกษา</span><strong>-</strong></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card mb-4">
+            <div class="card-header">
+              <ul class="nav nav-pills gap-2" role="tablist">
+                <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#curriculumTab" type="button" role="tab">หลักสูตรสถานศึกษา</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#achievementTab" type="button" role="tab">ผลสัมฤทธิ์ทางการเรียน</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#onetTab" type="button" role="tab">O-NET</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#ntTab" type="button" role="tab">NT</button></li>
+                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#graduationTab" type="button" role="tab">การสำเร็จการศึกษา</button></li>
+              </ul>
+            </div>
+            <div class="card-body">
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="curriculumTab" role="tabpanel">
+                  <div class="row g-3 mb-3" id="curriculumList"></div>
+                  <div class="soft-card p-3 mb-3">
+                    <div class="item-title mb-2">กลุ่มสาระการเรียนรู้</div>
+                    <div id="learningAreaList"></div>
+                  </div>
+                  <div class="soft-card p-3 mb-3">
+                    <div class="item-title mb-2">กิจกรรมตามหลักสูตร</div>
+                    <div id="curriculumActivityList"></div>
+                  </div>
+                  <div class="row g-3" id="subjectsByLevel"></div>
+                </div>
+
+                <div class="tab-pane fade" id="achievementTab" role="tabpanel">
+                  <div class="row g-3">
+                    <div class="col-lg-6">
+                      <div class="section-card h-100">
+                        <div class="card-header"><h3 class="h6 mb-0">ผลสัมฤทธิ์ผู้เรียน ป.1-ป.6</h3></div>
+                        <div class="card-body"><div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>ระดับชั้น</th><th>ค่าเฉลี่ย</th></tr></thead><tbody id="achievementPrimaryBody"></tbody></table></div></div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="section-card h-100">
+                        <div class="card-header"><h3 class="h6 mb-0">ผลสัมฤทธิ์ผู้เรียน ม.1-ม.6</h3></div>
+                        <div class="card-body"><div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>ระดับชั้น</th><th>ค่าเฉลี่ย</th></tr></thead><tbody id="achievementSecondaryBody"></tbody></table></div></div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="section-card">
+                        <div class="card-header"><h3 class="h6 mb-0">กราฟผลสัมฤทธิ์เฉลี่ย</h3></div>
+                        <div class="card-body chart-box"><canvas id="achievementChart"></canvas></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="onetTab" role="tabpanel">
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-3" id="onetLevelButtons">
+                    <button class="btn btn-primary btn-sm rounded-pill" type="button" data-onet-level="p6">ป.6</button>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill" type="button" data-onet-level="m3">ม.3</button>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill" type="button" data-onet-level="m6">ม.6</button>
+                  </div>
+                  <div class="section-card mb-3">
+                    <div class="card-header"><h3 class="h6 mb-0" id="onetChartTitle">กราฟเปรียบเทียบคะแนน O-NET</h3></div>
+                    <div class="card-body chart-box"><canvas id="onetSubjectChart"></canvas></div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>รายวิชา</th>
+                          <th>2566</th>
+                          <th>2567</th>
+                          <th>2568</th>
+                          <th>เปลี่ยนแปลง 2567-2568</th>
+                        </tr>
+                      </thead>
+                      <tbody id="onetCompareBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="ntTab" role="tabpanel">
+                  <div class="section-card mb-3">
+                    <div class="card-header"><h3 class="h6 mb-0">กราฟเปรียบเทียบ NT รายด้าน ปี 2566-2568</h3></div>
+                    <div class="card-body chart-box"><canvas id="ntTrendChart"></canvas></div>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-lg-6">
+                      <div class="section-card h-100">
+                        <div class="card-header"><h3 class="h6 mb-0">ตารางเปรียบเทียบแนวโน้มรายด้าน</h3></div>
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                              <thead><tr><th>ด้าน</th><th>2566</th><th>2567</th><th>2568</th><th>เปลี่ยนแปลงจากปี 2567 เป็น 2568</th></tr></thead>
+                              <tbody id="ntTrendBody"></tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="section-card h-100">
+                        <div class="card-header"><h3 class="h6 mb-0">เปรียบเทียบปี 2568 กับ สพฐ. และประเทศ</h3></div>
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                              <thead><tr><th>ระดับ</th><th>ภาษาไทย</th><th>คณิตศาสตร์</th><th>เฉลี่ย</th></tr></thead>
+                              <tbody id="ntCompareBody"></tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="graduationTab" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead><tr><th>ระดับ</th><th>จำนวนผู้สำเร็จการศึกษา</th><th>ร้อยละ</th></tr></thead>
+                      <tbody id="graduationBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="mt-4 pb-1">
+            <p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <div>
+        <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+        <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span></div>
+      <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
+      <a class="main-site-link" href="../../"><i class="bi bi-house-door-fill"></i><span>กลับเว็บไซต์หลัก</span></a>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script>
+    (function () {
+      const DATA_URL = '../data/academic.json';
+      const format = (value) => Number(value || 0).toFixed(2).replace(/\.00$/, '');
+      const diffText = (current, previous) => {
+        const diff = Number(current || 0) - Number(previous || 0);
+        const sign = diff > 0 ? '+' : '';
+        return `${sign}${format(diff)}`;
+      };
+
+      function renderOnetTable(data, levelKey) {
+        const body = document.getElementById('onetCompareBody');
+        const title = document.getElementById('onetChartTitle');
+        const level = data.onetByLevel[levelKey];
+        if (!body || !level) return;
+
+        if (title) title.textContent = `กราฟเปรียบเทียบคะแนน O-NET ${level.label}`;
+        body.innerHTML = data.onetSubjects.map((subject) => {
+          const y2566 = level.years['2566'][subject.key];
+          const y2567 = level.years['2567'][subject.key];
+          const y2568 = level.years['2568'][subject.key];
+          const diff = Number(y2568) - Number(y2567);
+          const badge = diff >= 0 ? 'badge-soft-success' : 'badge-soft-danger';
+          return `<tr><td>${subject.label}</td><td>${format(y2566)}</td><td>${format(y2567)}</td><td>${format(y2568)}</td><td><span class="badge ${badge}">${diffText(y2568, y2567)}</span></td></tr>`;
+        }).join('');
+      }
+
+      function renderNtTables(data) {
+        const trendBody = document.getElementById('ntTrendBody');
+        const compareBody = document.getElementById('ntCompareBody');
+
+        if (trendBody) {
+          trendBody.innerHTML = data.ntDomains.map((domain) => {
+            const y2566 = data.ntTrend['2566'][domain.key];
+            const y2567 = data.ntTrend['2567'][domain.key];
+            const y2568 = data.ntTrend['2568'][domain.key];
+            const diff = Number(y2568) - Number(y2567);
+            const badge = diff >= 0 ? 'badge-soft-success' : 'badge-soft-danger';
+            const status = diff >= 0 ? 'เพิ่มขึ้น' : 'ลดลง';
+            return `<tr><td>${domain.label}</td><td>${format(y2566)}</td><td>${format(y2567)}</td><td>${format(y2568)}</td><td><span class="badge ${badge}">${status} ${diffText(y2568, y2567)}</span></td></tr>`;
+          }).join('');
+        }
+
+        if (compareBody) {
+          compareBody.innerHTML = Object.values(data.ntCompare2568).map((row) => `<tr><td>${row.label}</td><td>${format(row.thai)}</td><td>${format(row.math)}</td><td>${format(row.average)}</td></tr>`).join('');
+        }
+      }
+
+      async function initAcademicDetails() {
+        const data = await fetch(DATA_URL).then((response) => response.json());
+        let activeLevel = 'p6';
+
+        renderOnetTable(data, activeLevel);
+        renderNtTables(data);
+
+        document.querySelectorAll('[data-onet-level]').forEach((button) => {
+          button.addEventListener('click', () => {
+            activeLevel = button.dataset.onetLevel;
+            document.querySelectorAll('[data-onet-level]').forEach((target) => {
+              target.classList.toggle('btn-primary', target === button);
+              target.classList.toggle('btn-outline-primary', target !== button);
+            });
+            renderOnetTable(data, activeLevel);
+            document.dispatchEvent(new CustomEvent('academic:onetLevelChanged', { detail: { level: activeLevel } }));
+          });
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', initAcademicDetails);
+    })();
+  </script>
+</body>
+</html>

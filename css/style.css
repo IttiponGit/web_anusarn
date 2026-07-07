@@ -142,6 +142,97 @@ nav a:hover::after,
 nav a.active::after {
   transform: scaleX(1);
 }
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown-toggle {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--dark);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.75;
+  padding: 8px 28px 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  transition: .2s ease;
+}
+.nav-dropdown-toggle::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 28px;
+  bottom: 5px;
+  height: 2px;
+  background: var(--gradient-main);
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .2s ease;
+}
+.nav-dropdown-toggle::after {
+  content: "▾";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-48%);
+  font-size: 11px;
+  line-height: 1;
+}
+.nav-dropdown:hover .nav-dropdown-toggle,
+.nav-dropdown:focus-within .nav-dropdown-toggle,
+.nav-dropdown.open .nav-dropdown-toggle {
+  color: var(--primary-dark);
+  background: linear-gradient(135deg, #f0f5fa, var(--primary-soft));
+  box-shadow: 0 8px 18px rgba(26, 84, 144, .10);
+}
+.nav-dropdown:hover .nav-dropdown-toggle::before,
+.nav-dropdown:focus-within .nav-dropdown-toggle::before,
+.nav-dropdown.open .nav-dropdown-toggle::before {
+  transform: scaleX(1);
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255,255,255,.98);
+  box-shadow: var(--shadow-strong);
+  display: grid;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.nav-dropdown-menu a {
+  border-radius: 12px;
+  padding: 9px 12px;
+  width: 100%;
+}
+.nav-dropdown-menu a::after {
+  display: none;
+}
+nav .nav-dropdown:last-of-type .nav-dropdown-menu {
+  left: auto;
+  right: 0;
+}
 .menu-btn {
   display: none;
   border: 0;
@@ -634,6 +725,12 @@ select:focus-visible {
 
 #general-info .academic-zone-card .about-ordered-list li {
   padding: 2px 0;
+}
+
+#education-strategy .card p,
+#education-strategy .card .about-ordered-list,
+#education-strategy .card .about-list {
+  font-size: .88rem;
 }
 
 .grid,
@@ -1195,10 +1292,11 @@ footer {
 }
 .footer-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
   align-items: center;
+  text-align: center;
 }
 .footer-content p { margin: 0; font-size: 14px; opacity: .95; }
 
@@ -1315,6 +1413,45 @@ footer {
     min-width: 0;
     flex: 1 1 auto;
     box-sizing: border-box;
+  }
+  .nav-dropdown,
+  .nav-dropdown-toggle,
+  .nav-dropdown-menu {
+    width: 100%;
+  }
+  .nav-dropdown-toggle {
+    text-align: left;
+    padding: 10px 32px 10px 12px;
+    white-space: normal;
+    width: 100%;
+  }
+  .nav-dropdown-toggle::before {
+    left: 12px;
+    right: 32px;
+  }
+  .nav-dropdown-menu {
+    position: static;
+    right: auto;
+    min-width: 0;
+    margin: 4px 0 4px;
+    padding: 0 0 0 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    display: none;
+    gap: 2px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+  }
+  .nav-dropdown.open .nav-dropdown-menu {
+    display: grid;
+  }
+  .nav-dropdown-menu a {
+    background: rgba(26, 84, 144, .06);
   }
   .hero-grid, .contact-grid, .about-intro-grid, .contact-hero-grid, .contact-page-grid { grid-template-columns: 1fr; }
   .stats, .two-col, .three-col, .heads-grid { grid-template-columns: 1fr; }

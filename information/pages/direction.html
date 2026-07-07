@@ -1,5 +1,6 @@
 ﻿<!doctype html>
 <html lang="th">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,13 +9,158 @@
   <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body data-page="direction">
   <div class="layout-shell">
     <aside class="app-sidebar d-none d-lg-flex flex-column">
-      <div class="sidebar-brand"><div><h1>สารสนเทศโรงเรียน</h1><p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div></div>
-      <div class="sidebar-meta"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span><span class="badge rounded-pill">ทิศทาง</span></div>
+      <div class="sidebar-brand">
+        <div>
+          <h1>สารสนเทศโรงเรียน</h1>
+          <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        </div>
+      </div>
+      <div class="sidebar-meta"><span class="badge rounded-pill">ปีการศึกษา <span
+            data-academic-year>2569</span></span><span class="badge rounded-pill">ทิศทาง</span></div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
+      <a class="main-site-link" href="../../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
     </aside>
     <div class="content-area">
-      <header class="app-topbar d-flex align-items-center"><div class="container-fluid d-flex align-items-center justify-content-between gap-3"><div class="d-flex align-items-center gap-3 topbar-shell"><button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button><div class="d-flex flex-column"><h1 class="page-title" id="pageTitle">ทิศทางการศึกษา</h1><p class="page-subtitle" id="pageSubtitle">วิสัยทัศน์ พันธกิจ และกลยุทธ์ • ปีการศึกษา 2569</p></div></div><nav aria-label="breadcrumb" class="d-none d-md-block"><ol class="breadcrumb" id="breadcrumbTrail"></ol></nav></div></header>
-      <main class="page-content"><div class="container-fluid"><div id="errorBox" class="alert alert-danger d-none"></div><section class="hero-panel rounded-4 p-3 p-xl-4 mb-3"><div class="row align-items-center g-4"><div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Strategic Direction</span><h2 class="display-6 fw-bold mb-3" id="heroTitle">ทิศทางการศึกษา</h2><p class="lead mb-0" id="heroSubtitle">กรอบการพัฒนาของโรงเรียนที่คงความเป็นทางการและอ่านง่าย</p></div><div class="col-lg-4"><div class="summary-grid"><div class="summary-chip"><span class="label">พันธกิจ</span><strong>4 ข้อ</strong></div><div class="summary-chip"><span class="label">กลยุทธ์</span><strong>4 ด้าน</strong></div><div class="summary-chip"><span class="label">วิสัยทัศน์</span><strong>2570</strong></div><div class="summary-chip"><span class="label">อัตลักษณ์</span><strong>มีวินัย</strong></div></div></div></div></section><section class="row g-3 mb-4"><div class="col-md-6 col-xl-3"><div class="soft-card p-3 h-100"><div class="d-flex align-items-center gap-3"><span class="icon-circle icon-blue"><i class="bi bi-bullseye"></i></span><div><div class="item-title">วิสัยทัศน์</div><div class="item-desc">สถานศึกษาสร้างสุข</div></div></div></div></div><div class="col-md-6 col-xl-3"><div class="soft-card p-3 h-100"><div class="d-flex align-items-center gap-3"><span class="icon-circle icon-green"><i class="bi bi-stars"></i></span><div><div class="item-title">อัตลักษณ์</div><div class="item-desc">มีวินัย รักสะอาด มารยาทงาม</div></div></div></div></div><div class="col-md-6 col-xl-3"><div class="soft-card p-3 h-100"><div class="d-flex align-items-center gap-3"><span class="icon-circle icon-yellow"><i class="bi bi-check2-square"></i></span><div><div class="item-title">พันธกิจ</div><div class="item-desc">มุ่งเน้นการพัฒนาผู้เรียน</div></div></div></div></div><div class="col-md-6 col-xl-3"><div class="soft-card p-3 h-100"><div class="d-flex align-items-center gap-3"><span class="icon-circle icon-purple"><i class="bi bi-diagram-3-fill"></i></span><div><div class="item-title">กลยุทธ์</div><div class="item-desc">ขับเคลื่อนด้วยข้อมูลสารสนเทศ</div></div></div></div></div></section><section class="row g-4"><div class="col-lg-6"><div class="section-card h-100"><div class="card-header d-flex align-items-center justify-content-between"><h3 class="h5 mb-0"><i class="bi bi-list-check me-2 text-primary"></i>พันธกิจ</h3><span class="badge badge-soft-primary">4 ข้อ</span></div><div class="card-body"><ul id="missionList" class="list-group feature-list"></ul></div></div></div><div class="col-lg-6"><div class="section-card h-100"><div class="card-header d-flex align-items-center justify-content-between"><h3 class="h5 mb-0"><i class="bi bi-diagram-3 me-2 text-primary"></i>กลยุทธ์</h3><span class="badge badge-soft-purple">4 ด้าน</span></div><div class="card-body"><ul id="strategyList" class="list-group feature-list"></ul></div></div></div></section><footer class="mt-4 pb-1"><p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p></footer></div></main></div></div><div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel"><div class="offcanvas-header"><div><h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5><p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button></div><div class="offcanvas-body"><div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span></div><ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul></div></div><script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><script src="../assets/vendor/chartjs/chart.umd.min.js"></script><script src="../assets/js/main.js"></script><script src="../assets/js/charts.js"></script></body></html>
+      <header class="app-topbar d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 topbar-shell"><button
+              class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button>
+            <div class="d-flex flex-column">
+              <h1 class="page-title" id="pageTitle">ทิศทางการศึกษา</h1>
+              <p class="page-subtitle" id="pageSubtitle">วิสัยทัศน์ พันธกิจ และกลยุทธ์ • ปีการศึกษา 2569</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-block">
+            <ol class="breadcrumb" id="breadcrumbTrail"></ol>
+          </nav>
+        </div>
+      </header>
+      <main class="page-content">
+        <div class="container-fluid">
+          <div id="errorBox" class="alert alert-danger d-none"></div>
+          <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
+            <div class="row align-items-center g-4">
+              <div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Strategic
+                  Direction</span>
+                <h2 class="display-6 fw-bold mb-3" id="heroTitle">ทิศทางการศึกษา</h2>
+                <p class="lead mb-0" id="heroSubtitle">กรอบการพัฒนาของโรงเรียนที่คงความเป็นทางการและอ่านง่าย</p>
+              </div>
+              <div class="col-lg-4">
+                <div class="summary-grid">
+                  <div class="summary-chip"><span class="label">พันธกิจ</span></div>
+                  <div class="summary-chip"><span class="label">กลยุทธ์</span></div>
+                  <div class="summary-chip"><span class="label">วิสัยทัศน์</span><strong>2570</strong></div>
+                  <div class="summary-chip"><span class="label">อัตลักษณ์</span><strong>มีวินัย</strong></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="row g-3 mb-4">
+            <div class="col-md-6 col-xl-3">
+              <div class="soft-card p-3 h-100">
+                <div class="d-flex align-items-center gap-3"><span class="icon-circle icon-blue"><i
+                      class="bi bi-bullseye"></i></span>
+                  <div>
+                    <div class="item-title">วิสัยทัศน์</div>
+                    <div class="item-desc">สถานศึกษาสร้างสุข</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <div class="soft-card p-3 h-100">
+                <div class="d-flex align-items-center gap-3"><span class="icon-circle icon-green"><i
+                      class="bi bi-stars"></i></span>
+                  <div>
+                    <div class="item-title">อัตลักษณ์</div>
+                    <div class="item-desc">มีวินัย รักสะอาด มารยาทงาม</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <div class="soft-card p-3 h-100">
+                <div class="d-flex align-items-center gap-3"><span class="icon-circle icon-yellow"><i
+                      class="bi bi-check2-square"></i></span>
+                  <div>
+                    <div class="item-title">พันธกิจ</div>
+                    <div class="item-desc">มุ่งเน้นการพัฒนาผู้เรียน</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+              <div class="soft-card p-3 h-100">
+                <div class="d-flex align-items-center gap-3"><span class="icon-circle icon-purple"><i
+                      class="bi bi-diagram-3-fill"></i></span>
+                  <div>
+                    <div class="item-title">กลยุทธ์</div>
+                    <div class="item-desc">ขับเคลื่อนด้วยข้อมูลสารสนเทศ</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="row g-4">
+            <div class="col-lg-6">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-list-check me-2 text-primary"></i>พันธกิจ</h3>
+                </div>
+                <div class="card-body">
+                  <ul id="missionList" class="list-group feature-list"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-diagram-3 me-2 text-primary"></i>กลยุทธ์</h3>
+                </div>
+                <div class="card-body">
+                  <ul id="strategyList" class="list-group feature-list"></ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer class="mt-4 pb-1">
+            <p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> |
+              พ.ศ. <span id="copyrightYear"></span></p>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar"
+    aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <div>
+        <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+        <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      </div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span
+            data-academic-year>2569</span></span></div>
+      <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
+      <a class="main-site-link" href="../../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
+    </div>
+  </div>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/charts.js"></script>
+</body>
+
+</html>

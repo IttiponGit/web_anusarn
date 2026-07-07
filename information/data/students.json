@@ -1,14 +1,16 @@
 {
+  "dataDate": "10 มิถุนายน 2569",
   "totalStudents": 195,
+  "classroomCount": 29,
   "byGender": {
-    "male": 102,
-    "female": 93
+    "male": 105,
+    "female": 90
   },
   "byLevel": [
     {
       "level": "อนุบาล",
-      "count": 32,
-      "classrooms": 5
+      "count": 9,
+      "classrooms": 2
     },
     {
       "level": "ประถมศึกษา",
@@ -17,13 +19,85 @@
     },
     {
       "level": "มัธยมศึกษาตอนต้น",
-      "count": 46,
+      "count": 45,
       "classrooms": 7
     },
     {
       "level": "มัธยมศึกษาตอนปลาย",
-      "count": 29,
-      "classrooms": 5
+      "count": 53,
+      "classrooms": 8
     }
+  ],
+  "byProvince": [
+    { "province": "เชียงใหม่", "count": 112 },
+    { "province": "ลำพูน", "count": 24 },
+    { "province": "เชียงราย", "count": 18 },
+    { "province": "แม่ฮ่องสอน", "count": 15 },
+    { "province": "ลำปาง", "count": 10 },
+    { "province": "พะเยา", "count": 8 },
+    { "province": "อื่น ๆ", "count": 8 }
+  ],
+  "byEthnicity": [
+    { "name": "ไทย", "count": 118 },
+    { "name": "ปกาเกอะญอ", "count": 28 },
+    { "name": "ม้ง", "count": 19 },
+    { "name": "ลาหู่", "count": 13 },
+    { "name": "อาข่า", "count": 9 },
+    { "name": "อื่น ๆ", "count": 8 }
+  ],
+  "byReligion": [
+    { "name": "พุทธ", "count": 154 },
+    { "name": "คริสต์", "count": 31 },
+    { "name": "อิสลาม", "count": 2 },
+    { "name": "อื่น ๆ", "count": 8 }
+  ],
+  "byImpairment": [
+    { "type": "บกพร่องทางการได้ยิน", "count": 176 },
+    { "type": "บกพร่องทางสติปัญญา", "count": 7 },
+    { "type": "บกพร่องทางร่างกายหรือสุขภาพ", "count": 5 },
+    { "type": "บกพร่องทางการเรียนรู้", "count": 4 },
+    { "type": "อื่น ๆ", "count": 3 }
+  ],
+  "multipleDisabilities": [
+    { "type": "ไม่มีความพิการซ้อน", "count": 168 },
+    { "type": "ทางการได้ยินร่วมกับสติปัญญา", "count": 12 },
+    { "type": "ทางการได้ยินร่วมกับร่างกายหรือสุขภาพ", "count": 8 },
+    { "type": "ทางการได้ยินร่วมกับการเรียนรู้", "count": 5 },
+    { "type": "อื่น ๆ", "count": 2 }
+  ],
+  "residenceType": [
+    { "type": "นักเรียนประจำ", "count": 121 },
+    { "type": "นักเรียนไป-กลับ", "count": 74 }
+  ],
+  "dormitories": [
+    { "name": "เรือนนอนชาย", "count": 65 },
+    { "name": "เรือนนอนหญิง", "count": 56 }
+  ],
+  "studentActivities": [
+    {
+      "name": "กิจกรรมคุณธรรม จริยธรรม และจิตอาสา",
+      "participants": 195,
+      "note": "ข้อมูลนักเรียนปัจจุบัน"
+    },
+    {
+      "name": "กิจกรรมกีฬาและนันทนาการ",
+      "participants": 195,
+      "note": "ข้อมูลนักเรียนปัจจุบัน"
+    },
+    {
+      "name": "การเยี่ยมบ้านนักเรียน",
+      "participants": 210,
+      "note": "ข้อมูลปีการศึกษา 2568 ใช้ฐานข้อมูลตามกิจกรรม ไม่ใช่จำนวนนักเรียนปัจจุบัน 195 คน"
+    },
+    {
+      "name": "ธนาคารโรงเรียน",
+      "participants": 210,
+      "note": "ข้อมูลปีการศึกษา 2568 ใช้ฐานข้อมูลตามกิจกรรม ไม่ใช่จำนวนนักเรียนปัจจุบัน 195 คน"
+    }
+  ],
+  "scholarships": [
+    { "name": "ทุนการศึกษาสำหรับนักเรียนเรียนดี", "count": 18, "amount": 54000 },
+    { "name": "ทุนช่วยเหลือนักเรียนยากจน", "count": 42, "amount": 126000 },
+    { "name": "ทุนสนับสนุนอุปกรณ์การเรียน", "count": 35, "amount": 70000 }
   ]
 }

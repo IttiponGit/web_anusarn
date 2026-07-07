@@ -22,6 +22,10 @@
         <span class="badge rounded-pill">Dashboard</span>
       </div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
+      <a class="main-site-link" href="../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
     </aside>
 
     <div class="content-area">
@@ -84,52 +88,56 @@
             <div class="col-12 col-md-6 col-xxl-3">
               <div class="metric-card metric-blue h-100">
                 <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between mb-3">
-                    <span class="metric-icon"><i class="bi bi-people-fill"></i></span>
+                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                    <div class="metric-heading">
+                      <span class="metric-icon"><i class="bi bi-people-fill"></i></span>
+                      <div class="metric-label">จำนวนนักเรียน</div>
+                    </div>
                     <span class="badge badge-soft-primary">ภาพรวม</span>
                   </div>
-                  <div class="metric-value mb-1" id="sumStudents">195</div>
-                  <div class="metric-label">จำนวนนักเรียน</div>
-                  <div class="metric-note mt-2">ข้อมูลจากไฟล์ JSON กลาง</div>
+                  <div class="metric-value mb-0" id="sumStudents">195</div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
               <div class="metric-card metric-green h-100">
                 <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between mb-3">
-                    <span class="metric-icon"><i class="bi bi-person-badge-fill"></i></span>
+                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                    <div class="metric-heading">
+                      <span class="metric-icon"><i class="bi bi-person-badge-fill"></i></span>
+                      <div class="metric-label">จำนวนบุคลากร</div>
+                    </div>
                     <span class="badge badge-soft-success">บุคลากร</span>
                   </div>
-                  <div class="metric-value mb-1" id="sumPersonnel">74</div>
-                  <div class="metric-label">จำนวนบุคลากร</div>
-                  <div class="metric-note mt-2">ครูและบุคลากรสนับสนุน</div>
+                  <div class="metric-value mb-0" id="sumPersonnel">74</div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
               <div class="metric-card metric-yellow h-100">
                 <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between mb-3">
-                    <span class="metric-icon"><i class="bi bi-building"></i></span>
+                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                    <div class="metric-heading">
+                      <span class="metric-icon"><i class="bi bi-building"></i></span>
+                      <div class="metric-label">จำนวนห้องเรียน</div>
+                    </div>
                     <span class="badge badge-soft-warning">อาคารเรียน</span>
                   </div>
-                  <div class="metric-value mb-1" id="sumClassrooms">29</div>
-                  <div class="metric-label">จำนวนห้องเรียน</div>
-                  <div class="metric-note mt-2">รองรับการจัดการเรียนรู้หลายระดับ</div>
+                  <div class="metric-value mb-0" id="sumClassrooms">29</div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
               <div class="metric-card metric-purple h-100">
                 <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between mb-3">
-                    <span class="metric-icon"><i class="bi bi-calendar2-week-fill"></i></span>
+                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+                    <div class="metric-heading">
+                      <span class="metric-icon"><i class="bi bi-calendar2-week-fill"></i></span>
+                      <div class="metric-label">ปีการศึกษา</div>
+                    </div>
                     <span class="badge badge-soft-purple">ปีล่าสุด</span>
                   </div>
-                  <div class="metric-value mb-1" id="sumYear">2569</div>
-                  <div class="metric-label">ปีการศึกษา</div>
-                  <div class="metric-note mt-2">ข้อมูลประจำปี 2569</div>
+                  <div class="metric-value mb-0" id="sumYear">2569</div>
                 </div>
               </div>
             </div>
@@ -140,7 +148,6 @@
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
                   <h3 class="h5 mb-0"><i class="bi bi-bar-chart-line me-2 text-primary"></i>กราฟภาพรวมสถานศึกษา</h3>
-                  <span class="badge badge-soft-primary">Bootstrap 5 + Chart.js</span>
                 </div>
                 <div class="card-body chart-box">
                   <canvas id="homeSummaryChart"></canvas>
@@ -151,7 +158,6 @@
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
                   <h3 class="h5 mb-0"><i class="bi bi-lightning-charge me-2 text-primary"></i>ข้อมูลสำคัญ</h3>
-                  <span class="badge badge-soft-success">Overview</span>
                 </div>
                 <div class="card-body">
                   <div class="soft-card p-3 mb-3">
@@ -208,6 +214,10 @@
         <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
       </div>
       <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
+      <a class="main-site-link" href="../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
     </div>
   </div>
 

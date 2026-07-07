@@ -1,5 +1,6 @@
 ﻿<!doctype html>
 <html lang="th">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,13 +9,128 @@
   <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body data-page="basic">
   <div class="layout-shell">
     <aside class="app-sidebar d-none d-lg-flex flex-column">
-      <div class="sidebar-brand"><div><h1>สารสนเทศโรงเรียน</h1><p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div></div>
-      <div class="sidebar-meta"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span><span class="badge rounded-pill">ข้อมูลพื้นฐาน</span></div>
+      <div class="sidebar-brand">
+        <div>
+          <h1>สารสนเทศโรงเรียน</h1>
+          <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        </div>
+      </div>
+      <div class="sidebar-meta"><span class="badge rounded-pill">ปีการศึกษา <span
+            data-academic-year>2569</span></span><span class="badge rounded-pill">ข้อมูลพื้นฐาน</span></div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
+      <a class="main-site-link" href="../../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
     </aside>
     <div class="content-area">
-      <header class="app-topbar d-flex align-items-center"><div class="container-fluid d-flex align-items-center justify-content-between gap-3"><div class="d-flex align-items-center gap-3 topbar-shell"><button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button><div class="d-flex flex-column"><h1 class="page-title" id="pageTitle">ข้อมูลพื้นฐานโรงเรียน</h1><p class="page-subtitle" id="pageSubtitle">ข้อมูลอ้างอิงหลักของสถานศึกษา • ปีการศึกษา 2569</p></div></div><nav aria-label="breadcrumb" class="d-none d-md-block"><ol class="breadcrumb" id="breadcrumbTrail"></ol></nav></div></header>
-      <main class="page-content"><div class="container-fluid"><div id="errorBox" class="alert alert-danger d-none"></div><section class="hero-panel rounded-4 p-3 p-xl-4 mb-3"><div class="row align-items-center g-4"><div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">School Profile</span><h2 class="display-6 fw-bold mb-3" id="heroTitle">ข้อมูลพื้นฐานโรงเรียน</h2><p class="lead mb-0" id="heroSubtitle">รายละเอียดสำคัญของโรงเรียนที่จัดวางในรูปแบบการ์ดและตาราง</p></div><div class="col-lg-4"><div class="summary-grid"><div class="summary-chip"><span class="label">ปีการศึกษา</span><strong>2569</strong></div><div class="summary-chip"><span class="label">ระดับที่เปิดสอน</span><strong>-</strong></div><div class="summary-chip"><span class="label">ห้องเรียน</span><strong>-</strong></div><div class="summary-chip"><span class="label">นักเรียน</span><strong>-</strong></div></div></div></div></section><section class="row g-3 mb-4"><div class="col-12 col-md-6 col-xxl-3"><div class="basic-info-card basic-info-card-blue h-100"><div class="basic-info-label">ชื่อสถานศึกษา</div><div class="basic-info-value basic-info-value-long">โรงเรียนโสตศึกษาอนุสารสุนทร</div></div></div><div class="col-12 col-md-6 col-xxl-3"><div class="basic-info-card basic-info-card-green h-100"><div class="basic-info-label">ระดับที่เปิดสอน</div><div class="basic-info-value basic-info-value-long">อนุบาล 2 - มัธยมศึกษาปีที่ 6</div></div></div><div class="col-12 col-md-6 col-xxl-3"><div class="basic-info-card basic-info-card-yellow h-100"><div class="basic-info-label">จำนวนนักเรียน</div><div class="basic-info-value">195 คน</div></div></div><div class="col-12 col-md-6 col-xxl-3"><div class="basic-info-card basic-info-card-purple h-100"><div class="basic-info-label">ปีการศึกษา</div><div class="basic-info-value">2569</div></div></div></section><section class="section-card"><div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2"><h3 class="h5 mb-0"><i class="bi bi-info-circle me-2 text-primary"></i>รายละเอียดสถานศึกษา</h3><span class="badge badge-soft-primary">ข้อมูลจาก JSON กลาง</span></div><div class="card-body"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><tbody id="basicTableBody"></tbody></table></div></div></section><footer class="mt-4 pb-1"><p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p></footer></div></main></div></div><div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel"><div class="offcanvas-header"><div><h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5><p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button></div><div class="offcanvas-body"><div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span></div><ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul></div></div><script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><script src="../assets/vendor/chartjs/chart.umd.min.js"></script><script src="../assets/js/main.js"></script><script src="../assets/js/charts.js"></script></body></html>
+      <header class="app-topbar d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 topbar-shell"><button
+              class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button>
+            <div class="d-flex flex-column">
+              <h1 class="page-title" id="pageTitle">ข้อมูลพื้นฐานโรงเรียน</h1>
+              <p class="page-subtitle" id="pageSubtitle">ข้อมูลอ้างอิงหลักของสถานศึกษา • ปีการศึกษา 2569</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-block">
+            <ol class="breadcrumb" id="breadcrumbTrail"></ol>
+          </nav>
+        </div>
+      </header>
+      <main class="page-content">
+        <div class="container-fluid">
+          <div id="errorBox" class="alert alert-danger d-none"></div>
+          <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
+            <div class="row align-items-center g-4">
+              <div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">School
+                  Profile</span>
+                <h2 class="display-6 fw-bold mb-3" id="heroTitle">ข้อมูลพื้นฐานโรงเรียน</h2>
+                <p class="lead mb-0" id="heroSubtitle">รายละเอียดสำคัญของโรงเรียนที่จัดวางในรูปแบบการ์ดและตาราง</p>
+              </div>
+              <div class="col-lg-4">
+                <div class="summary-grid">
+                  <div class="summary-chip"><span class="label">ปีการศึกษา</span><strong>2569</strong></div>
+                  <div class="summary-chip"><span class="label">ระดับที่เปิดสอน</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">ห้องเรียน</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">นักเรียน</span><strong>-</strong></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="row g-3 mb-4">
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="basic-info-card basic-info-card-blue h-100">
+                <div class="basic-info-label">ชื่อสถานศึกษา</div>
+                <div class="basic-info-value basic-info-value-long">โรงเรียนโสตศึกษาอนุสารสุนทร</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="basic-info-card basic-info-card-green h-100">
+                <div class="basic-info-label">ระดับที่เปิดสอน</div>
+                <div class="basic-info-value basic-info-value-long">อนุบาล 2 - มัธยมศึกษาปีที่ 6</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="basic-info-card basic-info-card-yellow h-100">
+                <div class="basic-info-label">จำนวนนักเรียน</div>
+                <div class="basic-info-value">195 คน</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="basic-info-card basic-info-card-purple h-100">
+                <div class="basic-info-label">ปีการศึกษา</div>
+                <div class="basic-info-value">2569</div>
+              </div>
+            </div>
+          </section>
+          <section class="section-card">
+            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <h3 class="h5 mb-0"><i class="bi bi-info-circle me-2 text-primary"></i>รายละเอียดสถานศึกษา</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <tbody id="basicTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+          <footer class="mt-4 pb-1">
+            <p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> |
+              พ.ศ. <span id="copyrightYear"></span></p>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar"
+    aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <div>
+        <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+        <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      </div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span
+            data-academic-year>2569</span></span></div>
+      <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
+      <a class="main-site-link" href="../../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
+    </div>
+  </div>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/charts.js"></script>
+</body>
+
+</html>

@@ -1,27 +1,470 @@
 {
+  "dataDate": "26 มิถุนายน 2569",
   "totalPersonnel": 74,
-  "teacherCount": 52,
-  "supportCount": 22,
+  "administratorCount": 3,
+  "teacherCount": 41,
+  "supportCount": 30,
   "byPosition": [
     {
-      "position": "ผู้บริหาร",
-      "count": 3,
-      "percent": 4.05
+      "position": "ผู้อำนวยการสถานศึกษา",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 0,
+      "master": 1,
+      "doctorate": 0,
+      "percent": 1.35
     },
     {
-      "position": "ครูผู้สอน",
-      "count": 52,
-      "percent": 70.27
+      "position": "รองผู้อำนวยการสถานศึกษา",
+      "male": 0,
+      "female": 2,
+      "count": 2,
+      "belowBachelor": 0,
+      "bachelor": 0,
+      "master": 2,
+      "doctorate": 0,
+      "percent": 2.7
     },
     {
-      "position": "ครูผู้ช่วย",
+      "position": "ข้าราชการครู",
+      "male": 10,
+      "female": 29,
+      "count": 39,
+      "belowBachelor": 0,
+      "bachelor": 22,
+      "master": 17,
+      "doctorate": 0,
+      "percent": 52.7
+    },
+    {
+      "position": "ข้าราชการครู (ช่วยราชการ)",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 1,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "ที่ปรึกษาทางวิชาการ",
+      "male": 0,
+      "female": 1,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 1,
+      "percent": 1.35
+    },
+    {
+      "position": "ลูกจ้างประจำ",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 1,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "พนักงานราชการ",
+      "male": 0,
+      "female": 1,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 1,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "ครูอัตราจ้างโครงการคืนครูฯ",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 1,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "พี่เลี้ยงเด็กพิการ",
+      "male": 6,
+      "female": 13,
+      "count": 19,
+      "belowBachelor": 5,
+      "bachelor": 13,
+      "master": 1,
+      "doctorate": 0,
+      "percent": 25.68
+    },
+    {
+      "position": "ภารโรง",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 1,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "ยาม",
+      "male": 1,
+      "female": 0,
+      "count": 1,
+      "belowBachelor": 1,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "บุคลากรดูแลหอพัก",
+      "male": 0,
+      "female": 2,
+      "count": 2,
+      "belowBachelor": 2,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 2.7
+    },
+    {
+      "position": "จ้างเหมาบริการ มาตรา 33",
+      "male": 2,
+      "female": 0,
+      "count": 2,
+      "belowBachelor": 2,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 2.7
+    },
+    {
+      "position": "จ้างเหมาบริการ มาตรา 35",
+      "male": 0,
+      "female": 1,
+      "count": 1,
+      "belowBachelor": 0,
+      "bachelor": 1,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    },
+    {
+      "position": "คนงาน",
+      "male": 0,
+      "female": 1,
+      "count": 1,
+      "belowBachelor": 1,
+      "bachelor": 0,
+      "master": 0,
+      "doctorate": 0,
+      "percent": 1.35
+    }
+  ],
+  "executives": [
+    {
+      "name": "นายกฤตเกษม ผัดขัน",
+      "position": "ผู้อำนวยการสถานศึกษา",
+      "gender": "ชาย",
+      "ageRange": "-",
+      "education": "การศึกษามหาบัณฑิต บริหารการศึกษา",
+      "academicStanding": "-",
+      "experienceYears": null,
+      "governmentServiceYears": null,
+      "startDate": "17 ตุลาคม 2568",
+      "phone": "092-6903876",
+      "email": "k.phudkhun@anusarn-deaf.ac.th",
+      "responsibilities": [
+        "บริหารสถานศึกษา"
+      ]
+    },
+    {
+      "name": "นางสาวดวงเดือน คำมูลสุข",
+      "position": "รองผู้อำนวยการสถานศึกษา",
+      "gender": "หญิง",
+      "ageRange": "-",
+      "education": "ศึกษาศาสตรมหาบัณฑิต สาขาการบริหารการศึกษา",
+      "academicStanding": "-",
+      "experienceYears": null,
+      "governmentServiceYears": null,
+      "startDate": "1 กุมภาพันธ์ 2559",
+      "responsibilities": [
+        "กลุ่มบริหารงานวิชาการ",
+        "กลุ่มบริหารงานกิจการนักเรียน",
+        "กลุ่มบริหารงานทางการศึกษาพิเศษ"
+      ]
+    },
+    {
+      "name": "นางสาวปิฏินนท์ จันทร์รัตน์",
+      "position": "รองผู้อำนวยการสถานศึกษา",
+      "gender": "หญิง",
+      "ageRange": "-",
+      "education": "ศึกษาศาสตรมหาบัณฑิต สาขาการบริหารการศึกษา และครุศาสตรมหาบัณฑิต สาขาการศึกษาพิเศษ",
+      "academicStanding": "-",
+      "experienceYears": null,
+      "governmentServiceYears": null,
+      "startDate": "16 พฤษภาคม 2561",
+      "responsibilities": [
+        "กลุ่มบริหารงานแผนงานและงบประมาณ",
+        "กลุ่มบริหารงานบุคคล",
+        "กลุ่มบริหารงานทั่วไป"
+      ]
+    }
+  ],
+  "byGender": [
+    {
+      "gender": "หญิง",
+      "count": 50,
+      "percent": 68
+    },
+    {
+      "gender": "ชาย",
+      "count": 24,
+      "percent": 32
+    }
+  ],
+  "byAgeRange": [
+    {
+      "range": "Gen X อายุ 46-61 ปี",
+      "count": 26,
+      "percent": 35
+    },
+    {
+      "range": "Gen Y อายุ 30-45 ปี",
+      "count": 40,
+      "percent": 54
+    },
+    {
+      "range": "Gen Z อายุ 14-29 ปี",
       "count": 8,
-      "percent": 10.81
+      "percent": 11
+    }
+  ],
+  "byEducation": [
+    {
+      "level": "ต่ำกว่าปริญญาตรี",
+      "count": 13,
+      "percent": 17.57
     },
     {
-      "position": "บุคลากรสนับสนุน",
+      "level": "ปริญญาตรี",
+      "count": 39,
+      "percent": 52.7
+    },
+    {
+      "level": "ปริญญาโท",
+      "count": 21,
+      "percent": 28.38
+    },
+    {
+      "level": "ปริญญาเอก",
+      "count": 1,
+      "percent": 1.35
+    }
+  ],
+  "byAcademicStanding": [
+    {
+      "standing": "ชำนาญการพิเศษ",
+      "count": 19,
+      "percent": 42
+    },
+    {
+      "standing": "ชำนาญการ",
       "count": 11,
-      "percent": 14.87
+      "percent": 24
+    },
+    {
+      "standing": "ไม่มีวิทยฐานะ",
+      "count": 13,
+      "percent": 34
+    }
+  ],
+  "byExperience": [
+    {
+      "range": "ข้อมูลตามแฟ้มบุคลากร",
+      "count": 74,
+      "percent": 100
+    }
+  ],
+  "byGovernmentServiceYears": [
+    {
+      "range": "ข้อมูลตามแฟ้มบุคลากร",
+      "count": 74,
+      "percent": 100
+    }
+  ],
+  "professionalDevelopment": [
+    {
+      "activity": "การอบรม",
+      "title": "การอบรม",
+      "year": "2568",
+      "participants": 34,
+      "count": 34,
+      "percent": 49,
+      "provider": "ข้อมูลปีการศึกษา 2568",
+      "summary": "บุคลากรเข้าร่วมการอบรม จำนวน 34 ครั้ง คิดเป็นร้อยละ 49"
+    },
+    {
+      "activity": "การประชุม",
+      "title": "การประชุม",
+      "year": "2568",
+      "participants": 18,
+      "count": 18,
+      "percent": 26,
+      "provider": "ข้อมูลปีการศึกษา 2568",
+      "summary": "บุคลากรเข้าร่วมการประชุม จำนวน 18 ครั้ง คิดเป็นร้อยละ 26"
+    },
+    {
+      "activity": "การสัมมนา",
+      "title": "การสัมมนา",
+      "year": "2568",
+      "participants": 7,
+      "count": 7,
+      "percent": 10,
+      "provider": "ข้อมูลปีการศึกษา 2568",
+      "summary": "บุคลากรเข้าร่วมการสัมมนา จำนวน 7 ครั้ง คิดเป็นร้อยละ 10"
+    },
+    {
+      "activity": "ศึกษาดูงาน",
+      "title": "ศึกษาดูงาน",
+      "year": "2568",
+      "participants": 8,
+      "count": 8,
+      "percent": 11,
+      "provider": "ข้อมูลปีการศึกษา 2568",
+      "summary": "บุคลากรเข้าร่วมศึกษาดูงาน จำนวน 8 ครั้ง คิดเป็นร้อยละ 11"
+    },
+    {
+      "activity": "เป็นวิทยากร",
+      "title": "เป็นวิทยากร",
+      "year": "2568",
+      "participants": 2,
+      "count": 2,
+      "percent": 4,
+      "provider": "ข้อมูลปีการศึกษา 2568",
+      "summary": "บุคลากรเป็นวิทยากร จำนวน 2 ครั้ง คิดเป็นร้อยละ 4"
+    }
+  ],
+  "personnelAwards": [
+    {
+      "title": "รางวัลยกย่องเชิดชูเกียรติ",
+      "year": "2568",
+      "recipient": "ผู้บริหารและครู จำนวน 24 คน",
+      "organization": "กลุ่มสถานศึกษาสังกัดสำนักบริหารงานการศึกษาพิเศษ กลุ่ม 6",
+      "count": 24,
+      "percent": 69,
+      "summary": "ได้รับรางวัลยกย่องเชิดชูเกียรติจากกลุ่มสถานศึกษาสังกัดสำนักบริหารงานการศึกษาพิเศษ กลุ่ม 6"
+    },
+    {
+      "title": "รางวัลยกย่องเชิดชูเกียรติ",
+      "year": "2568",
+      "recipient": "ผู้บริหารและครู จำนวน 11 คน",
+      "organization": "จังหวัดเชียงใหม่",
+      "count": 11,
+      "percent": 31,
+      "summary": "ได้รับรางวัลยกย่องเชิดชูเกียรติจากจังหวัดเชียงใหม่"
+    }
+  ],
+  "executiveDirectory": [
+    {
+      "order": 1,
+      "name": "นางแจ่มจิตต์ เลาหวัฒน์",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "พฤษภาคม 2520 - เมษายน 2522",
+      "startYear": "พฤษภาคม 2520",
+      "endYear": "เมษายน 2522",
+      "duration": "2 ปี"
+    },
+    {
+      "order": 2,
+      "name": "นางสุภิญ ศุขพงศ์",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "พฤษภาคม 2522 - กรกฎาคม 2528",
+      "startYear": "พฤษภาคม 2522",
+      "endYear": "กรกฎาคม 2528",
+      "duration": "6 ปี 3 เดือน"
+    },
+    {
+      "order": 3,
+      "name": "นายเสน่ห์ ดีหนอ",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "สิงหาคม 2528 - ตุลาคม 2536",
+      "startYear": "สิงหาคม 2528",
+      "endYear": "ตุลาคม 2536",
+      "duration": "8 ปี 3 เดือน"
+    },
+    {
+      "order": 4,
+      "name": "นางพรพัฒน์ ศิริ",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "9 พฤศจิกายน 2536 - 12 พฤษภาคม 2539",
+      "startYear": "9 พฤศจิกายน 2536",
+      "endYear": "12 พฤษภาคม 2539",
+      "duration": "2 ปี 7 เดือน"
+    },
+    {
+      "order": 5,
+      "name": "นายอมร อินทนนท์",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "13 พฤษภาคม 2539 - 5 กุมภาพันธ์ 2541",
+      "startYear": "13 พฤษภาคม 2539",
+      "endYear": "5 กุมภาพันธ์ 2541",
+      "duration": "1 ปี 10 เดือน"
+    },
+    {
+      "order": 6,
+      "name": "นายพิชัย สุขบท",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "9 กุมภาพันธ์ 2541 - 30 กันยายน 2549",
+      "startYear": "9 กุมภาพันธ์ 2541",
+      "endYear": "30 กันยายน 2549",
+      "duration": "8 ปี 8 เดือน"
+    },
+    {
+      "order": 7,
+      "name": "นางพิกุล เลียวศิริพงศ์",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "8 กุมภาพันธ์ 2550 - 30 กันยายน 2557",
+      "startYear": "8 กุมภาพันธ์ 2550",
+      "endYear": "30 กันยายน 2557",
+      "duration": "8 ปี"
+    },
+    {
+      "order": 8,
+      "name": "นางยุพิน คำปัน",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "8 มกราคม 2558 - 30 กันยายน 2563",
+      "startYear": "8 มกราคม 2558",
+      "endYear": "30 กันยายน 2563",
+      "duration": "5 ปี 8 เดือน"
+    },
+    {
+      "order": 9,
+      "name": "นายอมรินทร์ พันธุ์วิไล",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "9 ตุลาคม 2563 - 30 กันยายน 2568",
+      "startYear": "9 ตุลาคม 2563",
+      "endYear": "30 กันยายน 2568",
+      "duration": "4 ปี 11 เดือน"
+    },
+    {
+      "order": 10,
+      "name": "นายกฤตเกษม ผัดขัน",
+      "position": "ผู้บริหารสถานศึกษา",
+      "period": "17 ตุลาคม 2568 - ปัจจุบัน",
+      "startYear": "17 ตุลาคม 2568",
+      "endYear": "ปัจจุบัน",
+      "duration": "8 เดือน"
     }
   ]
 }
