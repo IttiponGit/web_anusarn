@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="sidebar-meta">
-        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>-</span></span>
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>ไม่มีข้อมูล</span></span>
         <span class="badge rounded-pill">บุคลากร</span>
       </div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
@@ -59,10 +59,10 @@
               </div>
               <div class="col-lg-4">
                 <div class="summary-grid">
-                  <div class="summary-chip"><span class="label">บุคลากร</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">ครูผู้สอน</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">สนับสนุน</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">ผู้บริหาร</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">บุคลากร</span><strong>ไม่มีข้อมูล</strong></div>
+                  <div class="summary-chip"><span class="label">ครูผู้สอน</span><strong>ไม่มีข้อมูล</strong></div>
+                  <div class="summary-chip"><span class="label">สนับสนุน</span><strong>ไม่มีข้อมูล</strong></div>
+                  <div class="summary-chip"><span class="label">ผู้บริหาร</span><strong>ไม่มีข้อมูล</strong></div>
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@
               <div class="personnel-info-card personnel-info-card-blue h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-person-vcard"></i></span>
-                  <div class="personnel-info-label">บุคลากรรวม <span class="personnel-info-value" id="personnelTotal">-</span></div>
+                  <div class="personnel-info-label">บุคลากรรวม <span class="personnel-info-value" id="personnelTotal">ไม่มีข้อมูล</span></div>
                 </div>
               </div>
             </div>
@@ -81,7 +81,7 @@
               <div class="personnel-info-card personnel-info-card-green h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-mortarboard-fill"></i></span>
-                  <div class="personnel-info-label">ครูผู้สอน <span class="personnel-info-value" id="teacherCount">-</span></div>
+                  <div class="personnel-info-label">ครูผู้สอน <span class="personnel-info-value" id="teacherCount">ไม่มีข้อมูล</span></div>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
               <div class="personnel-info-card personnel-info-card-purple h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-people"></i></span>
-                  <div class="personnel-info-label">บุคลากรสนับสนุน <span class="personnel-info-value" id="supportCount">-</span></div>
+                  <div class="personnel-info-label">บุคลากรสนับสนุน <span class="personnel-info-value" id="supportCount">ไม่มีข้อมูล</span></div>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@
             <div class="col-lg-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>สัดส่วนบุคลากรตามตำแหน่ง</h3>
+                  <h3 class="h5 mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>สัดส่วนบุคลากรจำแนกตามประเภท</h3>
                 </div>
                 <div class="card-body chart-box chart-box-pie personnel-chart-box">
                   <canvas id="personnelChart"></canvas>
@@ -110,7 +110,7 @@
             <div class="col-lg-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>ตารางสรุปตำแหน่ง</h3>
+                  <h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>ตารางบุคลากรจำแนกตามตำแหน่งและเพศ</h3>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -197,7 +197,7 @@
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3">
-        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>-</span></span>
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>ไม่มีข้อมูล</span></span>
       </div>
       <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
       <a class="main-site-link" href="../../"><i class="bi bi-house-door-fill"></i><span>กลับเว็บไซต์หลัก</span></a>
@@ -208,7 +208,7 @@
   <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/charts.js"></script>
-  <script>
+  <script type="text/plain" id="legacy-personnel-renderer-disabled">
     document.addEventListener('DOMContentLoaded', async () => {
       const escapeHtml = (value) => String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -252,13 +252,14 @@
         const response = await fetch('../api/personnel.php', { cache: 'no-store' });
         if (!response.ok) throw new Error('Cannot load personnel data');
         const payload = await response.json();
-        if (!payload.success) throw new Error(payload.error || 'Cannot load personnel data');
-
-        const personnelItems = Array.isArray(payload.data) ? payload.data : [];
-        const positionSummary = Array.isArray(payload.summary?.byPosition) ? payload.summary.byPosition : [];
+        if (payload && payload.success === false) {
+          throw new Error(payload.message || 'Cannot load personnel data');
+        }
+        const apiData = payload && payload.data ? payload.data : {};
+        const personnelItems = Array.isArray(apiData.items) ? apiData.items : [];
         const data = {
+          ...apiData,
           executives: personnelItems,
-          byPosition: positionSummary,
           byGender: [],
           byAgeRange: [],
           byEducation: [],
@@ -276,17 +277,20 @@
               <div class="d-flex align-items-start gap-3">
                 <span class="icon-circle icon-blue flex-shrink-0"><i class="bi bi-person-badge-fill"></i></span>
                 <div>
-                  <div class="item-title mb-1">${escapeHtml(item.name)}</div>
-                  <div class="item-desc">${escapeHtml(item.position)}</div>
-                  <div class="item-desc mt-2">${escapeHtml(item.group_name || item.group_type || '')}</div>
-                  <div class="item-desc">${escapeHtml(item.department || '')}</div>
+                  <div class="item-title mb-1">${escapeHtml(item.fullName)}</div>
+                  <div class="item-desc">${escapeHtml(item.roleTitle)}</div>
+                  <div class="item-desc mt-2">วุฒิการศึกษาสูงสุด: ${escapeHtml(item.highestEducation)}</div>
+                  <div class="item-desc">ดำรงตำแหน่ง: ${escapeHtml(item.startWorkText)}</div>
+                  <div class="item-desc">หน้าที่รับผิดชอบ: ${escapeHtml(item.responsibility)}</div>
+                  <div class="item-desc">โทร. ${escapeHtml(item.phone || 'ไม่มีข้อมูล')}</div>
+                  <div class="item-desc">อีเมล ${escapeHtml(item.email || 'ไม่มีข้อมูล')}</div>
                 </div>
               </div>
             </div>
           </div>
         `);
 
-        renderStatTable('genderStats', 'สถิติตามตำแหน่ง', data.byPosition, 'position');
+        renderStatTable('genderStats', 'สถิติตามเพศ', data.byGender, 'gender');
         renderStatTable('ageStats', 'สถิติตามช่วงอายุ', data.byAgeRange, 'range');
         renderStatTable('educationStats', 'วุฒิการศึกษา', data.byEducation, 'level');
         renderStatTable('standingStats', 'วิทยฐานะ', data.byAcademicStanding, 'standing');
@@ -327,7 +331,7 @@
                   <tr>
                     <td>${escapeHtml(item.name)}</td>
                     <td>${escapeHtml(item.position)}</td>
-                    <td><span class="badge badge-soft-purple">${escapeHtml(item.group_name || item.group_type || '-')}</span></td>
+                    <td><span class="badge badge-soft-purple">${escapeHtml(item.termPeriodText || 'ไม่มีข้อมูล')}</span>${item.durationText ? ` <span class="badge badge-soft-primary">${escapeHtml(item.durationText)}</span>` : ''}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -341,6 +345,198 @@
         }
       }
     });
+  </script>
+  <script>
+    (() => {
+      const noDataText = 'ไม่มีข้อมูล';
+      const escapeHtml = (value) => String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+      const formatNumber = (value) => Number(value || 0).toLocaleString('th-TH');
+      const percentBadge = (value) => `<span class="badge badge-soft-primary">${Number(value || 0).toFixed(2).replace(/\.00$/, '')}%</span>`;
+
+      const renderStatTable = (targetId, title, rows, labelKey) => {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        const safeRows = Array.isArray(rows) ? rows : [];
+        target.innerHTML = `
+          <table class="table table-hover align-middle mb-0">
+            <thead><tr><th colspan="3">${escapeHtml(title)}</th></tr></thead>
+            <tbody>
+              ${safeRows.length ? safeRows.map((item) => `
+                <tr>
+                  <td>${escapeHtml(item[labelKey] || item.label || noDataText)}</td>
+                  <td class="text-nowrap">${formatNumber(item.count)} คน</td>
+                  <td>${percentBadge(item.percent)}</td>
+                </tr>
+              `).join('') : `<tr><td colspan="3" class="text-center text-muted">${noDataText}</td></tr>`}
+            </tbody>
+          </table>
+        `;
+      };
+
+      const renderCards = (targetId, items, template) => {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        const safeItems = Array.isArray(items) ? items : [];
+        target.innerHTML = safeItems.length
+          ? safeItems.map(template).join('')
+          : `<div class="col-12"><div class="section-card p-3 text-center text-muted">${noDataText}</div></div>`;
+      };
+
+      const statRows = (data, sectionKey, labelKey = 'label') => {
+        const rows = data?.stats?.[sectionKey];
+        if (!Array.isArray(rows)) return [];
+        return rows.map((item) => ({
+          [labelKey]: item.label,
+          label: item.label,
+          count: item.count,
+          percent: item.percent,
+          note: item.note
+        }));
+      };
+      const adminImageSrc = (image) => {
+        const value = String(image || '').trim();
+        return value ? `/${value.replace(/^\/+/, '')}` : '';
+      };
+
+      const appendStatTable = (containerSelector, title, rows, labelKey) => {
+        const container = document.querySelector(containerSelector);
+        if (!container || container.querySelector(`[data-section-title="${title}"]`)) return;
+        const col = document.createElement('div');
+        col.className = 'col-lg-6';
+        col.dataset.sectionTitle = title;
+        const wrap = document.createElement('div');
+        wrap.className = 'table-responsive';
+        col.appendChild(wrap);
+        container.appendChild(col);
+
+        const safeRows = Array.isArray(rows) ? rows : [];
+        wrap.innerHTML = `
+          <table class="table table-hover align-middle mb-0">
+            <thead><tr><th colspan="3">${escapeHtml(title)}</th></tr></thead>
+            <tbody>
+              ${safeRows.length ? safeRows.map((item) => `
+                <tr>
+                  <td>${escapeHtml(item[labelKey] || item.label || noDataText)}</td>
+                  <td class="text-nowrap">${formatNumber(item.count)} คน</td>
+                  <td>${percentBadge(item.percent)}</td>
+                </tr>
+              `).join('') : `<tr><td colspan="3" class="text-center text-muted">${noDataText}</td></tr>`}
+            </tbody>
+          </table>
+        `;
+      };
+
+      const renderPersonnelTabs = (personnel) => {
+        renderCards('executivesList', personnel.executives, (item) => {
+          const imageSrc = adminImageSrc(item.image);
+          return `
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="soft-card p-3 h-100">
+              <div class="admin-card">
+                <div class="admin-photo-wrap">
+                  ${imageSrc ? `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(item.fullName || noDataText)}" class="admin-photo" onerror="this.style.display='none';">` : '<span class="admin-photo-fallback"><i class="bi bi-person-badge-fill"></i></span>'}
+                </div>
+                <div class="admin-info">
+                  <div class="item-title mb-1">${escapeHtml(item.fullName || noDataText)}</div>
+                  <div class="item-desc">${escapeHtml(item.roleTitle || noDataText)}</div>
+                  <div class="item-desc mt-2">วุฒิการศึกษาสูงสุด: ${escapeHtml(item.highestEducation || noDataText)}</div>
+                  <div class="item-desc">ดำรงตำแหน่ง: ${escapeHtml(item.startWorkText || noDataText)}</div>
+                  <div class="item-desc">หน้าที่รับผิดชอบ: ${escapeHtml(item.responsibility || noDataText)}</div>
+                  ${item.phone ? `<div class="item-desc">โทร. ${escapeHtml(item.phone)}</div>` : `<div class="item-desc">โทร. ${noDataText}</div>`}
+                  ${item.email ? `<div class="item-desc">อีเมล ${escapeHtml(item.email)}</div>` : `<div class="item-desc">อีเมล ${noDataText}</div>`}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        });
+
+        renderStatTable('genderStats', 'สถิติตามเพศ', personnel.byGender, 'gender');
+        renderStatTable('ageStats', 'สถิติตามรุ่น/ช่วงอายุ', personnel.byAgeRange, 'range');
+        renderStatTable('educationStats', 'วุฒิการศึกษา', personnel.byEducation, 'level');
+        renderStatTable('standingStats', 'วิทยฐานะ', personnel.byAcademicStanding, 'standing');
+        renderStatTable('experienceStats', 'ประสบการณ์ทำงาน', personnel.byExperience, 'range');
+        renderStatTable('serviceStats', 'อายุราชการ', personnel.byGovernmentServiceYears, 'range');
+
+        appendStatTable('#statsPane .row', 'ภูมิลำเนา', statRows(personnel, 'hometown'), 'label');
+        appendStatTable('#statsPane .row', 'สาขาวิชาเอก', statRows(personnel, 'major'), 'label');
+        appendStatTable('#qualificationPane .row', 'ใบประกอบวิชาชีพครู', statRows(personnel, 'teacher_license'), 'label');
+        appendStatTable('#experiencePane .row', 'เครื่องราชอิสริยาภรณ์', statRows(personnel, 'royal_decoration'), 'label');
+
+        renderCards('developmentList', personnel.professionalDevelopment, (item) => `
+          <div class="col-12 col-lg-4">
+            <div class="soft-card p-3 h-100">
+              <span class="badge badge-soft-success mb-2">พ.ศ. ${escapeHtml(item.year || personnel.pageYear || '')}</span>
+              <div class="item-title mb-1">${escapeHtml(item.title || noDataText)}</div>
+              <div class="item-desc mb-2">${escapeHtml(item.provider || noDataText)}</div>
+              <div class="item-desc">ผู้เข้าร่วม ${formatNumber(item.participants)} คน</div>
+              <div class="item-desc mt-2">${escapeHtml(item.summary || noDataText)}</div>
+            </div>
+          </div>
+        `);
+
+        renderCards('personnelAwardsList', personnel.personnelAwards, (item) => `
+          <div class="col-12 col-lg-6">
+            <div class="soft-card p-3 h-100">
+              <span class="badge badge-soft-warning mb-2">พ.ศ. ${escapeHtml(item.year || personnel.pageYear || '')}</span>
+              <div class="item-title mb-1">${escapeHtml(item.title || noDataText)}</div>
+              <div class="item-desc">${escapeHtml(item.recipient || noDataText)} | ${escapeHtml(item.organization || noDataText)}</div>
+              <div class="item-desc mt-2">${escapeHtml(item.summary || noDataText)}</div>
+            </div>
+          </div>
+        `);
+
+        const directory = document.getElementById('executiveDirectory');
+        if (directory) {
+          const rows = Array.isArray(personnel.executiveDirectory) ? personnel.executiveDirectory : [];
+          directory.innerHTML = `
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>ชื่อ / รายการ</th><th>ตำแหน่ง</th><th>ช่วงปี</th></tr></thead>
+              <tbody>
+                ${rows.length ? rows.map((item) => `
+                  <tr>
+                    <td>${escapeHtml(item.name || noDataText)}</td>
+                    <td>${escapeHtml(item.position || noDataText)}</td>
+                    <td><span class="badge badge-soft-purple">${escapeHtml(item.termPeriodText || noDataText)}</span>${item.durationText ? ` <span class="badge badge-soft-primary">${escapeHtml(item.durationText)}</span>` : ''}</td>
+                  </tr>
+                `).join('') : `<tr><td colspan="3" class="text-center text-muted">${noDataText}</td></tr>`}
+              </tbody>
+            </table>
+          `;
+        }
+      };
+
+      let rendered = false;
+      document.addEventListener('information:dataReady', (event) => {
+        rendered = true;
+        renderPersonnelTabs(event.detail?.personnel || {});
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        window.setTimeout(async () => {
+          if (rendered) return;
+          try {
+            const response = await fetch('../api/personnel.php', { cache: 'no-store' });
+            if (!response.ok) throw new Error('Cannot load personnel data');
+            const payload = await response.json();
+            if (payload && payload.success === false) {
+              throw new Error(payload.message || 'Cannot load personnel data');
+            }
+            renderPersonnelTabs(payload && payload.data ? payload.data : {});
+          } catch (error) {
+            const tabContent = document.getElementById('personnelTabsContent');
+            if (tabContent) {
+              tabContent.innerHTML = '<div class="alert alert-danger mb-0">ไม่สามารถโหลดข้อมูลบุคลากรเพิ่มเติมได้</div>';
+            }
+          }
+        }, 1000);
+      });
+    })();
   </script>
 </body>
 </html>

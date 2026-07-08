@@ -1075,6 +1075,47 @@ body[data-page="personnel"] .section-card .card-header .badge {
   display: none;
 }
 
+body[data-page="personnel"] .admin-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+body[data-page="personnel"] .admin-photo-wrap {
+  width: 110px;
+  height: 130px;
+  border-radius: 14px;
+  overflow: hidden;
+  flex: 0 0 110px;
+  background: #eaf1ff;
+  border: 1px solid #d6e4ff;
+}
+
+body[data-page="personnel"] .admin-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+}
+
+body[data-page="personnel"] .admin-photo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--school-blue-700);
+  font-size: 2rem;
+}
+
+body[data-page="personnel"] .admin-info {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.7;
+}
+
 body[data-page="personnel"] .personnel-chart-box {
   height: 488px;
   max-height: 488px;

@@ -60,7 +60,13 @@
     if (!legend) return;
 
     legend.innerHTML = '';
-    positions.forEach((item, index) => {
+    const safePositions = Array.isArray(positions) ? positions : [];
+    if (!safePositions.length) {
+      legend.innerHTML = '<div class="text-center text-muted py-2">ไม่มีข้อมูล</div>';
+      return;
+    }
+
+    safePositions.forEach((item, index) => {
       const row = document.createElement('div');
       row.className = 'personnel-legend-item';
 
@@ -278,29 +284,32 @@
     }
 
     if (hasCanvas('personnelChart') && data.personnel) {
-      renderPersonnelLegend(data.personnel.byPosition);
-      drawChart('personnelChart', {
-        type: 'doughnut',
-        data: {
-          labels: data.personnel.byPosition.map((x) => x.position),
-          datasets: [{
-            data: data.personnel.byPosition.map((x) => x.count),
-            backgroundColor: data.personnel.byPosition.map((_, index) => personnelPalette[index % personnelPalette.length]),
-            borderColor: '#ffffff',
-            borderWidth: 2,
-            hoverOffset: 8
-          }]
-        },
-        options: {
-          ...radialOptions(),
-          plugins: {
-            ...radialOptions().plugins,
-            legend: { display: false }
+      const personnelPositions = Array.isArray(data.personnel.byPosition) ? data.personnel.byPosition : [];
+      renderPersonnelLegend(personnelPositions);
+      if (personnelPositions.length) {
+        drawChart('personnelChart', {
+          type: 'doughnut',
+          data: {
+            labels: personnelPositions.map((x) => x.position),
+            datasets: [{
+              data: personnelPositions.map((x) => x.count),
+              backgroundColor: personnelPositions.map((_, index) => personnelPalette[index % personnelPalette.length]),
+              borderColor: '#ffffff',
+              borderWidth: 2,
+              hoverOffset: 8
+            }]
           },
-          cutout: '54%',
-          radius: '100%'
-        }
-      });
+          options: {
+            ...radialOptions(),
+            plugins: {
+              ...radialOptions().plugins,
+              legend: { display: false }
+            },
+            cutout: '54%',
+            radius: '100%'
+          }
+        });
+      }
     }
 
     if (hasCanvas('studentsChart') && data.students) {

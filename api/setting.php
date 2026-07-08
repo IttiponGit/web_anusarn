@@ -13,23 +13,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
 
 require_once __DIR__ . '/db.php';
 
-function setting_value(array $settings, array $keys, $default = '')
-{
-	foreach ($keys as $key) {
-		$value = trim((string)($settings[$key] ?? ''));
-		if ($value !== '') {
-			return $value;
-		}
-	}
-
-	return $default;
-}
-
-function setting_int(array $settings, array $keys): int
-{
-	$value = setting_value($settings, $keys, '');
-	return is_numeric($value) ? (int)$value : 0;
-}
+const SITE_SETTING_KEYS = [
+	'personnel_count',
+	'student_count',
+	'classroom_count',
+	'academic_year',
+];
 
 try {
 	$stmt = $pdo->query('SELECT setting_key, setting_value FROM site_settings');
@@ -37,44 +26,27 @@ try {
 
 	$allSettings = [];
 	foreach ($rows as $row) {
-		$key = isset($row['setting_key']) ? (string)$row['setting_key'] : '';
+		$key = isset($row['setting_key']) ? (string) $row['setting_key'] : '';
 		if ($key === '') {
 			continue;
 		}
-		$allSettings[$key] = isset($row['setting_value']) ? (string)$row['setting_value'] : '';
+		$allSettings[$key] = isset($row['setting_value']) ? (string) $row['setting_value'] : '';
 	}
 
-	$schoolName = setting_value($allSettings, ['school_name_th', 'school_name']);
-	$academicYear = setting_value($allSettings, ['academic_year']);
-	$studentCount = setting_int($allSettings, ['student_count']);
-	$personnelCount = setting_int($allSettings, ['personnel_count']);
-	$classroomCount = setting_int($allSettings, ['classroom_count']);
+	$stats = [];
+	foreach (SITE_SETTING_KEYS as $key) {
+		$value = array_key_exists($key, $allSettings) ? trim((string) $allSettings[$key]) : '';
+		$stats[$key] = $value !== '' ? $value : null;
+	}
 
 	echo json_encode([
 		'success' => true,
 		'message' => 'Settings loaded successfully',
 		'data' => [
-			'schoolName' => $schoolName,
-			'schoolNameTh' => $schoolName,
-			'schoolNameEn' => setting_value($allSettings, ['school_name_en']),
-			'academicYear' => $academicYear,
-			'studentCount' => $studentCount,
-			'personnelCount' => $personnelCount,
-			'classroomCount' => $classroomCount,
-			'levelRange' => setting_value($allSettings, ['level_range']),
-			'identity' => setting_value($allSettings, ['identity']),
-			'vision' => setting_value($allSettings, ['vision']),
-			'contact' => [
-				'address' => setting_value($allSettings, ['school_address', 'address']),
-				'phone' => setting_value($allSettings, ['phone']),
-				'email' => setting_value($allSettings, ['email']),
-				'website' => setting_value($allSettings, ['website'])
-			],
-			'settings' => $allSettings,
-			'personnel_count' => $personnelCount,
-			'student_count' => $studentCount,
-			'classroom_count' => $classroomCount,
-			'academic_year' => $academicYear
+			'personnel_count' => is_numeric($stats['personnel_count']) ? (int) $stats['personnel_count'] : null,
+			'student_count' => is_numeric($stats['student_count']) ? (int) $stats['student_count'] : null,
+			'classroom_count' => is_numeric($stats['classroom_count']) ? (int) $stats['classroom_count'] : null,
+			'academic_year' => $stats['academic_year'] !== null ? (string) $stats['academic_year'] : null,
 		],
 	], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
