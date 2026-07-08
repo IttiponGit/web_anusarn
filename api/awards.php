@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     exit;
 }
 
-require_once __DIR__ . "/../../api/db.php";
+require_once __DIR__ . "/db.php";
 
 if (!isset($pdo) || !($pdo instanceof PDO)) {
     http_response_code(500);
@@ -188,9 +188,11 @@ try {
 
         foreach ($awardTotalStmt->fetchAll() as $row) {
             $awardId = (int)$row["award_id"];
-            if (isset($awards[$awardId])) {
-                $awards[$awardId]["award_total"] = (int)($row["award_total"] ?? 0);
+            if (!isset($awards[$awardId])) {
+                continue;
             }
+
+            $awards[$awardId]["award_total"] = (int)($row["award_total"] ?? 0);
         }
 
         $recipientStmt = $pdo->prepare(
@@ -247,9 +249,11 @@ try {
 
         foreach ($studentTotalStmt->fetchAll() as $row) {
             $awardId = (int)$row["award_id"];
-            if (isset($awards[$awardId])) {
-                $awards[$awardId]["student_total"] = (int)($row["student_total"] ?? 0);
+            if (!isset($awards[$awardId])) {
+                continue;
             }
+
+            $awards[$awardId]["student_total"] = (int)($row["student_total"] ?? 0);
         }
     }
 

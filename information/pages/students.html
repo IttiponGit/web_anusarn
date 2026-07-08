@@ -157,10 +157,6 @@
             <div class="card-header">
               <ul class="nav nav-pills gap-2" id="studentTabs" role="tablist">
                 <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#overviewTab" type="button" role="tab">ภาพรวม</button></li>
-                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#generalTab" type="button" role="tab">ภูมิลำเนาและข้อมูลทั่วไป</button></li>
-                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#impairmentTab" type="button" role="tab">ความบกพร่อง</button></li>
-                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#activityTab" type="button" role="tab">กิจการนักเรียน</button></li>
-                <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#scholarshipTab" type="button" role="tab">ทุนการศึกษา</button></li>
               </ul>
             </div>
             <div class="card-body">
@@ -169,31 +165,6 @@
                   <div class="row g-3">
                     <div class="col-md-6"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">นักเรียนประจำ / ไป-กลับ</div><div id="residenceList" class="mt-2"></div></div></div>
                     <div class="col-md-6"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">เรือนนอน</div><div id="dormitoryList" class="mt-2"></div></div></div>
-                  </div>
-                </div>
-                <div class="tab-pane fade" id="generalTab" role="tabpanel">
-                  <div class="row g-3">
-                    <div class="col-lg-4"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">ภูมิลำเนาตามจังหวัด</div><div id="provinceList" class="mt-2"></div></div></div>
-                    <div class="col-lg-4"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">ชาติพันธุ์</div><div id="ethnicityList" class="mt-2"></div></div></div>
-                    <div class="col-lg-4"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">ศาสนา</div><div id="religionList" class="mt-2"></div></div></div>
-                  </div>
-                </div>
-                <div class="tab-pane fade" id="impairmentTab" role="tabpanel">
-                  <div class="row g-3">
-                    <div class="col-md-6"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">ประเภทความบกพร่อง</div><div id="impairmentList" class="mt-2"></div></div></div>
-                    <div class="col-md-6"><div class="soft-card p-3 h-100"><div class="item-title fw-bold">ประเภทความพิการซ้อน</div><div id="multipleDisabilityList" class="mt-2"></div></div></div>
-                  </div>
-                </div>
-                <div class="tab-pane fade" id="activityTab" role="tabpanel">
-                  <div class="alert alert-info mb-3">ข้อมูลกิจกรรมบางรายการเป็นข้อมูลปีการศึกษา 2568 และใช้ฐานข้อมูลตามกิจกรรมนั้น ไม่ใช่จำนวนนักเรียนปัจจุบัน 195 คน</div>
-                  <div id="activityList"></div>
-                </div>
-                <div class="tab-pane fade" id="scholarshipTab" role="tabpanel">
-                  <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                      <thead><tr><th>ทุนการศึกษา</th><th>จำนวนผู้ได้รับทุน</th><th>วงเงิน</th></tr></thead>
-                      <tbody id="scholarshipList"></tbody>
-                    </table>
                   </div>
                 </div>
               </div>

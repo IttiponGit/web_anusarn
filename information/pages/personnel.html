@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="sidebar-meta">
-        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>-</span></span>
         <span class="badge rounded-pill">บุคลากร</span>
       </div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
@@ -37,7 +37,7 @@
             </button>
             <div class="d-flex flex-column">
               <h1 class="page-title" id="pageTitle">ข้อมูลบุคลากร</h1>
-              <p class="page-subtitle" id="pageSubtitle">สถิติและโครงสร้างบุคลากรของโรงเรียน • ปีการศึกษา 2569</p>
+              <p class="page-subtitle" id="pageSubtitle">สถิติและโครงสร้างบุคลากรของโรงเรียน</p>
             </div>
           </div>
           <nav aria-label="breadcrumb" class="d-none d-md-block">
@@ -197,7 +197,7 @@
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3">
-        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>-</span></span>
       </div>
       <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
       <a class="main-site-link" href="../../"><i class="bi bi-house-door-fill"></i><span>กลับเว็บไซต์หลัก</span></a>
@@ -249,9 +249,26 @@
       };
 
       try {
-        const response = await fetch('../data/personnel.json', { cache: 'no-store' });
+        const response = await fetch('../api/personnel.php', { cache: 'no-store' });
         if (!response.ok) throw new Error('Cannot load personnel data');
-        const data = await response.json();
+        const payload = await response.json();
+        if (!payload.success) throw new Error(payload.error || 'Cannot load personnel data');
+
+        const personnelItems = Array.isArray(payload.data) ? payload.data : [];
+        const positionSummary = Array.isArray(payload.summary?.byPosition) ? payload.summary.byPosition : [];
+        const data = {
+          executives: personnelItems,
+          byPosition: positionSummary,
+          byGender: [],
+          byAgeRange: [],
+          byEducation: [],
+          byAcademicStanding: [],
+          byExperience: [],
+          byGovernmentServiceYears: [],
+          professionalDevelopment: [],
+          personnelAwards: [],
+          executiveDirectory: personnelItems
+        };
 
         renderCards('executivesList', data.executives, (item) => `
           <div class="col-12 col-md-6 col-xl-4">
@@ -261,15 +278,15 @@
                 <div>
                   <div class="item-title mb-1">${escapeHtml(item.name)}</div>
                   <div class="item-desc">${escapeHtml(item.position)}</div>
-                  <div class="item-desc mt-2">เพศ ${escapeHtml(item.gender)} | ${escapeHtml(item.ageRange)}</div>
-                  <div class="item-desc">${escapeHtml(item.education)} | ${escapeHtml(item.academicStanding)}</div>
+                  <div class="item-desc mt-2">${escapeHtml(item.group_name || item.group_type || '')}</div>
+                  <div class="item-desc">${escapeHtml(item.department || '')}</div>
                 </div>
               </div>
             </div>
           </div>
         `);
 
-        renderStatTable('genderStats', 'สถิติตามเพศ', data.byGender, 'gender');
+        renderStatTable('genderStats', 'สถิติตามตำแหน่ง', data.byPosition, 'position');
         renderStatTable('ageStats', 'สถิติตามช่วงอายุ', data.byAgeRange, 'range');
         renderStatTable('educationStats', 'วุฒิการศึกษา', data.byEducation, 'level');
         renderStatTable('standingStats', 'วิทยฐานะ', data.byAcademicStanding, 'standing');
@@ -310,7 +327,7 @@
                   <tr>
                     <td>${escapeHtml(item.name)}</td>
                     <td>${escapeHtml(item.position)}</td>
-                    <td><span class="badge badge-soft-purple">${escapeHtml(item.startYear)} - ${escapeHtml(item.endYear)}</span></td>
+                    <td><span class="badge badge-soft-purple">${escapeHtml(item.group_name || item.group_type || '-')}</span></td>
                   </tr>
                 `).join('')}
               </tbody>

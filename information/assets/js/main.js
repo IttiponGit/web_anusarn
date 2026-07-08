@@ -2,9 +2,10 @@
   const isSubPage = window.location.pathname.includes('/information/pages/');
   const ROOT = isSubPage ? '..' : '.';
   const DATA_ROOT = `${ROOT}/data`;
+  const API_ROOT = `${ROOT}/api`;
   const page = document.body.dataset.page || 'home';
   const SCHOOL_NAME = 'โรงเรียนโสตศึกษาอนุสารสุนทร';
-  const ACADEMIC_YEAR = '2569';
+  const ACADEMIC_YEAR = String(new Date().getFullYear() + 543);
 
   const navItems = [
     { key: 'home', label: 'หน้าแรก', icon: 'bi-house-door-fill', href: isSubPage ? '../index.html' : 'index.html' },
@@ -25,7 +26,7 @@
     direction: ['ทิศทางการศึกษา', 'วิสัยทัศน์ พันธกิจ และกลยุทธ์', 'ทิศทางการศึกษา', 'กรอบการพัฒนาของโรงเรียนที่อ่านง่ายและติดตามได้'],
     performance: ['ผลการดำเนินงาน / SAR', 'ตัวชี้วัดการประเมินตนเองของสถานศึกษา', 'ผลการดำเนินงาน / SAR', 'สรุปผลการดำเนินงานพร้อมกราฟและสถานะเป้าหมาย'],
     personnel: ['ข้อมูลบุคลากร', 'สถิติและโครงสร้างบุคลากรของโรงเรียน', 'ข้อมูลบุคลากร', 'แสดงข้อมูลฝ่ายบริหาร สถิติบุคลากร คุณวุฒิ ประสบการณ์ และรางวัล'],
-    students: ['ข้อมูลนักเรียน', 'ข้อมูล ณ วันที่ 10 มิถุนายน 2569', 'ข้อมูลนักเรียน', 'แสดงเฉพาะข้อมูลนักเรียน ไม่รวมหลักสูตร ผลสัมฤทธิ์ O-NET หรือ NT'],
+    students: ['ข้อมูลนักเรียน', `ข้อมูล ณ วันที่ 10 มิถุนายน ${ACADEMIC_YEAR}`, 'ข้อมูลนักเรียน', 'แสดงเฉพาะข้อมูลนักเรียน ไม่รวมหลักสูตร ผลสัมฤทธิ์ O-NET หรือ NT'],
     academic: ['ข้อมูลวิชาการ', 'หลักสูตร ผลสัมฤทธิ์ O-NET NT และการสำเร็จการศึกษา', 'ข้อมูลวิชาการ', 'รวมข้อมูลหลักสูตรสถานศึกษา ผลสัมฤทธิ์ทางการเรียน O-NET NT และการสำเร็จการศึกษา'],
     budget: ['งบประมาณ', 'ข้อมูลการจัดสรรงบประมาณของโรงเรียน', 'งบประมาณ', 'มุมมองการใช้ทรัพยากรในปีงบประมาณปัจจุบัน'],
     awards: ['ผลงานและรางวัล', 'เกียรติยศและผลงานเด่นของโรงเรียน', 'ผลงานและรางวัล', 'รวบรวมรางวัลและผลงานในรูปแบบการ์ด'],
@@ -33,16 +34,13 @@
   };
 
   const dataFilesByPage = {
-    home: ['school', 'personnel', 'students'],
+    home: [],
     basic: ['school'],
     direction: ['school'],
     performance: ['school'],
     personnel: ['school', 'personnel'],
-    students: ['school', 'students'],
     academic: ['school', 'academic'],
-    budget: ['school', 'budget'],
-    awards: ['school', 'awards'],
-    downloads: ['school', 'downloads']
+    budget: ['school', 'budget']
   };
 
   const byId = (id) => document.getElementById(id);
@@ -50,6 +48,13 @@
   const formatNumber = (value) => Number(value || 0).toLocaleString('th-TH');
   const formatCurrency = (value) => Number(value || 0).toLocaleString('th-TH');
   const formatPercent = (value) => Number(value || 0).toFixed(2).replace(/\.00$/, '');
+  const parsePercentValue = (value) => {
+    const normalized = String(value ?? '').replace('%', '').trim();
+    const number = parseFloat(normalized);
+    return Number.isFinite(number) ? number : 0;
+  };
+
+  const formatSarPercent = (value) => `${formatPercent(parsePercentValue(value))}%`;
 
   async function loadJson(key) {
     const response = await fetch(`${DATA_ROOT}/${key}.json`);
@@ -57,7 +62,149 @@
     return response.json();
   }
 
+  async function loadStudentsApi() {
+    const response = await fetch(`${API_ROOT}/students.php`);
+    if (!response.ok) throw new Error('ไม่สามารถโหลดข้อมูลนักเรียนจากฐานข้อมูล');
+
+    const payload = await response.json();
+    if (!payload.success) throw new Error(payload.error || 'ไม่สามารถโหลดข้อมูลนักเรียนจากฐานข้อมูล');
+
+    return payload.students;
+  }
+
+  async function loadDocumentsApi() {
+    const response = await fetch(`${API_ROOT}/documents.php`, {
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error('ไม่สามารถโหลดข้อมูลเอกสารจากฐานข้อมูล');
+
+    const payload = await response.json();
+    if (!payload.success) throw new Error(payload.error || 'ไม่สามารถโหลดข้อมูลเอกสารจากฐานข้อมูล');
+
+    return {
+      items: Array.isArray(payload.data) ? payload.data : [],
+      summary: payload.summary || {}
+    };
+  }
+
+  async function loadSchoolSettingsApi() {
+    const response = await fetch(`${API_ROOT}/school.php`, {
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error('ไม่สามารถโหลดข้อมูลโรงเรียนจากฐานข้อมูล');
+
+    const payload = await response.json();
+    if (!payload.success) throw new Error(payload.message || payload.error || 'ไม่สามารถโหลดข้อมูลโรงเรียนจากฐานข้อมูล');
+
+    const settings = payload.data || {};
+    return {
+      schoolName: settings.schoolName || settings.schoolNameTh || SCHOOL_NAME,
+      schoolNameTh: settings.schoolNameTh || settings.schoolName || SCHOOL_NAME,
+      schoolNameEn: settings.schoolNameEn || '',
+      academicYear: settings.academicYear || settings.academic_year || ACADEMIC_YEAR,
+      studentCount: Number(settings.studentCount ?? settings.student_count ?? 0),
+      personnelCount: Number(settings.personnelCount ?? settings.personnel_count ?? 0),
+      classroomCount: Number(settings.classroomCount ?? settings.classroom_count ?? 0),
+      levelRange: settings.levelRange || '',
+      identity: settings.identity || '',
+      vision: settings.vision || '',
+      contact: settings.contact || {},
+      settings: settings.settings || {}
+    };
+  }
+
+  async function loadPersonnelApi() {
+    const response = await fetch(`${API_ROOT}/personnel.php`, {
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error('ไม่สามารถโหลดข้อมูลบุคลากรจากฐานข้อมูล');
+
+    const payload = await response.json();
+    if (!payload.success) throw new Error(payload.error || 'ไม่สามารถโหลดข้อมูลบุคลากรจากฐานข้อมูล');
+
+    const items = Array.isArray(payload.data) ? payload.data : [];
+    const summary = payload.summary || {};
+    return {
+      items,
+      totalPersonnel: Number(summary.totalPersonnel ?? items.length),
+      administratorCount: Number(summary.administratorCount || 0),
+      teacherCount: Number(summary.teacherCount || 0),
+      supportCount: Number(summary.supportCount || 0),
+      byPosition: Array.isArray(summary.byPosition) ? summary.byPosition : []
+    };
+  }
+
   async function loadPageData() {
+    if (page === 'home') {
+      const [school, personnel, students] = await Promise.all([
+        loadSchoolSettingsApi(),
+        loadPersonnelApi(),
+        loadStudentsApi()
+      ]);
+      const studentTotal = Number(school.studentCount || 0);
+      const classroomTotal = Number(school.classroomCount || 0);
+      return {
+        school: {
+          ...school,
+          academicYear: school.academicYear || students?.academicYear || ACADEMIC_YEAR
+        },
+        personnel,
+        students: {
+          ...students,
+          totalStudents: studentTotal || students?.totalStudents || 0,
+          classroomCount: classroomTotal || students?.classroomCount || 0
+        }
+      };
+    }
+
+    if (page === 'personnel') {
+      const [school, personnel] = await Promise.all([
+        loadSchoolSettingsApi(),
+        loadPersonnelApi()
+      ]);
+      return { school, personnel };
+    }
+
+    if (page === 'students') {
+      const students = await loadStudentsApi();
+      return {
+        school: {
+          schoolName: SCHOOL_NAME,
+          academicYear: students?.academicYear || ACADEMIC_YEAR
+        },
+        students
+      };
+    }
+
+    if (page === 'awards') {
+      return {
+        school: {
+          schoolName: SCHOOL_NAME,
+          academicYear: ACADEMIC_YEAR
+        }
+      };
+    }
+
+    if (page === 'downloads') {
+      const downloads = await loadDocumentsApi();
+      return {
+        school: {
+          schoolName: SCHOOL_NAME,
+          academicYear: ACADEMIC_YEAR
+        },
+        downloads
+      };
+    }
+
     const keys = dataFilesByPage[page] || dataFilesByPage.home;
     const entries = await Promise.all(keys.map(async (key) => [key, await loadJson(key)]));
     return Object.fromEntries(entries);
@@ -114,13 +261,14 @@
   function applyPageChrome(school) {
     const [title, subtitle, heroTitle, heroSubtitle] = pageMeta[page] || pageMeta.home;
     const academicYear = school?.academicYear || ACADEMIC_YEAR;
-    document.title = `${title} | ${SCHOOL_NAME}`;
+    const schoolName = school?.schoolName && !school.schoolName.includes('เน€เธ') ? school.schoolName : SCHOOL_NAME;
+    document.title = `${title} | ${schoolName}`;
     setText('pageTitle', title);
     setText('pageSubtitle', `${subtitle} • ปีการศึกษา ${academicYear}`);
     setText('heroTitle', heroTitle);
     setText('heroSubtitle', heroSubtitle);
     setText('heroYear', academicYear);
-    setText('heroSchoolName', SCHOOL_NAME);
+    setText('heroSchoolName', schoolName);
 
     const breadcrumb = byId('breadcrumbTrail');
     if (breadcrumb) {
@@ -134,26 +282,44 @@
   }
 
   function renderHome(data) {
-    const classrooms = data.students?.classroomCount || data.school?.classroomCount || 29;
-    setSummaryValues([`${data.students.totalStudents} คน`, `${data.personnel.totalPersonnel} คน`, `${classrooms} ห้อง`, ACADEMIC_YEAR]);
-    setText('sumStudents', data.students.totalStudents);
-    setText('sumPersonnel', data.personnel.totalPersonnel);
-    setText('sumClassrooms', classrooms);
-    setText('sumYear', ACADEMIC_YEAR);
+    const students = data.students || {};
+    const levels = Array.isArray(students.byLevel) ? students.byLevel : [];
+    const classrooms = students.classroomCount || levels.reduce((total, item) => total + Number(item.classrooms || 0), 0);
+    const levelGroupCount = Number(students.levelGroupCount || 0) || levels.filter((item) => Number(item.count || 0) > 0 || Number(item.classrooms || 0) > 0).length || levels.length;
+    const personnelTotal = data.personnel?.totalPersonnel || '-';
+
+    setSummaryValues([`${formatNumber(students.totalStudents)} คน`, `${personnelTotal} คน`, `${formatNumber(classrooms)} ห้อง`, `${formatNumber(levelGroupCount)} ช่วงชั้น`]);
+    setText('sumStudents', formatNumber(students.totalStudents));
+    setText('sumPersonnel', personnelTotal);
+    setText('sumClassrooms', formatNumber(classrooms));
+    setText('sumLevelGroups', formatNumber(levelGroupCount));
+    if (data.school?.levelRange) setText('homeLevelLead', data.school.levelRange);
+    if (data.school?.identity) setText('homeIdentityLead', data.school.identity);
+    if (data.school?.vision) setText('homeVisionLead', data.school.vision);
   }
 
   function renderBasic(data) {
-    setSummaryValues([ACADEMIC_YEAR, 'อนุบาล - มัธยมศึกษาตอนปลาย', '29 ห้อง', '195 คน']);
-    setMetricValues([SCHOOL_NAME, 'อนุบาล - มัธยมศึกษาตอนปลาย', '195 คน', ACADEMIC_YEAR]);
+    const school = data.school || {};
+    const academicYear = school.academicYear || ACADEMIC_YEAR;
+    const levelRange = school.levelRange || '-';
+    const classroomCount = Number(school.classroomCount || 0);
+    const studentCount = Number(school.studentCount || 0);
+    const personnelCount = Number(school.personnelCount || 0);
+    const classroomText = classroomCount > 0 ? `${formatNumber(classroomCount)} ห้อง` : '-';
+    const studentText = studentCount > 0 ? `${formatNumber(studentCount)} คน` : '-';
+    const personnelText = personnelCount > 0 ? `${formatNumber(personnelCount)} คน` : '-';
+
+    setSummaryValues([academicYear, levelRange, classroomText, studentText]);
+    setMetricValues([school.schoolName || SCHOOL_NAME, levelRange, studentText, academicYear]);
     const tbody = byId('basicTableBody');
     if (!tbody) return;
     const rows = [
-      ['ชื่อสถานศึกษา', SCHOOL_NAME],
-      ['ปีการศึกษา', ACADEMIC_YEAR],
-      ['ระดับที่เปิดสอน', 'อนุบาล - มัธยมศึกษาตอนปลาย'],
-      ['จำนวนห้องเรียน', '29 ห้อง'],
-      ['จำนวนนักเรียน', '195 คน'],
-      ['จำนวนบุคลากร', '74 คน']
+      ['ชื่อสถานศึกษา', school.schoolName || SCHOOL_NAME],
+      ['ปีการศึกษา', academicYear],
+      ['ระดับที่เปิดสอน', levelRange],
+      ['จำนวนห้องเรียน', classroomText],
+      ['จำนวนนักเรียน', studentText],
+      ['จำนวนบุคลากร', personnelText]
     ];
     tbody.innerHTML = rows.map(([label, value]) => `<tr><th scope="row" class="text-nowrap">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`).join('');
   }
@@ -171,10 +337,30 @@
 
   function renderPerformance(data) {
     const indicators = data.school?.sarIndicators || [];
-    setSummaryValues([`${indicators.length} ตัวชี้วัด`, `${indicators.filter((x) => String(x.status).includes('ผ่าน')).length} รายการ`, ACADEMIC_YEAR, 'SAR']);
+    const evaluatedIndicators = indicators.map((item) => {
+      const targetValue = parsePercentValue(item.target);
+      const actualValue = parsePercentValue(item.actual);
+      const isPassed = actualValue >= targetValue;
+      const existingStatus = String(item.status || '').trim();
+
+      return {
+        ...item,
+        targetValue,
+        actualValue,
+        isPassed,
+        actualBadgeClass: isPassed
+          ? 'bg-success-subtle text-success border border-success-subtle'
+          : 'bg-warning-subtle text-warning border border-warning-subtle',
+        statusText: isPassed ? 'ผ่าน' : (existingStatus && !existingStatus.includes('ผ่าน') ? existingStatus : 'กำลังพัฒนา')
+      };
+    });
+    const passedCount = evaluatedIndicators.filter((item) => item.isPassed).length;
+    const developingCount = evaluatedIndicators.length - passedCount;
+
+    setSummaryValues([`${evaluatedIndicators.length} ตัวชี้วัด`, `${passedCount} รายการ`, `${developingCount} รายการ`, data.school?.academicYear || ACADEMIC_YEAR]);
     const tbody = byId('sarTableBody');
     if (tbody) {
-      tbody.innerHTML = indicators.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td><span class="badge badge-soft-primary">${escapeHtml(item.target)}%</span></td><td><span class="badge badge-soft-success">${escapeHtml(item.actual)}%</span></td><td>${escapeHtml(item.status)}</td></tr>`).join('');
+      tbody.innerHTML = evaluatedIndicators.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td><span class="badge badge-soft-primary">${escapeHtml(formatSarPercent(item.target))}</span></td><td><span class="badge ${item.actualBadgeClass}">${escapeHtml(formatSarPercent(item.actual))}</span></td><td>${escapeHtml(item.statusText)}</td></tr>`).join('');
     }
   }
 
@@ -182,7 +368,7 @@
     setText('personnelTotal', data.personnel.totalPersonnel);
     setText('teacherCount', data.personnel.teacherCount);
     setText('supportCount', data.personnel.supportCount);
-    setSummaryValues([`${data.personnel.totalPersonnel} คน`, `${data.personnel.teacherCount} คน`, `${data.personnel.supportCount} คน`, `${data.personnel.administratorCount || 3} คน`]);
+    setSummaryValues([`${data.personnel.totalPersonnel} คน`, `${data.personnel.teacherCount} คน`, `${data.personnel.supportCount} คน`, `${data.personnel.administratorCount || 0} คน`]);
     const tbody = byId('personnelTableBody');
     if (tbody) {
       tbody.innerHTML = data.personnel.byPosition.map((item) => `<tr><td>${escapeHtml(item.position)}</td><td>${escapeHtml(item.count)}</td><td>${formatPercent(item.percent)}%</td><td><span class="badge badge-soft-primary">${escapeHtml(item.count)} คน</span></td></tr>`).join('');
@@ -192,7 +378,7 @@
   function renderKeyValueList(id, items, labelKey, valueKey, unit = 'คน') {
     const target = byId(id);
     if (!target) return;
-    target.innerHTML = items.map((item) => `<div class="d-flex align-items-center justify-content-between gap-3 py-2 border-bottom"><span>${escapeHtml(item[labelKey])}</span><strong>${formatNumber(item[valueKey])} ${unit}</strong></div>`).join('');
+    target.innerHTML = (items || []).map((item) => `<div class="d-flex align-items-center justify-content-between gap-3 py-2 border-bottom"><span>${escapeHtml(item[labelKey])}</span><strong>${formatNumber(item[valueKey])} ${unit}</strong></div>`).join('');
   }
 
   function renderStudents(data) {
@@ -206,7 +392,10 @@
 
     const tbody = byId('studentsTableBody');
     if (tbody) {
-      tbody.innerHTML = students.byLevel.map((item) => `<tr><td>${escapeHtml(item.level)}</td><td>${formatNumber(item.count)} คน</td><td>${formatNumber(item.classrooms)} ห้อง</td><td><span class="badge badge-soft-info">${Math.round((Number(item.count) / Number(students.totalStudents)) * 100)}%</span></td></tr>`).join('');
+      tbody.innerHTML = students.byLevel.map((item) => {
+        const percent = Number(students.totalStudents) > 0 ? Math.round((Number(item.count) / Number(students.totalStudents)) * 100) : 0;
+        return `<tr><td>${escapeHtml(item.level)}</td><td>${formatNumber(item.count)} คน</td><td>${formatNumber(item.classrooms)} ห้อง</td><td><span class="badge badge-soft-info">${percent}%</span></td></tr>`;
+      }).join('');
     }
 
     renderKeyValueList('provinceList', students.byProvince, 'province', 'count');
@@ -219,12 +408,12 @@
 
     const activities = byId('activityList');
     if (activities) {
-      activities.innerHTML = students.studentActivities.map((item) => `<div class="soft-card p-3 mb-2"><div class="d-flex justify-content-between gap-3"><strong>${escapeHtml(item.name)}</strong><span class="badge badge-soft-primary">${formatNumber(item.participants)} คน</span></div><div class="small text-muted mt-2">${escapeHtml(item.note)}</div></div>`).join('');
+      activities.innerHTML = (students.studentActivities || []).map((item) => `<div class="soft-card p-3 mb-2"><div class="d-flex justify-content-between gap-3"><strong>${escapeHtml(item.name)}</strong><span class="badge badge-soft-primary">${formatNumber(item.participants)} คน</span></div><div class="small text-muted mt-2">${escapeHtml(item.note)}</div></div>`).join('');
     }
 
     const scholarships = byId('scholarshipList');
     if (scholarships) {
-      scholarships.innerHTML = students.scholarships.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td>${formatNumber(item.count)} คน</td><td>${formatCurrency(item.amount)} บาท</td></tr>`).join('');
+      scholarships.innerHTML = (students.scholarships || []).map((item) => `<tr><td>${escapeHtml(item.name)}</td><td>${formatNumber(item.count)} คน</td><td>${formatCurrency(item.amount)} บาท</td></tr>`).join('');
     }
   }
 
@@ -273,15 +462,30 @@
   }
 
   function renderAwards(data) {
+    if (!data.awards) return;
+
     const items = data.awards?.items || [];
     setSummaryValues([`${items.length} รายการ`, items.map((item) => Number(item.year)).sort((a, b) => b - a)[0] || '-', 'รางวัล', 'ผลงาน']);
   }
 
   function renderDownloads(data) {
     const items = data.downloads?.items || [];
-    setSummaryValues([`${items.length} รายการ`, [...new Set(items.map((item) => item.type))].join(' / '), items.map((item) => item.updatedAt).sort().reverse()[0] || '-', 'สาธารณะ']);
+    const summary = data.downloads?.summary || {};
+    const fileTypes = summary.file_types?.length ? summary.file_types : [...new Set(items.map((item) => item.file_type).filter(Boolean))];
+    const latestUpdatedAt = summary.latest_updated_at || items.map((item) => item.updated_at || item.created_at || '').sort().reverse()[0] || '-';
+    setSummaryValues([`${Number(summary.total ?? items.length).toLocaleString('th-TH')} รายการ`, fileTypes.join(' / ') || '-', latestUpdatedAt, 'สาธารณะ']);
     const tbody = byId('downloadsTableBody');
-    if (tbody) tbody.innerHTML = items.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td><span class="badge badge-soft-primary">${escapeHtml(item.type)}</span></td><td>${escapeHtml(item.updatedAt)}</td><td><a href="${escapeHtml(item.link || '#')}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="bi bi-download me-1"></i>ดาวน์โหลด</a></td></tr>`).join('');
+    if (tbody) {
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">ยังไม่มีข้อมูลเอกสาร</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = items.map((item) => {
+        const updatedAt = item.updated_at || item.created_at || '-';
+        return `<tr><td><div class="fw-semibold">${escapeHtml(item.document_title || '-')}</div>${item.description ? `<div class="small text-muted">${escapeHtml(item.description)}</div>` : ''}</td><td><span class="badge badge-soft-primary">${escapeHtml(item.document_category || item.file_type || '-')}</span></td><td>${escapeHtml(updatedAt)}</td><td><a href="${escapeHtml(item.file_url || '#')}" class="btn btn-sm btn-outline-primary rounded-pill" target="_blank" rel="noopener"><i class="bi bi-download me-1"></i>ดาวน์โหลด</a></td></tr>`;
+      }).join('');
+    }
   }
 
   async function init() {
@@ -299,7 +503,7 @@
       if (page === 'students') renderStudents(data);
       if (page === 'academic') renderAcademic(data);
       if (page === 'budget') renderBudget(data);
-      if (page === 'awards') renderAwards(data);
+      // awards.html renders awards through its own inline API script.
       if (page === 'downloads') renderDownloads(data);
 
       document.dispatchEvent(new CustomEvent('information:dataReady', { detail: data }));

@@ -57,7 +57,7 @@
                 <div class="summary-grid">
                   <div class="summary-chip"><span class="label">รางวัลนักเรียน</span><strong data-awards-summary="student">-</strong></div>
                   <div class="summary-chip"><span class="label">รางวัลครูและบุคลากร</span><strong data-awards-summary="staff">-</strong></div>
-                  <div class="summary-chip"><span class="label">รางวัลสถานศึกษา</span><strong data-awards-summary="school">-</strong></div>
+                  <div class="summary-chip"><span class="label">รางวัลสถานศึกษา</span><strong data-awards-summary="institution">-</strong></div>
                 </div>
               </div>
             </div>
@@ -116,9 +116,31 @@
     document.addEventListener('DOMContentLoaded', async () => {
       const tabContainer = document.getElementById('awardGroupTabs');
       const tableBody = document.getElementById('awardGroupTableBody');
-      const tableHead = document.getElementById('awardTableHead');
       const groupDescription = document.getElementById('awardGroupDescription');
       const summaryItems = document.querySelectorAll('[data-awards-summary]');
+      const apiEndpoint = '../api/awards.php';
+      const groups = [
+        {
+          key: 'all',
+          title: 'ทั้งหมด',
+          description: 'รายการผลงานและรางวัลทั้งหมด'
+        },
+        {
+          key: 'student',
+          title: 'รางวัลนักเรียน',
+          description: 'ผลงานและรางวัลที่นักเรียนได้รับ'
+        },
+        {
+          key: 'staff',
+          title: 'รางวัลครูและบุคลากร',
+          description: 'ผลงานและรางวัลที่ผู้บริหาร ครู และบุคลากรทางการศึกษาได้รับ'
+        },
+        {
+          key: 'institution',
+          title: 'รางวัลสถานศึกษา',
+          description: 'ผลงานและรางวัลที่โรงเรียนได้รับ'
+        }
+      ];
 
       if (!tabContainer || !tableBody) {
         return;
@@ -131,87 +153,225 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 
-      const getGroupCount = (group) => {
-        if (group.key !== 'staff') {
-          return group.items.length;
-        }
-
-        return group.items.reduce((sum, item) => sum + Number(item.awardCount || 0), 0);
+      const normalizeAwardType = (awardType) => {
+        return String(awardType || '').replace(/[\s\u200B\u200C\u200D\uFEFF]+/g, ' ').trim();
       };
 
-      const setSummary = (groups) => {
-        const values = Object.fromEntries(groups.map((group) => [group.key, `${getGroupCount(group)} รายการ`]));
+      const getAwardGroup = (awardType) => {
+        const value = normalizeAwardType(awardType);
+        const map = {
+          student: 'student',
+          'รางวัลนักเรียน': 'student',
+          staff: 'staff',
+          'รางวัลครูและบุคลากร': 'staff',
+          institution: 'institution',
+          school: 'institution',
+          'รางวัลสถานศึกษา': 'institution',
+          'สถานศึกษา': 'institution',
+          'รางวัลโรงเรียน': 'institution',
+          'โรงเรียน': 'institution'
+        };
+        return map[value] || value;
+      };
 
+      const getAwardItemGroup = (item) => {
+        const groupFromType = getAwardGroup(item.award_type);
+        if (['student', 'staff', 'institution'].includes(groupFromType)) {
+          return groupFromType;
+        }
+
+        return getAwardGroup(item.award_group) || groupFromType;
+      };
+
+      const setSummary = (summary = {}) => {
         summaryItems.forEach((item) => {
-          item.textContent = values[item.dataset.awardsSummary] || '-';
+          const value = Number(summary[item.dataset.awardsSummary] || 0);
+          item.textContent = `${value.toLocaleString('th-TH')} รายการ`;
         });
       };
 
-      const renderTable = (group) => {
+      const setLoading = () => {
+        tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>กำลังโหลดข้อมูลรางวัล...</td></tr>';
+      };
+
+      const setError = () => {
+        tableBody.innerHTML = '<tr><td colspan="4"><div class="alert alert-danger mb-0">ไม่สามารถโหลดข้อมูลรางวัลได้ กรุณาลองใหม่อีกครั้ง</div></td></tr>';
+      };
+
+      const getRecipientBadgeLabel = (item) => {
+        return getAwardItemGroup(item) === 'student' ? 'นักเรียนเข้าร่วม' : 'ผู้ได้รับรางวัล';
+      };
+
+      const getResultGroupKey = (item) => {
+        const resultId = Number(item?.result_id || 0);
+        if (resultId > 0) {
+          return `id:${resultId}`;
+        }
+
+        const detail = String(item?.result_detail || '').trim();
+        if (detail) {
+          return `detail:${detail}`;
+        }
+
+        const result = String(item?.award_result || '').trim();
+        if (result) {
+          return `result:${result}`;
+        }
+
+        return 'ungrouped';
+      };
+
+      const getResultGroupTitle = (item, fallback = 'รายละเอียดผลรางวัล') => {
+        const detail = String(item?.result_detail || '').trim();
+        const type = String(item?.result_type || '').trim();
+        const teamName = String(item?.team_name || '').trim();
+
+        return detail || type || teamName || fallback;
+      };
+
+      const isSummaryResult = (result) => {
+        return String(result?.result_type || '').trim().toLowerCase() === 'summary';
+      };
+
+      const buildResultGroups = (item) => {
+        const groupsByKey = new Map();
+        const results = Array.isArray(item.results) ? item.results : [];
+        const recipients = Array.isArray(item.recipients) ? item.recipients : [];
+
+        const ensureGroup = (key, source = {}) => {
+          if (!groupsByKey.has(key)) {
+            groupsByKey.set(key, {
+              key,
+              title: getResultGroupTitle(source),
+              result: null,
+              recipients: []
+            });
+          }
+
+          const group = groupsByKey.get(key);
+          const title = getResultGroupTitle(source, group.title);
+          if (title && group.title === 'รายละเอียดผลรางวัล') {
+            group.title = title;
+          }
+
+          return group;
+        };
+
+        results.forEach((result) => {
+          const group = ensureGroup(getResultGroupKey(result), result);
+          group.result = result;
+        });
+
+        recipients.forEach((recipient) => {
+          const key = getResultGroupKey(recipient);
+          let group = groupsByKey.get(key);
+
+          if (!group && Number(recipient.result_id || 0) > 0) {
+            group = groupsByKey.get(`id:${Number(recipient.result_id)}`);
+          }
+
+          if (!group) {
+            group = ensureGroup(key, recipient);
+          }
+
+          group.recipients.push(recipient);
+        });
+
+        return Array.from(groupsByKey.values()).filter((group) => group.result || group.recipients.length);
+      };
+
+      const renderResultDetail = (item) => {
+        const groups = buildResultGroups(item);
+
+        if (!groups.length) {
+          return '';
+        }
+
+        const detailMarkup = groups.map((group) => {
+          const result = group.result || {};
+          const summaryResult = isSummaryResult(result);
+          const resultSummary = [
+            result.award_result ? `<span class="badge badge-soft-success me-1">${escapeHtml(result.award_result)}</span>` : '',
+            result.result_rank ? `<span class="badge badge-soft-primary me-1">${escapeHtml(result.result_rank)}</span>` : '',
+            Number(result.result_count || 0) > 0 ? `<span class="badge badge-soft-info me-1">${Number(result.result_count || 0).toLocaleString('th-TH')} รางวัล</span>` : ''
+          ].join('');
+
+          const summaryDetail = [
+            result.result_detail,
+            result.note
+          ].filter((value) => String(value || '').trim()).map(escapeHtml);
+
+          const recipients = summaryResult
+            ? `<div class="small text-muted">${summaryDetail.length ? summaryDetail.join('<br>') : 'ข้อมูลสรุปผลรางวัล'}</div>`
+            : group.recipients.length
+            ? `<ul class="mb-0 ps-3">${group.recipients.map((recipient) => {
+                const details = [
+                  recipient.recipient_detail,
+                  recipient.award_result,
+                  recipient.result_rank,
+                  recipient.note
+                ].filter((value) => String(value || '').trim()).map(escapeHtml);
+
+                return `<li><span class="fw-semibold">${escapeHtml(recipient.recipient_name || '-')}</span>${details.length ? ` <span class="text-muted small">(${details.join(' / ')})</span>` : ''}</li>`;
+              }).join('')}</ul>`
+            : '<div class="text-muted small">ยังไม่มีรายชื่อผู้ได้รับรางวัล</div>';
+
+          return `
+            <div class="soft-card p-3 mb-2">
+              <div class="d-flex align-items-start justify-content-between gap-2 flex-wrap mb-2">
+                <div class="fw-bold">${summaryResult ? 'ข้อมูลสรุปผลรางวัล' : escapeHtml(group.title)}</div>
+                <div>${resultSummary}</div>
+              </div>
+              ${!summaryResult && result.result_detail && result.result_detail !== group.title ? `<div class="small text-muted mb-2">${escapeHtml(result.result_detail)}</div>` : ''}
+              ${!summaryResult && result.note ? `<div class="small text-muted mb-2">${escapeHtml(result.note)}</div>` : ''}
+              ${recipients}
+            </div>
+          `;
+        }).join('');
+
+        return `<tr class="award-detail-row">
+          <td></td>
+          <td colspan="3">
+            <div class="pt-2 pb-1">${detailMarkup}</div>
+          </td>
+        </tr>`;
+      };
+
+      const renderTable = (group, awards) => {
         if (groupDescription) {
           groupDescription.textContent = group.description || '';
         }
 
-        const isStaff = group.key === 'staff';
-        if (tableHead) {
-          tableHead.innerHTML = isStaff
-            ? '<th class="text-nowrap">ลำดับที่</th><th>รายการ</th><th>หน่วยงานที่จัด</th><th>ระดับ</th><th class="text-nowrap">จำนวนรางวัล</th>'
-            : '<th class="text-nowrap">ลำดับที่</th><th>รายการ</th><th>หน่วยงานที่จัด</th><th>ระดับ</th>';
-        }
+        const items = group.key === 'all'
+          ? awards
+          : awards.filter((item) => getAwardItemGroup(item) === group.key);
 
-        if (!group.items.length) {
-          tableBody.innerHTML = `<tr><td colspan="${isStaff ? 5 : 4}" class="text-center text-muted py-4">ยังไม่มีข้อมูลรางวัลในหมวดนี้</td></tr>`;
+        if (!items.length) {
+          tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">ยังไม่มีข้อมูลรางวัลในหมวดนี้</td></tr>';
           return;
         }
 
-        tableBody.innerHTML = group.items.map((item) => {
+        tableBody.innerHTML = items.map((item, index) => {
+          const recipientLabel = getRecipientBadgeLabel(item);
           const badges = [
-            item.year ? `<span class="badge badge-soft-primary me-1">พ.ศ. ${escapeHtml(item.year)}</span>` : '',
-            item.category ? `<span class="badge badge-soft-info me-1">${escapeHtml(item.category)}</span>` : ''
+            item.award_year ? `<span class="badge badge-soft-primary me-1">พ.ศ. ${escapeHtml(item.award_year)}</span>` : '',
+            `<span class="badge badge-soft-success me-1">ได้รับ ${Number(item.award_total || 0).toLocaleString('th-TH')} รางวัล</span>`,
+            `<span class="badge badge-soft-info me-1">${recipientLabel} ${Number(item.student_total || 0).toLocaleString('th-TH')} คน</span>`
           ].join('');
 
-          if (isStaff) {
-            const recipients = Array.isArray(item.recipients) ? item.recipients : [];
-            const collapseId = `staffRecipients-${escapeHtml(item.order || Math.random().toString(36).slice(2))}`;
-            const recipientList = recipients.length
-              ? `<button class="btn btn-sm btn-outline-primary rounded-pill mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
-                  ดูรายชื่อผู้ได้รับรางวัล
-                </button>
-                <div class="collapse mt-2" id="${collapseId}">
-                  <div class="border rounded-3 bg-light p-2">
-                    <ol class="mb-0 ps-3 small">
-                      ${recipients.map((recipient) => `<li>${escapeHtml(recipient)}</li>`).join('')}
-                    </ol>
-                  </div>
-                </div>`
-              : '';
-
-            return `<tr>
-              <td class="text-nowrap fw-bold">${escapeHtml(item.order || '-')}</td>
-              <td>
-                <div class="fw-bold">${escapeHtml(item.item || '-')}</div>
-                <div class="mt-1">${badges}</div>
-                ${recipientList}
-              </td>
-              <td>${escapeHtml(item.organizer || '-')}</td>
-              <td class="text-nowrap">${escapeHtml(item.level || '-')}</td>
-              <td class="text-nowrap"><span class="badge badge-soft-success">${escapeHtml(item.awardCount || 0)} รายการ</span></td>
-            </tr>`;
-          }
-
           return `<tr>
-            <td class="text-nowrap fw-bold">${escapeHtml(item.order || '-')}</td>
+            <td class="text-nowrap fw-bold">${(index + 1).toLocaleString('th-TH')}</td>
             <td>
-              <div class="fw-bold">${escapeHtml(item.item || '-')}</div>
+              <div class="fw-bold">${escapeHtml(item.award_list || '-')}</div>
               <div class="mt-1">${badges}</div>
             </td>
-            <td>${escapeHtml(item.organizer || '-')}</td>
-            <td class="text-nowrap">${escapeHtml(item.level || '-')}</td>
-          </tr>`;
+            <td>${escapeHtml(item.award_agency || '-')}</td>
+            <td class="text-nowrap">${escapeHtml(item.award_level || '-')}</td>
+          </tr>${renderResultDetail(item)}`;
         }).join('');
       };
 
-      const renderTabs = (groups) => {
+      const renderTabs = (awards) => {
         tabContainer.innerHTML = groups.map((group, index) => `
           <button class="btn btn-sm ${index === 0 ? 'btn-primary' : 'btn-outline-primary'} rounded-pill" type="button" data-award-group="${escapeHtml(group.key)}">
             ${escapeHtml(group.title)}
@@ -225,26 +385,35 @@
               target.classList.toggle('btn-primary', target === button);
               target.classList.toggle('btn-outline-primary', target !== button);
             });
-            renderTable(groups.find((group) => group.key === selected) || groups[0]);
+            renderTable(groups.find((group) => group.key === selected) || groups[0], awards);
           });
         });
       };
 
       try {
-        const response = await fetch('../data/awards.json', { cache: 'no-store' });
+        setLoading();
+        const response = await fetch(apiEndpoint, {
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
         if (!response.ok) {
           throw new Error('Cannot load awards data');
         }
 
         const payload = await response.json();
-        const groups = Array.isArray(payload.awardGroups) ? payload.awardGroups : [];
+        if (!payload.success) {
+          throw new Error(payload.error || 'Cannot load awards data');
+        }
 
-        setSummary(groups);
-        window.setTimeout(() => setSummary(groups), 500);
-        renderTabs(groups);
-        renderTable(groups[0] || { items: [], description: '' });
+        const awards = Array.isArray(payload.data) ? payload.data : [];
+        setSummary(payload.summary);
+        renderTabs(awards);
+        renderTable(groups[0], awards);
       } catch (error) {
-        tableBody.innerHTML = '<tr><td colspan="4"><div class="alert alert-danger mb-0">ไม่สามารถโหลดข้อมูลรางวัลได้</div></td></tr>';
+        setError();
       }
     });
   </script>
