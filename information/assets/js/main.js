@@ -1,9 +1,15 @@
 (function () {
   const isSubPage = window.location.pathname.includes('/information/pages/');
+  const APP_BASE_PATH = (() => {
+    const marker = '/information/';
+    const markerIndex = window.location.pathname.indexOf(marker);
+    if (markerIndex >= 0) return window.location.pathname.slice(0, markerIndex) || '';
+    return '';
+  })();
   const ROOT = isSubPage ? '..' : '.';
   const DATA_ROOT = `${ROOT}/data`;
-  const SITE_API_ROOT = isSubPage ? '../../api' : '../api';
-  const INFORMATION_API_ROOT = `${ROOT}/api`;
+  const SITE_API_ROOT = `${APP_BASE_PATH}/api`;
+  const INFORMATION_API_ROOT = `${APP_BASE_PATH}/information/api`;
   const page = document.body.dataset.page || 'home';
   const SCHOOL_NAME = 'โรงเรียนโสตศึกษาอนุสารสุนทร';
   const ACADEMIC_YEAR = '';
@@ -42,7 +48,7 @@
     personnel: ['school', 'personnel'],
     students: ['school', 'students'],
     academic: ['school', 'academic'],
-    budget: ['school', 'budget'],
+    budget: ['school'],
     awards: ['school'],
     downloads: ['school', 'downloads']
   };
@@ -54,6 +60,23 @@
   const formatCurrency = (value) => Number(value || 0).toLocaleString('th-TH');
   const formatPercent = (value) => Number(value || 0).toFixed(2).replace(/\.00$/, '');
   const noDataText = 'ไม่มีข้อมูล';
+  const budgetNoDataText = 'ยังไม่มีข้อมูลงบประมาณ';
+
+  function pickValue(source, keys, fallback = null) {
+    for (const key of keys) {
+      if (source && Object.prototype.hasOwnProperty.call(source, key) && source[key] !== null && source[key] !== undefined && source[key] !== '') {
+        return source[key];
+      }
+    }
+    return fallback;
+  }
+
+  function toNumber(value, fallback = 0) {
+    if (value === null || value === undefined || value === '') return fallback;
+    const normalized = String(value).replace(/[,บาท%]/g, '').trim();
+    const numberValue = Number(normalized);
+    return Number.isFinite(numberValue) ? numberValue : fallback;
+  }
 
   async function loadJson(key) {
     const response = await fetch(`${DATA_ROOT}/${key}.json`);
@@ -63,8 +86,14 @@
 
   async function loadApiJson(url) {
     const response = await fetch(url, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Cannot load ${url}`);
-    const payload = await response.json();
+    let payload = null;
+    try {
+      payload = await response.json();
+    } catch (error) {
+      if (!response.ok) throw new Error(`Cannot load ${url}`);
+      throw error;
+    }
+    if (!response.ok) throw new Error(payload?.message || payload?.error || `Cannot load ${url}`);
     if (payload && payload.success === false) {
       throw new Error(payload.message || payload.error || `Cannot load ${url}`);
     }
@@ -92,6 +121,14 @@
     return loadApiJson(`${INFORMATION_API_ROOT}/personnel.php`);
   }
 
+  async function loadBudgetData(year = '2569') {
+    return loadApiJson(`${SITE_API_ROOT}/budget.php?action=all&year=${encodeURIComponent(year)}`);
+  }
+
+  async function loadBudgetElectricityData(year) {
+    return loadApiJson(`${SITE_API_ROOT}/budget.php?action=electricity&year=${encodeURIComponent(year)}`);
+  }
+
   async function loadPageData() {
     if (page === 'home') {
       const settingsData = await loadSettingsData();
@@ -111,6 +148,28 @@
       return {
         ...settingsData,
         personnel
+      };
+    }
+
+    if (page === 'budget') {
+      const [settingsData, budgetData, electricity2568, electricity2569] = await Promise.all([
+        loadSettingsData(),
+        loadBudgetData('2569'),
+        loadBudgetElectricityData('2568'),
+        loadBudgetElectricityData('2569')
+      ]);
+      return {
+        ...settingsData,
+        ...budgetData,
+        electricityComparison: {
+          2568: electricity2568,
+          2569: electricity2569
+        },
+        budget: budgetData.budget || {
+          fiscalYear: budgetData.overview?.fiscalYear || '2569',
+          total: budgetData.overview?.totalBudget || 0,
+          items: budgetData.categories || []
+        }
       };
     }
 
@@ -357,10 +416,125 @@
   }
 
   function renderBudget(data) {
-    setSummaryValues([data.budget.fiscalYear, `${formatCurrency(data.budget.total)} บาท`, `${data.budget.items.length} หมวด`, 'งบประมาณ']);
+    const budget = data.budget || {};
+    const overview = data.overview || {};
+    const categories = Array.isArray(data.categories) ? data.categories : (budget.items || []);
+    const cards = Array.isArray(data.cards) ? data.cards : [];
+    const items = Array.isArray(data.items) ? data.items : [];
+    const mainItems = items.filter((item) => {
+      const level = String(pickValue(item, ['level', 'apiItemLevel', 'api_item_level'], pickValue(item.raw, ['api_item_level', 'item_level'], ''))).toUpperCase();
+      return level === 'MAIN' || level === '1';
+    });
+    const teachingManagement = items.filter((item) => {
+      const parentCode = pickValue(item, ['parentCode', 'parentItemCode', 'parent_item_code'], pickValue(item.raw, ['parent_item_code'], ''));
+      return parentCode === 'SUBSIDY_TEACHING_MANAGEMENT';
+    });
+    const electricity = Array.isArray(data.electricity) ? data.electricity : [];
+    const fiscalYear = pickValue(budget, ['fiscalYear', 'fiscal_year'], pickValue(overview, ['fiscalYear', 'fiscal_year'], '2569'));
+    const totalBudget = toNumber(pickValue(budget, ['total', 'totalBudget', 'total_budget'], pickValue(overview, ['totalBudget', 'total_budget'], 0)));
+    const categoryCount = toNumber(pickValue(overview, ['categoryCount', 'category_count'], categories.length), categories.length);
+    const itemCount = toNumber(pickValue(overview, ['itemCount', 'item_count'], items.length), items.length);
+    const electricityMonths = toNumber(
+      pickValue(overview, ['electricityMonthsRecorded', 'electricity_months_recorded'], null),
+      electricity.filter((item) => pickValue(item, ['amount'], pickValue(item.raw, ['amount'], null)) !== null).length
+    );
+    const electricityTotal = toNumber(
+      pickValue(overview, ['electricityTotalAmount', 'electricity_total_amount'], null),
+      electricity.reduce((sum, item) => sum + toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0))), 0)
+    );
+    const teachingTotal = teachingManagement.reduce((sum, item) => sum + toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0))), 0);
+    const findCard = (patterns) => cards.find((card) => {
+      const haystack = `${pickValue(card, ['key', 'cardKey'], '')} ${pickValue(card, ['label', 'title', 'cardTitle'], pickValue(card.raw, ['card_title'], ''))}`.toLowerCase();
+      return patterns.some((pattern) => haystack.includes(pattern));
+    });
+    const cardDisplay = (card, fallback, fallbackUnit = '') => {
+      if (!card) return fallback;
+      const rawValue = pickValue(card, ['value', 'valueText', 'cardValueText'], pickValue(card.raw, ['card_value_text'], null));
+      const numericValue = pickValue(card, ['valueNumber', 'cardValueNumber'], pickValue(card.raw, ['card_value_number'], null));
+      const value = numericValue !== null
+        ? formatCurrency(numericValue)
+        : String(rawValue ?? fallback);
+      const unit = pickValue(card, ['unit', 'cardUnit'], pickValue(card.raw, ['card_unit'], fallbackUnit));
+      return unit ? `${value} ${unit}` : value;
+    };
+    const totalCard = findCard(['total_budget', 'budget_total', 'งบประมาณรวม', 'งบรวม']);
+    const categoryCard = findCard(['category_count', 'หมวด']);
+    const itemCard = findCard(['item_count', 'รายการ']);
+    const electricityCard = findCard(['electricity', 'ค่าไฟ']);
+
+    setSummaryValues([fiscalYear, `${formatCurrency(totalBudget)} บาท`, `${categoryCount} หมวด`, 'API']);
+    setMetricValues([
+      fiscalYear,
+      cardDisplay(totalCard, `${formatCurrency(totalBudget)} บาท`, 'บาท'),
+      cardDisplay(categoryCard, `${categoryCount} หมวด`)
+    ]);
+    setText('fiscalYear', fiscalYear);
+    setText('budgetTotal', `${formatCurrency(totalBudget)} บาท`);
+    setText('budgetCategoryCount', categoryCount);
+    setText('budgetItemCount', cardDisplay(itemCard, itemCount));
+    setText('electricityRecorded', electricityMonths);
+    setText('electricityTotal', cardDisplay(electricityCard, `${formatCurrency(electricityTotal)} บาท`, 'บาท'));
+    setText('teachingTotal', `${formatCurrency(teachingTotal)} บาท`);
+
     const tbody = byId('budgetTableBody');
     if (tbody) {
-      tbody.innerHTML = data.budget.items.map((item) => `<tr><td>${escapeHtml(item.category)}</td><td>${formatCurrency(item.amount)}</td><td><span class="badge badge-soft-warning">${formatPercent(item.percent)}%</span></td><td><div class="progress" style="height:0.7rem"><div class="progress-bar bg-primary" style="width:${Number(item.percent) || 0}%"></div></div></td></tr>`).join('');
+      tbody.innerHTML = categories.length
+        ? categories.map((item) => {
+          const name = pickValue(item, ['category', 'categoryName', 'name'], pickValue(item.raw, ['category_name'], noDataText));
+          const amount = toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0)));
+          const percent = toNumber(pickValue(item, ['percent', 'percentCalculated', 'percentage'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
+          return `<tr><td>${escapeHtml(name)}</td><td>${formatCurrency(amount)} บาท</td><td><span class="badge badge-soft-warning">${formatPercent(percent)}%</span></td><td><div class="progress" style="height:0.7rem"><div class="progress-bar bg-primary" style="width:${percent || 0}%"></div></div></td></tr>`;
+        }).join('')
+        : `<tr><td colspan="4" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+    }
+
+    const mainItemsBody = byId('budgetMainItemsBody');
+    if (mainItemsBody) {
+      mainItemsBody.innerHTML = mainItems.length
+        ? mainItems.map((item) => {
+          const code = pickValue(item, ['code', 'itemCode'], pickValue(item.raw, ['item_code'], '-'));
+          const category = pickValue(item, ['category', 'categoryName'], pickValue(item.raw, ['category_name'], noDataText));
+          const name = pickValue(item, ['name', 'itemName'], pickValue(item.raw, ['item_name'], noDataText));
+          const amount = toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0)));
+          const percent = toNumber(pickValue(item, ['percent', 'percentCalculated'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
+          return `<tr data-item-code="${escapeHtml(code || '')}"><td>${escapeHtml(category)}</td><td>${escapeHtml(name)}</td><td>${formatCurrency(amount)} บาท</td><td><span class="badge badge-soft-primary">${formatPercent(percent)}%</span></td></tr>`;
+        }).join('')
+        : `<tr><td colspan="4" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+    }
+
+    const teachingBody = byId('teachingManagementBody');
+    if (teachingBody) {
+      teachingBody.innerHTML = teachingManagement.length
+        ? teachingManagement.map((item) => {
+          const code = pickValue(item, ['code', 'itemCode'], pickValue(item.raw, ['item_code'], '-'));
+          const category = pickValue(item, ['category', 'categoryName'], pickValue(item.raw, ['category_name'], noDataText));
+          const name = pickValue(item, ['name', 'itemName'], pickValue(item.raw, ['item_name'], noDataText));
+          const amount = toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0)));
+          const percent = toNumber(pickValue(item, ['percent', 'percentCalculated'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
+          return `<tr data-item-code="${escapeHtml(code || '')}"><td>${escapeHtml(name)}</td><td>${escapeHtml(category)}</td><td>${formatCurrency(amount)} บาท</td><td><span class="badge badge-soft-success">${formatPercent(percent)}%</span></td></tr>`;
+        }).join('')
+        : `<tr><td colspan="4" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+    }
+
+    const electricityBody = byId('electricityMonthlyBody');
+    if (electricityBody) {
+      electricityBody.innerHTML = electricity.length
+        ? electricity.map((item) => {
+          const amount = pickValue(item, ['amount'], pickValue(item.raw, ['amount'], null));
+          const hasAmount = amount !== null && amount !== undefined && amount !== '';
+          const month = pickValue(item, ['month', 'monthLabel', 'monthLabelTh'], pickValue(item.raw, ['month_label_th'], noDataText));
+          const status = pickValue(item, ['status', 'dataStatus'], pickValue(item.raw, ['data_status'], hasAmount ? 'มีข้อมูล' : 'ยังไม่มีข้อมูล'));
+          return `<tr><td>${escapeHtml(month)}</td><td>${hasAmount ? `${formatCurrency(amount)} บาท` : '-'}</td><td><span class="badge ${hasAmount ? 'badge-soft-success' : 'badge-soft-warning'}">${escapeHtml(hasAmount ? status : 'ยังไม่มีข้อมูล')}</span></td></tr>`;
+        }).join('')
+        : `<tr><td colspan="3" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+    }
+
+    const notesList = byId('budgetNotesList');
+    if (notesList) {
+      const notes = Array.isArray(data.notes) ? data.notes : [];
+      notesList.innerHTML = notes.length
+        ? notes.map((item) => `<div class="soft-card p-3 mb-2"><strong>${escapeHtml(item.title)}</strong><div class="small text-muted mt-1">${escapeHtml(item.note)}</div></div>`).join('')
+        : `<div class="text-muted">${noDataText}</div>`;
     }
   }
 

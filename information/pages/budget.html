@@ -11,14 +11,297 @@
 <body data-page="budget">
   <div class="layout-shell">
     <aside class="app-sidebar d-none d-lg-flex flex-column">
-      <div class="sidebar-brand"><div><h1>สารสนเทศโรงเรียน</h1><p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div></div>
-      <div class="sidebar-meta"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span><span class="badge rounded-pill">งบประมาณ</span></div>
+      <div class="sidebar-brand">
+        <div>
+          <h1>สารสนเทศโรงเรียน</h1>
+          <p data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+        </div>
+      </div>
+      <div class="sidebar-meta">
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+        <span class="badge rounded-pill">งบประมาณ</span>
+      </div>
       <ul class="nav flex-column app-menu js-sidebar-menu"></ul>
       <a class="main-site-link" href="../../">
         <i class="bi bi-house-door-fill"></i>
         <span>กลับเว็บไซต์หลัก</span>
       </a>
     </aside>
+
     <div class="content-area">
-      <header class="app-topbar d-flex align-items-center"><div class="container-fluid d-flex align-items-center justify-content-between gap-3"><div class="d-flex align-items-center gap-3 topbar-shell"><button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button><div class="d-flex flex-column"><h1 class="page-title" id="pageTitle">งบประมาณ</h1><p class="page-subtitle" id="pageSubtitle">ข้อมูลการจัดสรรงบประมาณของโรงเรียน • ปีการศึกษา 2569</p></div></div><nav aria-label="breadcrumb" class="d-none d-md-block"><ol class="breadcrumb" id="breadcrumbTrail"></ol></nav></div></header>
-<main class="page-content"><div class="container-fluid"><div id="errorBox" class="alert alert-danger d-none"></div><section class="hero-panel rounded-4 p-3 p-xl-4 mb-3"><div class="row align-items-center g-4"><div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Budget Dashboard</span><h2 class="display-6 fw-bold mb-3" id="heroTitle">งบประมาณ</h2><p class="lead mb-0" id="heroSubtitle">มุมมองการใช้ทรัพยากรในปีงบประมาณปัจจุบัน</p></div><div class="col-lg-4"><div class="summary-grid"><div class="summary-chip"><span class="label">ปีงบประมาณ</span><strong>2569</strong></div><div class="summary-chip"><span class="label">งบรวม</span><strong>-</strong></div><div class="summary-chip"><span class="label">หมวดงบ</span><strong>-</strong></div><div class="summary-chip"><span class="label">ข้อมูล</span><strong>JSON กลาง</strong></div></div></div></div></section><section class="row g-3 mb-4"><div class="col-12 col-md-6 col-xxl-4"><div class="metric-card metric-blue h-100"><div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-wallet2"></i></span><div class="metric-label">ปีงบประมาณ <span class="metric-value" id="fiscalYear">-</span></div></div></div></div></div><div class="col-12 col-md-6 col-xxl-4"><div class="metric-card metric-green h-100"><div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-cash-coin"></i></span><div class="metric-label">งบประมาณรวม <span class="metric-value" id="budgetTotal">-</span></div></div></div></div></div><div class="col-12 col-md-6 col-xxl-4"><div class="metric-card metric-purple h-100"><div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-diagram-3-fill"></i></span><div class="metric-label">หมวดงบประมาณ <span class="metric-value">4</span></div></div></div></div></div></section><section class="row g-3"><div class="col-xl-7"><div class="section-card h-100"><div class="card-header d-flex align-items-center justify-content-between"><h3 class="h5 mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>กราฟงบประมาณตามหมวด</h3><span class="badge badge-soft-warning">การจัดสรร</span></div><div class="card-body chart-box"><canvas id="budgetChart"></canvas></div></div></div><div class="col-xl-5"><div class="section-card h-100"><div class="card-header d-flex align-items-center justify-content-between"><h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>สรุปงบประมาณ</h3><span class="badge badge-soft-primary">รายละเอียด</span></div><div class="card-body"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th>หมวดงบประมาณ</th><th>จำนวนเงิน (บาท)</th><th>สัดส่วน (%)</th><th>สัดส่วนภาพ</th></tr></thead><tbody id="budgetTableBody"></tbody></table></div></div></div></div></section><footer class="mt-4 pb-1"><p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p></footer></div></main></div></div><div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel"><div class="offcanvas-header"><div><h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5><p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p></div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button></div><div class="offcanvas-body"><div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span></div><ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul><a class="main-site-link" href="../../"><i class="bi bi-house-door-fill"></i><span>กลับเว็บไซต์หลัก</span></a></div></div><script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script><script src="../assets/vendor/chartjs/chart.umd.min.js"></script><script src="../assets/js/main.js"></script><script src="../assets/js/charts.js"></script></body></html>
+      <header class="app-topbar d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
+          <div class="d-flex align-items-center gap-3 topbar-shell">
+            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+              <i class="bi bi-list"></i>
+            </button>
+            <div class="d-flex flex-column">
+              <h1 class="page-title" id="pageTitle">งบประมาณ</h1>
+              <p class="page-subtitle" id="pageSubtitle">ข้อมูลการจัดสรรงบประมาณของโรงเรียน • ปีการศึกษา 2569</p>
+            </div>
+          </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-block">
+            <ol class="breadcrumb" id="breadcrumbTrail"></ol>
+          </nav>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <div class="container-fluid">
+          <div id="errorBox" class="alert alert-danger d-none"></div>
+
+          <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
+            <div class="row align-items-center g-4">
+              <div class="col-lg-8">
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Budget Dashboard</span>
+                <h2 class="display-6 fw-bold mb-3" id="heroTitle">งบประมาณ</h2>
+                <p class="lead mb-0" id="heroSubtitle">มุมมองการใช้ทรัพยากรในปีงบประมาณปัจจุบัน</p>
+              </div>
+              <div class="col-lg-4">
+                <div class="summary-grid">
+                  <div class="summary-chip"><span class="label">ปีงบประมาณ</span><strong>2569</strong></div>
+                  <div class="summary-chip"><span class="label">งบรวม</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">หมวดงบ</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">ข้อมูล</span><strong>API</strong></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-12 col-md-6 col-xxl-4">
+              <div class="metric-card metric-blue h-100">
+                <div class="card-body">
+                  <div class="metric-heading">
+                    <span class="metric-icon"><i class="bi bi-wallet2"></i></span>
+                    <div class="metric-label">ปีงบประมาณ <span class="metric-value" id="fiscalYear">-</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-4">
+              <div class="metric-card metric-green h-100">
+                <div class="card-body">
+                  <div class="metric-heading">
+                    <span class="metric-icon"><i class="bi bi-cash-coin"></i></span>
+                    <div class="metric-label">งบประมาณรวม <span class="metric-value" id="budgetTotal">-</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-4">
+              <div class="metric-card metric-purple h-100">
+                <div class="card-body">
+                  <div class="metric-heading">
+                    <span class="metric-icon"><i class="bi bi-diagram-3-fill"></i></span>
+                    <div class="metric-label">หมวดงบประมาณ <span class="metric-value" id="budgetCategoryCount">-</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="section-card h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div>
+                      <div class="text-muted small">รายการงบประมาณ</div>
+                      <div class="h4 mb-0" id="budgetItemCount">-</div>
+                    </div>
+                    <span class="icon-circle icon-blue"><i class="bi bi-list-check"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="section-card h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div>
+                      <div class="text-muted small">ค่าจัดการเรียนการสอน</div>
+                      <div class="h4 mb-0" id="teachingTotal">-</div>
+                    </div>
+                    <span class="icon-circle icon-green"><i class="bi bi-mortarboard-fill"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="section-card h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div>
+                      <div class="text-muted small">ค่าไฟฟ้า <span id="electricityRecorded">-</span> เดือน</div>
+                      <div class="h4 mb-0" id="electricityTotal">-</div>
+                    </div>
+                    <span class="icon-circle icon-yellow"><i class="bi bi-lightning-charge-fill"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-xl-7">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>กราฟงบประมาณตามหมวด</h3>
+                  <span class="badge badge-soft-warning">การจัดสรร</span>
+                </div>
+                <div class="card-body chart-box">
+                  <canvas id="budgetChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-5">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>สรุปงบประมาณ</h3>
+                  <span class="badge badge-soft-primary">รายละเอียด</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>หมวดงบประมาณ</th>
+                          <th>จำนวนเงิน (บาท)</th>
+                          <th>สัดส่วน (%)</th>
+                          <th>สัดส่วนภาพ</th>
+                        </tr>
+                      </thead>
+                      <tbody id="budgetTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-xl-6">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-card-checklist me-2 text-primary"></i>รายการงบประมาณหลัก</h3>
+                  <span class="badge badge-soft-primary">MAIN</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>หมวดงบประมาณ</th>
+                          <th>รายการ</th>
+                          <th>จำนวนเงิน</th>
+                          <th>สัดส่วน</th>
+                        </tr>
+                      </thead>
+                      <tbody id="budgetMainItemsBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>ค่าจัดการเรียนการสอน</h3>
+                  <span class="badge badge-soft-success">รายการย่อย</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>รายการ</th>
+                          <th>หมวดงบประมาณ</th>
+                          <th>จำนวนเงิน</th>
+                          <th>สัดส่วน</th>
+                        </tr>
+                      </thead>
+                      <tbody id="teachingManagementBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-xl-7">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-lightning-charge-fill me-2 text-primary"></i>ค่าไฟฟ้ารายเดือน</h3>
+                  <span class="badge badge-soft-warning">รายเดือน</span>
+                </div>
+                <div class="card-body">
+                  <div class="chart-box mb-3">
+                    <canvas id="electricityLineChart"></canvas>
+                  </div>
+                  <button class="btn btn-sm btn-outline-primary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#electricityMonthlyDetail" aria-expanded="false" aria-controls="electricityMonthlyDetail">
+                    <i class="bi bi-table me-1"></i>ดูรายละเอียดรายเดือน
+                  </button>
+                  <div class="collapse mt-3" id="electricityMonthlyDetail">
+                    <div class="table-responsive">
+                      <table class="table table-hover align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th>เดือน</th>
+                            <th>จำนวนเงิน</th>
+                            <th>สถานะ</th>
+                          </tr>
+                        </thead>
+                        <tbody id="electricityMonthlyBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-5">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-journal-text me-2 text-primary"></i>หมายเหตุรายงาน</h3>
+                  <span class="badge badge-soft-primary">Notes</span>
+                </div>
+                <div class="card-body" id="budgetNotesList"></div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="mt-4 pb-1">
+            <p class="footer-note mb-0">Information Portal | <span data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</span> | พ.ศ. <span id="copyrightYear"></span></p>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-start mobile-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+    <div class="offcanvas-header">
+      <div>
+        <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
+        <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="sidebar-meta mb-3">
+        <span class="badge rounded-pill">ปีการศึกษา <span data-academic-year>2569</span></span>
+      </div>
+      <ul class="nav flex-column mobile-menu js-offcanvas-menu"></ul>
+      <a class="main-site-link" href="../../">
+        <i class="bi bi-house-door-fill"></i>
+        <span>กลับเว็บไซต์หลัก</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/charts.js"></script>
+</body>
+</html>

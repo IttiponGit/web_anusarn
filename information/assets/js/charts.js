@@ -405,14 +405,31 @@
     }
 
     if (hasCanvas('budgetChart') && data.budget) {
+      const budgetItems = Array.isArray(data.categories)
+        ? data.categories
+        : (Array.isArray(data.budget.items) ? data.budget.items : []);
+      const budgetValue = (item, keys, fallback = '') => {
+        for (const key of keys) {
+          if (item && item[key] !== null && item[key] !== undefined && item[key] !== '') return item[key];
+        }
+        return fallback;
+      };
       drawChart('budgetChart', {
         type: 'bar',
         data: {
-          labels: data.budget.items.map((x) => x.category),
+          labels: budgetItems.map((x) => budgetValue(x, ['category', 'categoryName', 'name', 'label'], budgetValue(x.raw, ['category_name'], 'ไม่ระบุหมวด'))),
           datasets: [{
             label: 'งบประมาณ (บาท)',
-            data: data.budget.items.map((x) => x.amount),
-            backgroundColor: [palette.blue, palette.green, palette.yellow, palette.purple],
+            data: budgetItems.map((x) => Number(budgetValue(x, ['amount'], budgetValue(x.raw, ['amount'], 0)) || 0)),
+            backgroundColor: budgetItems.map((x, index) => budgetValue(x, ['chartColor', 'chart_color'], budgetValue(x.raw, ['chart_color'], [
+              palette.blue,
+              palette.green,
+              palette.yellow,
+              palette.purple,
+              palette.cyan,
+              palette.navy,
+              palette.red
+            ][index % 7]))),
             borderRadius: 10,
             maxBarThickness: 42,
             borderSkipped: false
@@ -423,6 +440,109 @@
           scales: {
             x: { grid: { display: false }, ticks: { color: '#475569' } },
             y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.16)' }, ticks: { callback: (value) => `${value / 1000000}M` } }
+          }
+        }
+      });
+    }
+
+    if (hasCanvas('electricityLineChart') && data.electricityComparison) {
+      const monthLabels = ['ต.ค.', 'พ.ย.', 'ธ.ค.', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'];
+      const readValue = (item, keys, fallback = null) => {
+        for (const key of keys) {
+          if (item && item[key] !== null && item[key] !== undefined && item[key] !== '') return item[key];
+        }
+        return fallback;
+      };
+      const toMonthNo = (item) => Number(readValue(item, ['monthNo', 'fiscalMonthNo'], readValue(item.raw, ['fiscal_month_no'], 0)));
+      const toAmount = (item) => {
+        const value = readValue(item, ['amount'], readValue(item.raw, ['amount'], null));
+        if (value === null || value === undefined || value === '') return null;
+        const numberValue = Number(String(value).replace(/,/g, ''));
+        return Number.isFinite(numberValue) ? numberValue : null;
+      };
+      const seriesForYear = (year) => {
+        const rows = Array.isArray(data.electricityComparison[year]) ? data.electricityComparison[year] : [];
+        const byMonth = new Map(rows.map((item) => [toMonthNo(item), item]));
+        return monthLabels.map((_, index) => {
+          const item = byMonth.get(index + 1);
+          return item ? toAmount(item) : null;
+        });
+      };
+      const statusFor = (year, monthIndex) => {
+        const rows = Array.isArray(data.electricityComparison[year]) ? data.electricityComparison[year] : [];
+        const item = rows.find((row) => toMonthNo(row) === monthIndex + 1);
+        return readValue(item, ['status', 'dataStatus'], readValue(item?.raw, ['data_status'], 'ยังไม่มีข้อมูล'));
+      };
+
+      drawChart('electricityLineChart', {
+        type: 'line',
+        data: {
+          labels: monthLabels,
+          datasets: [
+            {
+              label: 'ปีงบประมาณ 2568',
+              data: seriesForYear('2568'),
+              borderColor: palette.slate,
+              backgroundColor: 'rgba(100, 116, 139, 0.12)',
+              pointBackgroundColor: palette.slate,
+              pointBorderColor: '#ffffff',
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              tension: 0.35,
+              spanGaps: false
+            },
+            {
+              label: 'ปีงบประมาณ 2569',
+              data: seriesForYear('2569'),
+              borderColor: palette.blue,
+              backgroundColor: 'rgba(37, 99, 235, 0.12)',
+              pointBackgroundColor: palette.blue,
+              pointBorderColor: '#ffffff',
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              tension: 0.35,
+              spanGaps: false
+            }
+          ]
+        },
+        options: {
+          ...baseOptions(),
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            ...baseOptions().plugins,
+            tooltip: {
+              ...baseOptions().plugins.tooltip,
+              callbacks: {
+                title(items) {
+                  return items?.[0]?.label || '';
+                },
+                label(context) {
+                  const year = context.dataset.label.replace('ปีงบประมาณ ', '');
+                  const value = context.raw;
+                  if (value === null || value === undefined) {
+                    return `${context.dataset.label}: ${statusFor(year, context.dataIndex)}`;
+                  }
+                  return `${context.dataset.label}: ${Number(value).toLocaleString('th-TH')} บาท`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#475569' }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(148, 163, 184, 0.16)' },
+              ticks: {
+                color: '#64748b',
+                callback: (value) => Number(value).toLocaleString('th-TH')
+              }
+            }
           }
         }
       });
