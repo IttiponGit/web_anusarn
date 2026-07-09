@@ -785,6 +785,10 @@ body[data-page="home"] .metric-note {
   background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 }
 
+.personnel-info-card-yellow {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
 .personnel-info-icon {
   width: 2.35rem;
   height: 2.35rem;
@@ -1117,9 +1121,20 @@ body[data-page="personnel"] .admin-info {
 }
 
 body[data-page="personnel"] .personnel-chart-box {
-  height: 488px;
-  max-height: 488px;
+  height: 340px;
+  max-height: 340px;
   padding: 1rem 1.1rem 0.8rem;
+}
+
+body[data-page="students"] .chart-box-pie {
+  height: 340px;
+  max-height: 340px;
+}
+
+body[data-page="personnel"] .personnel-chart-box canvas,
+body[data-page="students"] #studentsChart {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 body[data-page="personnel"] .personnel-chart-legend {
@@ -1251,6 +1266,12 @@ body[data-page="personnel"] .personnel-legend-count {
     height: 306px;
     max-height: 306px;
   }
+
+  body[data-page="personnel"] .personnel-chart-box,
+  body[data-page="students"] .chart-box-pie {
+    height: 340px;
+    max-height: 340px;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -1323,8 +1344,13 @@ body[data-page="personnel"] .personnel-legend-count {
   }
 
   body[data-page="personnel"] .personnel-chart-box {
-    height: 412px;
-    max-height: 412px;
+    height: 280px;
+    max-height: 280px;
+  }
+
+  body[data-page="students"] .chart-box-pie {
+    height: 280px;
+    max-height: 280px;
   }
 
   body[data-page="personnel"] .personnel-chart-legend {

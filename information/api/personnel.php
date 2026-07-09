@@ -52,7 +52,18 @@ function info_personnel_pick_int(array $row, array $keys): int
 function info_personnel_pick_float(array $row, array $keys, ?float $fallback = null): ?float
 {
 	$value = info_personnel_pick($row, $keys, '');
+	$value = str_replace('%', '', $value);
 	return is_numeric($value) ? (float) $value : $fallback;
+}
+
+function info_personnel_percent_display(array $row, float $percent): string
+{
+	$display = info_personnel_pick($row, ['percent_display']);
+	if ($display !== '') {
+		return strpos($display, '%') !== false ? $display : $display . '%';
+	}
+
+	return number_format($percent, 2, '.', '') . '%';
 }
 
 function info_personnel_calculated_percent(array $row, int $count, string $sectionKey = ''): float
@@ -190,7 +201,7 @@ function info_personnel_normalize_stat(array $row): array
 		'count' => $count,
 		'totalCount' => $denominator !== null ? (int) $denominator : null,
 		'percent' => $percent,
-		'percentDisplay' => number_format($percent, 2, '.', '') . '%',
+		'percentDisplay' => info_personnel_percent_display($row, $percent),
 		'note' => info_personnel_pick($row, ['note', 'description', 'summary']),
 	];
 }
@@ -211,7 +222,7 @@ function info_personnel_normalize_position(array $row): array
 		'totalPersonnel' => $totalPersonnel,
 		'percentCalculated' => $percent,
 		'percent' => $percent,
-		'percentDisplay' => number_format($percent, 2, '.', '') . '%',
+		'percentDisplay' => info_personnel_percent_display($row, $percent),
 		'note' => '',
 	];
 }
@@ -339,7 +350,7 @@ try {
 		}
 	}
 
-	$byPosition = isset($stats['position']) ? info_personnel_position_stats($stats['position']) : $positionSummary;
+	$byPosition = $positionSummary;
 	$testSummary = [
 		'kpiTotal' => $kpiByKey['total_personnel'] ?? ($kpis[0]['value'] ?? null),
 		'genderTotal' => info_personnel_sum($stats['gender'] ?? [], 'count'),

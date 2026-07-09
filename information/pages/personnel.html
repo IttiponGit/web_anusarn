@@ -69,7 +69,7 @@
           </section>
 
           <section class="row g-3 mb-4">
-            <div class="col-12 col-md-6 col-xxl-4">
+            <div class="col-12 col-md-6 col-xxl-3">
               <div class="personnel-info-card personnel-info-card-blue h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-person-vcard"></i></span>
@@ -77,7 +77,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-xxl-4">
+            <div class="col-12 col-md-6 col-xxl-3">
               <div class="personnel-info-card personnel-info-card-green h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-mortarboard-fill"></i></span>
@@ -85,11 +85,19 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-xxl-4">
+            <div class="col-12 col-md-6 col-xxl-3">
               <div class="personnel-info-card personnel-info-card-purple h-100">
                 <div class="personnel-info-heading">
                   <span class="personnel-info-icon"><i class="bi bi-people"></i></span>
                   <div class="personnel-info-label">บุคลากรสนับสนุน <span class="personnel-info-value" id="supportCount">ไม่มีข้อมูล</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-3">
+              <div class="personnel-info-card personnel-info-card-yellow h-100">
+                <div class="personnel-info-heading">
+                  <span class="personnel-info-icon"><i class="bi bi-person-gear"></i></span>
+                  <div class="personnel-info-label">ผู้บริหาร <span class="personnel-info-value" id="administratorCount">ไม่มีข้อมูล</span></div>
                 </div>
               </div>
             </div>
@@ -99,7 +107,7 @@
             <div class="col-lg-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>สัดส่วนบุคลากรจำแนกตามประเภท</h3>
+                  <h3 class="h5 mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>สัดส่วนบุคลากรจำแนกตามประเภทตำแหน่ง</h3>
                 </div>
                 <div class="card-body chart-box chart-box-pie personnel-chart-box">
                   <canvas id="personnelChart"></canvas>
@@ -118,9 +126,10 @@
                       <thead>
                         <tr>
                           <th>ตำแหน่ง</th>
-                          <th>จำนวน</th>
+                          <th>ชาย</th>
+                          <th>หญิง</th>
+                          <th>รวม</th>
                           <th>ร้อยละ</th>
-                          <th>หมายเหตุ</th>
                         </tr>
                       </thead>
                       <tbody id="personnelTableBody"></tbody>

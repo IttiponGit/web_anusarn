@@ -79,7 +79,8 @@
       school: {
         schoolName: settings.school_name || SCHOOL_NAME,
         academicYear,
-        classroomCount: settings.classroom_count ?? null
+        classroomCount: settings.classroom_count ?? null,
+        levelGroupCount: settings.level_group_count ?? 4
       },
       students: {
         totalStudents: settings.student_count ?? null
@@ -193,7 +194,8 @@
     const students = data.settings?.student_count ?? data.students?.totalStudents ?? null;
     const personnel = data.settings?.personnel_count ?? data.personnel?.totalPersonnel ?? null;
     const classrooms = data.settings?.classroom_count ?? data.school?.classroomCount ?? null;
-    setSummaryValues([`${formatCount(students)} คน`, `${formatCount(personnel)} คน`, `${formatCount(classrooms)} ห้อง`, academicYear || '-']);
+    const levelGroups = data.settings?.level_group_count ?? data.school?.levelGroupCount ?? 4;
+    setSummaryValues([`${formatCount(students)} คน`, `${formatCount(personnel)} คน`, `${formatCount(classrooms)} ห้อง`, `${formatCount(levelGroups)} ช่วงชั้น`]);
     setText('sumStudents', formatCount(students));
     setText('sumPersonnel', formatCount(personnel));
     setText('sumClassrooms', formatCount(classrooms));
@@ -236,7 +238,13 @@
     setSummaryValues([`${indicators.length} ตัวชี้วัด`, `${indicators.filter((x) => String(x.status).includes('ผ่าน')).length} รายการ`, ACADEMIC_YEAR, 'SAR']);
     const tbody = byId('sarTableBody');
     if (tbody) {
-      tbody.innerHTML = indicators.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td><span class="badge badge-soft-primary">${escapeHtml(item.target)}%</span></td><td><span class="badge badge-soft-success">${escapeHtml(item.actual)}%</span></td><td>${escapeHtml(item.status)}</td></tr>`).join('');
+      const toPercentNumber = (value) => Number(String(value ?? '').replace('%', '').trim());
+      tbody.innerHTML = indicators.map((item) => {
+        const target = toPercentNumber(item.target);
+        const actual = toPercentNumber(item.actual);
+        const actualBadgeClass = Number.isFinite(actual) && Number.isFinite(target) && actual < target ? 'badge-soft-warning' : 'badge-soft-success';
+        return `<tr><td>${escapeHtml(item.name)}</td><td><span class="badge badge-soft-primary">${escapeHtml(item.target)}%</span></td><td><span class="badge ${actualBadgeClass}">${escapeHtml(item.actual)}%</span></td><td>${escapeHtml(item.status)}</td></tr>`;
+      }).join('');
     }
   }
 
@@ -254,6 +262,7 @@
     setText('personnelTotal', kpis[0] ? formatNumber(kpis[0].value) : (personnel.totalPersonnel ?? noDataText));
     setText('teacherCount', kpis[1] ? formatNumber(kpis[1].value) : (personnel.teacherCount ?? noDataText));
     setText('supportCount', kpis[2] ? formatNumber(kpis[2].value) : (personnel.supportCount ?? noDataText));
+    setText('administratorCount', kpis[3] ? formatNumber(kpis[3].value) : (personnel.administratorCount ?? noDataText));
     setSummaryValues([
       kpiValue(0, personnel.totalPersonnel),
       kpiValue(1, personnel.teacherCount),
@@ -265,11 +274,10 @@
       const positionSummary = Array.isArray(personnel.positionSummary) ? personnel.positionSummary : [];
       tbody.innerHTML = positionSummary.length
         ? positionSummary.map((item) => {
-          const note = item.note || `ชาย ${formatNumber(item.maleCount)} / หญิง ${formatNumber(item.femaleCount)}`;
-          const percent = item.percentCalculated ?? item.percent;
-          return `<tr><td>${escapeHtml(item.position || noDataText)}</td><td>${formatNumber(item.count)} คน</td><td>${formatPercent(percent)}%</td><td><span class="badge badge-soft-primary">${escapeHtml(note)}</span></td></tr>`;
+          const percent = item.percentDisplay || `${formatPercent(item.percentCalculated ?? item.percent)}%`;
+          return `<tr><td>${escapeHtml(item.position || noDataText)}</td><td>${formatNumber(item.maleCount)} คน</td><td>${formatNumber(item.femaleCount)} คน</td><td>${formatNumber(item.count)} คน</td><td><span class="badge badge-soft-primary">${escapeHtml(percent)}</span></td></tr>`;
         }).join('')
-        : `<tr><td colspan="4" class="text-center text-muted">${noDataText}</td></tr>`;
+        : `<tr><td colspan="5" class="text-center text-muted">${noDataText}</td></tr>`;
     }
   }
 

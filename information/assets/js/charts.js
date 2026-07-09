@@ -51,6 +51,61 @@
     window.__informationCharts[id] = new Chart(canvas, config);
   }
 
+  const sliceDataLabelsPlugin = {
+    id: 'sliceDataLabels',
+    afterDatasetsDraw(chart, args, pluginOptions) {
+      const options = pluginOptions || {};
+      const dataset = chart.data.datasets?.[0];
+      const meta = chart.getDatasetMeta(0);
+      if (!dataset || !meta || meta.hidden) return;
+
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = options.color || '#ffffff';
+      ctx.strokeStyle = options.strokeColor || 'rgba(15, 23, 42, 0.35)';
+      ctx.lineWidth = options.strokeWidth ?? 3;
+      ctx.font = options.font || '700 12px Sarabun, Tahoma, sans-serif';
+
+      meta.data.forEach((element, dataIndex) => {
+        const value = dataset.data[dataIndex];
+        const context = {
+          chart,
+          dataset,
+          datasetIndex: 0,
+          dataIndex
+        };
+        const shouldDisplay = typeof options.display === 'function'
+          ? options.display(context)
+          : options.display !== false;
+        if (!shouldDisplay) return;
+
+        const label = typeof options.formatter === 'function'
+          ? options.formatter(value, context)
+          : String(value ?? '');
+        if (!label) return;
+
+        const position = element.tooltipPosition();
+        String(label).split('\n').forEach((line, lineIndex, lines) => {
+          const y = position.y + (lineIndex - (lines.length - 1) / 2) * 15;
+          ctx.strokeText(line, position.x, y);
+          ctx.fillText(line, position.x, y);
+        });
+      });
+
+      ctx.restore();
+    }
+  };
+
+  function sliceLabelFormatter(value, context) {
+    const data = context.chart.data.datasets[0].data;
+    const total = data.reduce((sum, item) => sum + Number(item || 0), 0);
+    const numberValue = Number(value || 0);
+    const percent = total > 0 ? (numberValue * 100 / total) : 0;
+    return `${numberValue} คน\n${percent.toFixed(1)}%`;
+  }
+
   function hasCanvas(id) {
     return Boolean(document.getElementById(id));
   }
@@ -299,11 +354,22 @@
               hoverOffset: 8
             }]
           },
+          plugins: [sliceDataLabelsPlugin],
           options: {
             ...radialOptions(),
             plugins: {
               ...radialOptions().plugins,
-              legend: { display: false }
+              legend: { display: false },
+              sliceDataLabels: {
+                display(context) {
+                  const data = context.chart.data.datasets[0].data;
+                  const value = Number(data[context.dataIndex] || 0);
+                  const total = data.reduce((sum, item) => sum + Number(item || 0), 0);
+                  const percent = total > 0 ? (value * 100 / total) : 0;
+                  return value >= 3 || percent >= 5;
+                },
+                formatter: sliceLabelFormatter
+              }
             },
             cutout: '54%',
             radius: '100%'
@@ -323,11 +389,16 @@
             borderWidth: 0
           }]
         },
+        plugins: [sliceDataLabelsPlugin],
         options: {
           ...baseOptions(),
           plugins: {
             ...baseOptions().plugins,
-            legend: { position: 'bottom' }
+            legend: { position: 'bottom' },
+            sliceDataLabels: {
+              display: true,
+              formatter: sliceLabelFormatter
+            }
           }
         }
       });
