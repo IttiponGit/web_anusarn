@@ -23,7 +23,7 @@
     { key: 'students', label: 'ข้อมูลนักเรียน', icon: 'bi-people-fill', href: isSubPage ? 'students.html' : 'pages/students.html' },
     { key: 'academic', label: 'ข้อมูลวิชาการ', icon: 'bi-mortarboard-fill', href: isSubPage ? 'academic.html' : 'pages/academic.html' },
     { key: 'budget', label: 'งบประมาณ', icon: 'bi-wallet2', href: isSubPage ? 'budget.html' : 'pages/budget.html' },
-    { key: 'awards', label: 'ผลงานและรางวัล', icon: 'bi-award-fill', href: isSubPage ? 'awards.php' : 'pages/awards.php' },
+    { key: 'awards', label: 'ผลงานและรางวัล', icon: 'bi-award-fill', href: isSubPage ? 'awards.html' : 'pages/awards.html' },
     { key: 'downloads', label: 'ดาวน์โหลดเอกสาร', icon: 'bi-download', href: isSubPage ? 'downloads.html' : 'pages/downloads.html' }
   ];
 
@@ -122,6 +122,18 @@
     return loadApiJson(`${INFORMATION_API_ROOT}/personnel.php`);
   }
 
+  async function loadAwardsData() {
+    const response = await fetch(`${INFORMATION_API_ROOT}/awards.php`, { cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok || payload?.success === false) {
+      throw new Error(payload?.message || payload?.error || 'Cannot load awards data');
+    }
+    return {
+      awardsSummary: payload.summary || {},
+      awards: Array.isArray(payload.data) ? payload.data : []
+    };
+  }
+
   async function loadBudgetData(year = '2569') {
     return loadApiJson(`${SITE_API_ROOT}/budget.php?action=all&year=${encodeURIComponent(year)}`);
   }
@@ -149,6 +161,17 @@
       return {
         ...settingsData,
         personnel
+      };
+    }
+
+    if (page === 'awards') {
+      const [settingsData, awardsData] = await Promise.all([
+        loadSettingsData(),
+        loadAwardsData()
+      ]);
+      return {
+        ...settingsData,
+        ...awardsData
       };
     }
 
@@ -540,7 +563,59 @@
   }
 
   function renderAwards(data) {
-    return data;
+    const awards = Array.isArray(data.awards) ? data.awards : [];
+    const summary = data.awardsSummary || {};
+    const total = summary.total ?? awards.length;
+    const studentTotal = summary.student ?? awards.filter((item) => item.award_group === 'student').length;
+    const staffTotal = summary.staff ?? awards.filter((item) => item.award_group === 'staff').length;
+    const institutionTotal = summary.institution ?? awards.filter((item) => item.award_group === 'institution').length;
+    const latestYear = awards.map((item) => item.award_year).filter(Boolean).sort().reverse()[0] || '-';
+
+    setSummaryValues([
+      `${formatCount(total)} รายการ`,
+      `${formatCount(studentTotal)} รายการ`,
+      `${formatCount(staffTotal)} รายการ`,
+      `${formatCount(institutionTotal)} รายการ`
+    ]);
+    setMetricValues([
+      formatCount(total),
+      formatCount(studentTotal),
+      formatCount(staffTotal),
+      latestYear
+    ]);
+    setText('awardsTotal', formatCount(total));
+    setText('studentAwardsTotal', formatCount(studentTotal));
+    setText('staffAwardsTotal', formatCount(staffTotal));
+    setText('latestAwardYear', latestYear);
+
+    const cards = byId('awardsCardList');
+    if (cards) {
+      cards.innerHTML = awards.length
+        ? awards.map((item) => {
+          const recipients = Array.isArray(item.recipients) ? item.recipients : [];
+          const results = Array.isArray(item.results) ? item.results : [];
+          const group = item.award_group || '';
+          const groupBadge = group === 'student' ? 'badge-soft-primary' : (group === 'staff' ? 'badge-soft-success' : 'badge-soft-warning');
+          const groupLabel = group === 'student' ? 'นักเรียน' : (group === 'staff' ? 'ครูและบุคลากร' : 'สถานศึกษา');
+          const names = recipients.slice(0, 3).map((recipient) => recipient.recipient_name).filter(Boolean);
+          const resultText = results.map((result) => result.award_result || result.result_rank).filter(Boolean).slice(0, 2).join(' / ');
+          return `<div class="col-md-6 col-xl-4"><div class="soft-card p-3 h-100"><div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="badge ${groupBadge}">${escapeHtml(groupLabel)}</span><span class="small text-muted">${escapeHtml(item.award_year || '-')}</span></div><div class="item-title mb-2">${escapeHtml(item.award_list || noDataText)}</div><div class="item-desc mb-2">${escapeHtml(item.award_agency || '')}</div>${resultText ? `<div class="small fw-semibold mb-2">${escapeHtml(resultText)}</div>` : ''}${names.length ? `<div class="small text-muted">${escapeHtml(names.join(', '))}${recipients.length > names.length ? ' ...' : ''}</div>` : ''}</div></div>`;
+        }).join('')
+        : `<div class="col-12"><div class="text-center text-muted py-4">${noDataText}</div></div>`;
+    }
+
+    const tbody = byId('awardsTableBody');
+    if (tbody) {
+      tbody.innerHTML = awards.length
+        ? awards.map((item) => {
+          const recipients = Array.isArray(item.recipients) ? item.recipients : [];
+          const results = Array.isArray(item.results) ? item.results : [];
+          const recipientText = recipients.map((recipient) => recipient.recipient_name).filter(Boolean).join(', ') || '-';
+          const resultText = results.map((result) => result.award_result || result.result_rank).filter(Boolean).join(', ') || '-';
+          return `<tr><td>${escapeHtml(item.award_list || noDataText)}</td><td>${escapeHtml(item.award_agency || '-')}</td><td>${escapeHtml(resultText)}</td><td>${escapeHtml(recipientText)}</td><td>${escapeHtml(item.award_year || '-')}</td></tr>`;
+        }).join('')
+        : `<tr><td colspan="5" class="text-center text-muted">${noDataText}</td></tr>`;
+    }
   }
 
   function renderDownloads(data) {
