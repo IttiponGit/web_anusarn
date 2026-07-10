@@ -414,29 +414,50 @@
         }
         return fallback;
       };
+      const toBudgetAmount = (item) => {
+        const value = budgetValue(item, ['amount'], budgetValue(item.raw, ['amount'], 0));
+        const numberValue = Number(String(value).replace(/,/g, ''));
+        return Number.isFinite(numberValue) ? numberValue : 0;
+      };
+      const categoryAmounts = budgetItems.map(toBudgetAmount);
+      const categoryColors = budgetItems.map((x, index) => budgetValue(x, ['chartColor', 'chart_color'], budgetValue(x.raw, ['chart_color'], [
+        palette.blue,
+        palette.green,
+        palette.yellow,
+        palette.purple,
+        palette.cyan,
+        palette.navy,
+        palette.red
+      ][index % 7])));
       drawChart('budgetChart', {
         type: 'bar',
         data: {
           labels: budgetItems.map((x) => budgetValue(x, ['category', 'categoryName', 'name', 'label'], budgetValue(x.raw, ['category_name'], 'ไม่ระบุหมวด'))),
           datasets: [{
             label: 'งบประมาณ (บาท)',
-            data: budgetItems.map((x) => Number(budgetValue(x, ['amount'], budgetValue(x.raw, ['amount'], 0)) || 0)),
-            backgroundColor: budgetItems.map((x, index) => budgetValue(x, ['chartColor', 'chart_color'], budgetValue(x.raw, ['chart_color'], [
-              palette.blue,
-              palette.green,
-              palette.yellow,
-              palette.purple,
-              palette.cyan,
-              palette.navy,
-              palette.red
-            ][index % 7]))),
+            data: categoryAmounts,
+            backgroundColor: categoryColors,
             borderRadius: 10,
             maxBarThickness: 42,
+            minBarLength: 4,
             borderSkipped: false
           }]
         },
         options: {
           ...baseOptions(),
+          plugins: {
+            ...baseOptions().plugins,
+            tooltip: {
+              ...baseOptions().plugins.tooltip,
+              callbacks: {
+                label(context) {
+                  const value = Number(context.raw);
+                  const amount = Number.isFinite(value) ? value : 0;
+                  return `${context.dataset.label}: ${amount.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท`;
+                }
+              }
+            }
+          },
           scales: {
             x: { grid: { display: false }, ticks: { color: '#475569' } },
             y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.16)' }, ticks: { callback: (value) => `${value / 1000000}M` } }

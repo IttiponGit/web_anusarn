@@ -73,7 +73,7 @@
               <div class="metric-card metric-blue h-100">
                 <div class="card-body">
                   <div class="metric-heading">
-                    <span class="metric-icon"><i class="bi bi-wallet2"></i></span>
+                    <span class="metric-icon"><i class="bi bi-calendar-date-fill"></i></span>
                     <div class="metric-label">ปีงบประมาณ <span class="metric-value" id="fiscalYear">-</span></div>
                   </div>
                 </div>
@@ -83,8 +83,8 @@
               <div class="metric-card metric-green h-100">
                 <div class="card-body">
                   <div class="metric-heading">
-                    <span class="metric-icon"><i class="bi bi-cash-coin"></i></span>
-                    <div class="metric-label">งบประมาณรวม <span class="metric-value" id="budgetTotal">-</span></div>
+                    <span class="metric-icon"><i class="bi bi-layers-fill"></i></span>
+                    <div class="metric-label">หมวดงบประมาณ <span class="metric-value" id="budgetCategoryCount">-</span></div>
                   </div>
                 </div>
               </div>
@@ -93,8 +93,8 @@
               <div class="metric-card metric-purple h-100">
                 <div class="card-body">
                   <div class="metric-heading">
-                    <span class="metric-icon"><i class="bi bi-diagram-3-fill"></i></span>
-                    <div class="metric-label">หมวดงบประมาณ <span class="metric-value" id="budgetCategoryCount">-</span></div>
+                    <span class="metric-icon"><i class="bi bi-list-ul"></i></span>
+                    <div class="metric-label">รายการงบประมาณ <span class="metric-value" id="budgetItemCount">-</span></div>
                   </div>
                 </div>
               </div>
@@ -107,10 +107,10 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between gap-3">
                     <div>
-                      <div class="text-muted small">รายการงบประมาณ</div>
-                      <div class="h4 mb-0" id="budgetItemCount">-</div>
+                      <div class="text-muted small">งบประมาณรับจริง</div>
+                      <div class="h4 mb-0" id="actualReceipts">-</div>
                     </div>
-                    <span class="icon-circle icon-blue"><i class="bi bi-list-check"></i></span>
+                    <span class="icon-circle icon-blue"><i class="bi bi-cash-stack"></i></span>
                   </div>
                 </div>
               </div>
@@ -120,10 +120,10 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between gap-3">
                     <div>
-                      <div class="text-muted small">ค่าจัดการเรียนการสอน</div>
-                      <div class="h4 mb-0" id="teachingTotal">-</div>
+                      <div class="text-muted small">งบประมาณจ่ายจริง</div>
+                      <div class="h4 mb-0" id="actualExpenditures">-</div>
                     </div>
-                    <span class="icon-circle icon-green"><i class="bi bi-mortarboard-fill"></i></span>
+                    <span class="icon-circle icon-green"><i class="bi bi-receipt"></i></span>
                   </div>
                 </div>
               </div>
@@ -133,47 +133,10 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between gap-3">
                     <div>
-                      <div class="text-muted small">ค่าไฟฟ้า <span id="electricityRecorded">-</span> เดือน</div>
-                      <div class="h4 mb-0" id="electricityTotal">-</div>
+                      <div class="text-muted small">งบประมาณคงเหลือ</div>
+                      <div class="h4 mb-0" id="actualBalance">-</div>
                     </div>
-                    <span class="icon-circle icon-yellow"><i class="bi bi-lightning-charge-fill"></i></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="row g-3 mb-4">
-            <div class="col-xl-7">
-              <div class="section-card h-100">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>กราฟงบประมาณตามหมวด</h3>
-                  <span class="badge badge-soft-warning">การจัดสรร</span>
-                </div>
-                <div class="card-body chart-box">
-                  <canvas id="budgetChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-5">
-              <div class="section-card h-100">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>สรุปงบประมาณ</h3>
-                  <span class="badge badge-soft-primary">รายละเอียด</span>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                      <thead>
-                        <tr>
-                          <th>หมวดงบประมาณ</th>
-                          <th>จำนวนเงิน (บาท)</th>
-                          <th>สัดส่วน (%)</th>
-                          <th>สัดส่วนภาพ</th>
-                        </tr>
-                      </thead>
-                      <tbody id="budgetTableBody"></tbody>
-                    </table>
+                    <span class="icon-circle icon-yellow"><i class="bi bi-wallet-fill"></i></span>
                   </div>
                 </div>
               </div>
@@ -184,17 +147,17 @@
             <div class="col-xl-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-card-checklist me-2 text-primary"></i>รายการงบประมาณหลัก</h3>
-                  <span class="badge badge-soft-primary">MAIN</span>
+                  <h3 class="h5 mb-0"><i class="bi bi-card-checklist me-2 text-primary"></i>งบประมาณตามแผน</h3>
+                  <span class="badge badge-soft-primary">PLAN</span>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
+                  <div class="table-responsive budget-table-scroll">
                     <table class="table table-hover align-middle mb-0">
                       <thead>
                         <tr>
                           <th>หมวดงบประมาณ</th>
                           <th>รายการ</th>
-                          <th>จำนวนเงิน</th>
+                          <th class="text-end">งบประมาณตามแผน</th>
                           <th>สัดส่วน</th>
                         </tr>
                       </thead>
@@ -207,17 +170,44 @@
             <div class="col-xl-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>ค่าจัดการเรียนการสอน</h3>
+                  <h3 class="h5 mb-0"><i class="bi bi-receipt me-2 text-primary"></i>การใช้จ่ายจริง</h3>
+                  <span class="badge badge-soft-success">ACTUAL</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive budget-table-scroll">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>หมวดงบประมาณ</th>
+                          <th>รายการ</th>
+                          <th class="text-end">รับจริง</th>
+                          <th class="text-end">จ่ายจริง</th>
+                          <th class="text-end">คงเหลือ</th>
+                          <th>เบิกจ่าย</th>
+                        </tr>
+                      </thead>
+                      <tbody id="actualItemsBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-xl-6">
+              <div class="section-card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <h3 class="h5 mb-0"><i class="bi bi-mortarboard-fill me-2 text-primary"></i>รายละเอียดค่าจัดการเรียนการสอน</h3>
                   <span class="badge badge-soft-success">รายการย่อย</span>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
+                  <div class="table-responsive budget-table-scroll">
                     <table class="table table-hover align-middle mb-0">
                       <thead>
                         <tr>
                           <th>รายการ</th>
-                          <th>หมวดงบประมาณ</th>
-                          <th>จำนวนเงิน</th>
+                          <th class="text-end">จำนวนเงิน</th>
                           <th>สัดส่วน</th>
                         </tr>
                       </thead>
@@ -227,14 +217,11 @@
                 </div>
               </div>
             </div>
-          </section>
-
-          <section class="row g-3 mb-4">
-            <div class="col-xl-7">
+            <div class="col-xl-6">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h3 class="h5 mb-0"><i class="bi bi-lightning-charge-fill me-2 text-primary"></i>ค่าไฟฟ้ารายเดือน</h3>
-                  <span class="badge badge-soft-warning">รายเดือน</span>
+                  <h3 class="h5 mb-0"><i class="bi bi-lightning-charge-fill me-2 text-primary"></i>ค่าไฟฟ้ารายเดือนเปรียบเทียบ</h3>
+                  <span class="badge badge-soft-warning">2568 / 2569</span>
                 </div>
                 <div class="card-body">
                   <div class="chart-box mb-3">
@@ -260,7 +247,10 @@
                 </div>
               </div>
             </div>
-            <div class="col-xl-5">
+          </section>
+
+          <section class="row g-3 mb-4">
+            <div class="col-12">
               <div class="section-card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
                   <h3 class="h5 mb-0"><i class="bi bi-journal-text me-2 text-primary"></i>หมายเหตุรายงาน</h3>

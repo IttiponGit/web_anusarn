@@ -785,6 +785,17 @@ body[data-page="home"] .metric-note {
   background: linear-gradient(135deg, #8b5cf6, #7c3aed);
 }
 
+.budget-table-scroll {
+  max-height: 520px;
+  overflow: auto;
+}
+
+@media (max-width: 1199.98px) {
+  .budget-table-scroll {
+    max-height: none;
+  }
+}
+
 .personnel-info-card-yellow {
   background: linear-gradient(135deg, #f59e0b, #d97706);
 }

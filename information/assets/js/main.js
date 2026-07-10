@@ -58,6 +58,7 @@
   const formatNumber = (value) => Number(value || 0).toLocaleString('th-TH');
   const formatCount = (value) => (value === null || value === undefined || value === '' || value === '-' ? '-' : formatNumber(value));
   const formatCurrency = (value) => Number(value || 0).toLocaleString('th-TH');
+  const formatCurrencyFixed = (value) => Number(value).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const formatPercent = (value) => Number(value || 0).toFixed(2).replace(/\.00$/, '');
   const noDataText = 'ไม่มีข้อมูล';
   const budgetNoDataText = 'ยังไม่มีข้อมูลงบประมาณ';
@@ -418,63 +419,51 @@
   function renderBudget(data) {
     const budget = data.budget || {};
     const overview = data.overview || {};
+    const actualSummary = data.actualSummary || {};
     const categories = Array.isArray(data.categories) ? data.categories : (budget.items || []);
-    const cards = Array.isArray(data.cards) ? data.cards : [];
     const items = Array.isArray(data.items) ? data.items : [];
-    const mainItems = items.filter((item) => {
+    const mainItems = Array.isArray(data.mainItems) ? data.mainItems : items.filter((item) => {
       const level = String(pickValue(item, ['level', 'apiItemLevel', 'api_item_level'], pickValue(item.raw, ['api_item_level', 'item_level'], ''))).toUpperCase();
       return level === 'MAIN' || level === '1';
     });
-    const teachingManagement = items.filter((item) => {
+    const teachingManagement = Array.isArray(data.teachingManagement) ? data.teachingManagement : items.filter((item) => {
       const parentCode = pickValue(item, ['parentCode', 'parentItemCode', 'parent_item_code'], pickValue(item.raw, ['parent_item_code'], ''));
       return parentCode === 'SUBSIDY_TEACHING_MANAGEMENT';
     });
+    const actualItems = Array.isArray(data.actualItems) ? data.actualItems : [];
     const electricity = Array.isArray(data.electricity) ? data.electricity : [];
     const fiscalYear = pickValue(budget, ['fiscalYear', 'fiscal_year'], pickValue(overview, ['fiscalYear', 'fiscal_year'], '2569'));
     const totalBudget = toNumber(pickValue(budget, ['total', 'totalBudget', 'total_budget'], pickValue(overview, ['totalBudget', 'total_budget'], 0)));
     const categoryCount = toNumber(pickValue(overview, ['categoryCount', 'category_count'], categories.length), categories.length);
     const itemCount = toNumber(pickValue(overview, ['itemCount', 'item_count'], items.length), items.length);
-    const electricityMonths = toNumber(
-      pickValue(overview, ['electricityMonthsRecorded', 'electricity_months_recorded'], null),
-      electricity.filter((item) => pickValue(item, ['amount'], pickValue(item.raw, ['amount'], null)) !== null).length
-    );
-    const electricityTotal = toNumber(
-      pickValue(overview, ['electricityTotalAmount', 'electricity_total_amount'], null),
-      electricity.reduce((sum, item) => sum + toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0))), 0)
-    );
-    const teachingTotal = teachingManagement.reduce((sum, item) => sum + toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0))), 0);
-    const findCard = (patterns) => cards.find((card) => {
-      const haystack = `${pickValue(card, ['key', 'cardKey'], '')} ${pickValue(card, ['label', 'title', 'cardTitle'], pickValue(card.raw, ['card_title'], ''))}`.toLowerCase();
-      return patterns.some((pattern) => haystack.includes(pattern));
-    });
-    const cardDisplay = (card, fallback, fallbackUnit = '') => {
-      if (!card) return fallback;
-      const rawValue = pickValue(card, ['value', 'valueText', 'cardValueText'], pickValue(card.raw, ['card_value_text'], null));
-      const numericValue = pickValue(card, ['valueNumber', 'cardValueNumber'], pickValue(card.raw, ['card_value_number'], null));
-      const value = numericValue !== null
-        ? formatCurrency(numericValue)
-        : String(rawValue ?? fallback);
-      const unit = pickValue(card, ['unit', 'cardUnit'], pickValue(card.raw, ['card_unit'], fallbackUnit));
-      return unit ? `${value} ${unit}` : value;
-    };
-    const totalCard = findCard(['total_budget', 'budget_total', 'งบประมาณรวม', 'งบรวม']);
-    const categoryCard = findCard(['category_count', 'หมวด']);
-    const itemCard = findCard(['item_count', 'รายการ']);
-    const electricityCard = findCard(['electricity', 'ค่าไฟ']);
+    const actualReceiptsRaw = pickValue(actualSummary, ['actualReceived', 'actual_received'], pickValue(overview, ['actualReceipts', 'actual_receipts'], null));
+    const actualExpendituresRaw = pickValue(actualSummary, ['actualPaid', 'actual_paid'], pickValue(overview, ['actualExpenditures', 'actual_expenditures'], null));
+    const actualBalanceRaw = pickValue(actualSummary, ['actualBalance', 'actual_balance'], pickValue(overview, ['actualBalance', 'actual_balance'], null));
+    const actualReceipts = actualReceiptsRaw === null || actualReceiptsRaw === undefined || actualReceiptsRaw === ''
+      ? null
+      : toNumber(actualReceiptsRaw, null);
+    const actualExpenditures = actualExpendituresRaw === null || actualExpendituresRaw === undefined || actualExpendituresRaw === ''
+      ? null
+      : toNumber(actualExpendituresRaw, null);
+    const actualBalance = actualBalanceRaw === null || actualBalanceRaw === undefined || actualBalanceRaw === ''
+      ? null
+      : toNumber(actualBalanceRaw, null);
+    const moneyDisplay = (value) => Number.isFinite(value) ? `${formatCurrencyFixed(value)} บาท` : 'ยังไม่มีข้อมูล';
+    const categoryCountDisplay = `${formatCount(categoryCount)} หมวด`;
+    const itemCountDisplay = `${formatCount(itemCount)} รายการ`;
 
     setSummaryValues([fiscalYear, `${formatCurrency(totalBudget)} บาท`, `${categoryCount} หมวด`, 'API']);
     setMetricValues([
       fiscalYear,
-      cardDisplay(totalCard, `${formatCurrency(totalBudget)} บาท`, 'บาท'),
-      cardDisplay(categoryCard, `${categoryCount} หมวด`)
+      categoryCountDisplay,
+      itemCountDisplay
     ]);
     setText('fiscalYear', fiscalYear);
-    setText('budgetTotal', `${formatCurrency(totalBudget)} บาท`);
-    setText('budgetCategoryCount', categoryCount);
-    setText('budgetItemCount', cardDisplay(itemCard, itemCount));
-    setText('electricityRecorded', electricityMonths);
-    setText('electricityTotal', cardDisplay(electricityCard, `${formatCurrency(electricityTotal)} บาท`, 'บาท'));
-    setText('teachingTotal', `${formatCurrency(teachingTotal)} บาท`);
+    setText('budgetCategoryCount', categoryCountDisplay);
+    setText('budgetItemCount', itemCountDisplay);
+    setText('actualReceipts', moneyDisplay(actualReceipts));
+    setText('actualExpenditures', moneyDisplay(actualExpenditures));
+    setText('actualBalance', moneyDisplay(actualBalance));
 
     const tbody = byId('budgetTableBody');
     if (tbody) {
@@ -492,28 +481,40 @@
     if (mainItemsBody) {
       mainItemsBody.innerHTML = mainItems.length
         ? mainItems.map((item) => {
-          const code = pickValue(item, ['code', 'itemCode'], pickValue(item.raw, ['item_code'], '-'));
-          const category = pickValue(item, ['category', 'categoryName'], pickValue(item.raw, ['category_name'], noDataText));
-          const name = pickValue(item, ['name', 'itemName'], pickValue(item.raw, ['item_name'], noDataText));
+          const category = pickValue(item, ['categoryName', 'category_name', 'category'], pickValue(item.raw, ['category_name'], noDataText));
+          const name = pickValue(item, ['itemName', 'item_name', 'name'], pickValue(item.raw, ['item_name'], noDataText));
           const amount = toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0)));
-          const percent = toNumber(pickValue(item, ['percent', 'percentCalculated'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
-          return `<tr data-item-code="${escapeHtml(code || '')}"><td>${escapeHtml(category)}</td><td>${escapeHtml(name)}</td><td>${formatCurrency(amount)} บาท</td><td><span class="badge badge-soft-primary">${formatPercent(percent)}%</span></td></tr>`;
+          const percent = toNumber(pickValue(item, ['percentCalculated', 'percent_calculated', 'percent'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
+          return `<tr><td>${escapeHtml(category)}</td><td>${escapeHtml(name)}</td><td class="text-end">${formatCurrencyFixed(amount)} บาท</td><td><span class="badge badge-soft-primary">${formatPercent(percent)}%</span></td></tr>`;
         }).join('')
         : `<tr><td colspan="4" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+    }
+
+    const actualItemsBody = byId('actualItemsBody');
+    if (actualItemsBody) {
+      actualItemsBody.innerHTML = actualItems.length
+        ? actualItems.map((item) => {
+          const category = pickValue(item, ['categoryName', 'category_name', 'category'], pickValue(item.raw, ['category_name'], noDataText));
+          const name = pickValue(item, ['itemName', 'item_name', 'name'], pickValue(item.raw, ['item_name'], noDataText));
+          const actualReceived = toNumber(pickValue(item, ['actualReceived', 'actual_received'], pickValue(item.raw, ['actual_received'], 0)));
+          const actualPaid = toNumber(pickValue(item, ['actualPaid', 'actual_paid'], pickValue(item.raw, ['actual_paid'], 0)));
+          const actualBalance = toNumber(pickValue(item, ['actualBalance', 'actual_balance'], pickValue(item.raw, ['actual_balance'], actualReceived - actualPaid)));
+          const expenditurePercent = toNumber(pickValue(item, ['expenditurePercent', 'expenditure_percent'], pickValue(item.raw, ['expenditure_percent'], actualReceived > 0 ? (actualPaid / actualReceived) * 100 : 0)));
+          return `<tr><td>${escapeHtml(category)}</td><td>${escapeHtml(name)}</td><td class="text-end">${formatCurrencyFixed(actualReceived)} บาท</td><td class="text-end">${formatCurrencyFixed(actualPaid)} บาท</td><td class="text-end">${formatCurrencyFixed(actualBalance)} บาท</td><td><span class="badge badge-soft-success">${formatPercent(expenditurePercent)}%</span></td></tr>`;
+        }).join('')
+        : `<tr><td colspan="6" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
     }
 
     const teachingBody = byId('teachingManagementBody');
     if (teachingBody) {
       teachingBody.innerHTML = teachingManagement.length
         ? teachingManagement.map((item) => {
-          const code = pickValue(item, ['code', 'itemCode'], pickValue(item.raw, ['item_code'], '-'));
-          const category = pickValue(item, ['category', 'categoryName'], pickValue(item.raw, ['category_name'], noDataText));
-          const name = pickValue(item, ['name', 'itemName'], pickValue(item.raw, ['item_name'], noDataText));
+          const name = pickValue(item, ['itemName', 'item_name', 'name'], pickValue(item.raw, ['item_name'], noDataText));
           const amount = toNumber(pickValue(item, ['amount'], pickValue(item.raw, ['amount'], 0)));
-          const percent = toNumber(pickValue(item, ['percent', 'percentCalculated'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
-          return `<tr data-item-code="${escapeHtml(code || '')}"><td>${escapeHtml(name)}</td><td>${escapeHtml(category)}</td><td>${formatCurrency(amount)} บาท</td><td><span class="badge badge-soft-success">${formatPercent(percent)}%</span></td></tr>`;
+          const percent = toNumber(pickValue(item, ['percentCalculated', 'percent_calculated', 'percent'], pickValue(item.raw, ['percent_calculated', 'percent_reported'], 0)));
+          return `<tr><td>${escapeHtml(name)}</td><td class="text-end">${formatCurrencyFixed(amount)} บาท</td><td><span class="badge badge-soft-success">${formatPercent(percent)}%</span></td></tr>`;
         }).join('')
-        : `<tr><td colspan="4" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
+        : `<tr><td colspan="3" class="text-center text-muted">${budgetNoDataText}</td></tr>`;
     }
 
     const electricityBody = byId('electricityMonthlyBody');
