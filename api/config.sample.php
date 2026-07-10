@@ -1,5 +1,9 @@
 <?php
 
+// Optional: GitHub raw JSON source for api/budget.php?source=github
+// Example: https://raw.githubusercontent.com/OWNER/REPO/main/information/data/budget.json
+$infoBudgetGithubUrl = '';
+
 /**
  * ตัวอย่างไฟล์ config สำหรับ Hosting (Production)
  * 

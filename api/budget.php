@@ -12,10 +12,23 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
 	exit;
 }
 
-require_once __DIR__ . '/db.php';
-
 const INFO_BUDGET_DEFAULT_YEAR = 2569;
 const INFO_BUDGET_TEACHING_PARENT = 'SUBSIDY_TEACHING_MANAGEMENT';
+
+function budget_load_config_once(): void
+{
+	static $loaded = false;
+	if ($loaded) {
+		return;
+	}
+
+	$loaded = true;
+	$configFile = __DIR__ . '/config.php';
+	if (file_exists($configFile)) {
+		global $infoBudgetGithubUrl;
+		include_once $configFile;
+	}
+}
 
 function budget_debug_enabled(): bool
 {
@@ -89,6 +102,207 @@ function budget_number($value): ?float
 function budget_string($value, string $default = ''): string
 {
 	return $value === null ? $default : trim((string) $value);
+}
+
+function budget_github_url(): string
+{
+	budget_load_config_once();
+
+	if (defined('INFO_BUDGET_GITHUB_URL')) {
+		return budget_normalize_github_url((string) constant('INFO_BUDGET_GITHUB_URL'));
+	}
+
+	global $infoBudgetGithubUrl;
+	if (!empty($infoBudgetGithubUrl)) {
+		return budget_normalize_github_url((string) $infoBudgetGithubUrl);
+	}
+
+	$envUrl = getenv('INFO_BUDGET_GITHUB_URL');
+	return $envUrl ? budget_normalize_github_url((string) $envUrl) : '';
+}
+
+function budget_normalize_github_url(string $url): string
+{
+	$url = trim($url);
+	if ($url === '') {
+		return '';
+	}
+
+	if (preg_match('#^https://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+)$#', $url, $matches)) {
+		return "https://raw.githubusercontent.com/{$matches[1]}/{$matches[2]}/{$matches[3]}/{$matches[4]}";
+	}
+
+	if (preg_match('#^https://github\.com/([^/]+)/([^/]+)/raw/([^/]+)/(.+)$#', $url, $matches)) {
+		return "https://raw.githubusercontent.com/{$matches[1]}/{$matches[2]}/{$matches[3]}/{$matches[4]}";
+	}
+
+	return $url;
+}
+
+function budget_assert_github_url(string $url): void
+{
+	$parts = parse_url($url);
+	$host = strtolower((string) ($parts['host'] ?? ''));
+	$scheme = strtolower((string) ($parts['scheme'] ?? ''));
+	$allowedHosts = ['raw.githubusercontent.com', 'github.com', 'gist.githubusercontent.com'];
+
+	if ($scheme !== 'https' || !in_array($host, $allowedHosts, true)) {
+		throw new InvalidArgumentException('Invalid GitHub budget URL');
+	}
+}
+
+function budget_fetch_url(string $url): string
+{
+	budget_assert_github_url($url);
+
+	$context = stream_context_create([
+		'http' => [
+			'method' => 'GET',
+			'header' => "User-Agent: web-anusarn-budget-api\r\nAccept: application/json\r\n",
+			'timeout' => 8,
+		],
+	]);
+	$content = @file_get_contents($url, false, $context);
+	if ($content !== false) {
+		return $content;
+	}
+
+	if (function_exists('curl_init')) {
+		$curl = curl_init($url);
+		curl_setopt_array($curl, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_TIMEOUT => 8,
+			CURLOPT_HTTPHEADER => ['Accept: application/json'],
+			CURLOPT_USERAGENT => 'web-anusarn-budget-api',
+		]);
+		$content = curl_exec($curl);
+		$status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		$error = curl_error($curl);
+		curl_close($curl);
+
+		if ($content !== false && $status >= 200 && $status < 300) {
+			return (string) $content;
+		}
+
+		throw new RuntimeException($error !== '' ? $error : 'GitHub returned HTTP ' . $status);
+	}
+
+	throw new RuntimeException('Unable to fetch GitHub budget data');
+}
+
+function budget_fetch_github_payload(string $url): array
+{
+	$content = budget_fetch_url($url);
+	$payload = json_decode($content, true);
+
+	if (!is_array($payload)) {
+		throw new RuntimeException('GitHub budget data is not valid JSON');
+	}
+
+	if (array_key_exists('success', $payload) && $payload['success'] === false) {
+		throw new RuntimeException((string) ($payload['message'] ?? 'GitHub budget API returned an error'));
+	}
+
+	return is_array($payload['data'] ?? null) ? $payload['data'] : $payload;
+}
+
+function budget_complete_github_data(array $payload, int $year): array
+{
+	$budget = is_array($payload['budget'] ?? null) ? $payload['budget'] : $payload;
+	$categories = is_array($payload['categories'] ?? null)
+		? $payload['categories']
+		: (is_array($budget['items'] ?? null) ? $budget['items'] : []);
+	$items = is_array($payload['items'] ?? null) ? $payload['items'] : [];
+	$electricity = is_array($payload['electricity'] ?? null) ? $payload['electricity'] : [];
+	$total = budget_number(budget_pick($budget, ['total', 'totalBudget', 'total_budget', 'amount'], null));
+
+	if ($total === null) {
+		$total = array_reduce($categories, static function (float $sum, $row): float {
+			return $sum + (budget_number(is_array($row) ? budget_pick($row, ['amount', 'total_amount', 'budget_amount'], 0) : 0) ?? 0);
+		}, 0.0);
+	}
+
+	$fiscalYear = (string) budget_pick($budget, ['fiscalYear', 'fiscal_year', 'budget_year', 'year'], $year);
+	$overview = is_array($payload['overview'] ?? null) ? $payload['overview'] : [];
+	$overview = array_merge([
+		'fiscalYear' => $fiscalYear,
+		'totalBudget' => $total,
+		'categoryCount' => count($categories),
+		'itemCount' => count($items),
+		'electricityMonthsRecorded' => count(array_filter($electricity, static function ($row): bool {
+			return is_array($row) && budget_pick($row, ['amount', 'total_amount', 'electricity_amount'], null) !== null;
+		})),
+		'electricityTotalAmount' => array_reduce($electricity, static function (float $sum, $row): float {
+			return $sum + (budget_number(is_array($row) ? budget_pick($row, ['amount', 'total_amount', 'electricity_amount'], 0) : 0) ?? 0);
+		}, 0.0),
+	], $overview);
+
+	return [
+		'overview' => $overview,
+		'cards' => is_array($payload['cards'] ?? null) ? $payload['cards'] : [],
+		'sources' => is_array($payload['sources'] ?? null) ? $payload['sources'] : [],
+		'categories' => $categories,
+		'items' => $items,
+		'mainItems' => budget_filter_items($items, ['level' => 'MAIN']),
+		'teachingManagement' => budget_filter_items($items, ['parentCode' => INFO_BUDGET_TEACHING_PARENT]),
+		'electricity' => $electricity,
+		'utilityYearly' => is_array($payload['utilityYearly'] ?? null) ? $payload['utilityYearly'] : (is_array($payload['utility_yearly'] ?? null) ? $payload['utility_yearly'] : []),
+		'projects' => is_array($payload['projects'] ?? null) ? $payload['projects'] : [],
+		'actualSources' => is_array($payload['actualSources'] ?? null) ? $payload['actualSources'] : (is_array($payload['actual_sources'] ?? null) ? $payload['actual_sources'] : []),
+		'notes' => is_array($payload['notes'] ?? null) ? $payload['notes'] : [],
+		'budget' => [
+			'fiscalYear' => $fiscalYear,
+			'total' => $total,
+			'items' => $categories,
+		],
+	];
+}
+
+function budget_fetch_github_action(string $action, int $year)
+{
+	$url = budget_github_url();
+	if ($url === '') {
+		throw new RuntimeException('GitHub budget URL is not configured');
+	}
+
+	$data = budget_complete_github_data(budget_fetch_github_payload($url), $year);
+
+	switch ($action) {
+		case 'all':
+			return $data;
+		case 'overview':
+			return $data['overview'];
+		case 'cards':
+			return $data['cards'];
+		case 'sources':
+			return $data['sources'];
+		case 'categories':
+			return $data['categories'];
+		case 'items':
+			return $data['items'];
+		case 'main_items':
+			return $data['mainItems'];
+		case 'child_items':
+			$parent = isset($_GET['parent_item_code']) && $_GET['parent_item_code'] !== ''
+				? (string) $_GET['parent_item_code']
+				: INFO_BUDGET_TEACHING_PARENT;
+			return budget_filter_items($data['items'], ['parentCode' => $parent]);
+		case 'teaching_management':
+			return $data['teachingManagement'];
+		case 'electricity':
+			return $data['electricity'];
+		case 'utility_yearly':
+			return $data['utilityYearly'];
+		case 'projects':
+			return $data['projects'];
+		case 'actual_sources':
+			return $data['actualSources'];
+		case 'notes':
+			return $data['notes'];
+		default:
+			throw new InvalidArgumentException('Unsupported action');
+	}
 }
 
 function budget_order_clause(array $columns): string
@@ -719,6 +933,9 @@ try {
 	$year = isset($_GET['year']) && preg_match('/^\d{4}$/', (string) $_GET['year'])
 		? (int) $_GET['year']
 		: INFO_BUDGET_DEFAULT_YEAR;
+	$source = isset($_GET['source']) && $_GET['source'] !== ''
+		? strtolower(trim((string) $_GET['source']))
+		: (budget_github_url() !== '' ? 'github' : 'database');
 
 	$allowedActions = [
 		'overview',
@@ -741,6 +958,17 @@ try {
 	if (!in_array($action, $allowedActions, true)) {
 		budget_response(false, 'Invalid budget action', null, 400);
 	}
+
+	if (!in_array($source, ['database', 'db', 'github'], true)) {
+		budget_response(false, 'Invalid budget source', null, 400);
+	}
+
+	if ($source === 'github') {
+		$data = budget_fetch_github_action($action, $year);
+		budget_response(true, 'Budget information loaded from GitHub successfully', $data);
+	}
+
+	require_once __DIR__ . '/db.php';
 
 	if ($action === 'all') {
 		$overview = budget_fetch_action($pdo, 'overview', $year);
@@ -782,10 +1010,12 @@ try {
 	budget_response(false, $e->getMessage(), budget_error_data($e, [
 		'action' => $_GET['action'] ?? null,
 		'year' => $_GET['year'] ?? null,
+		'source' => $_GET['source'] ?? null,
 	]), 400);
 } catch (Throwable $e) {
 	budget_response(false, 'Failed to load budget information', budget_error_data($e, [
 		'action' => $_GET['action'] ?? null,
 		'year' => $_GET['year'] ?? null,
+		'source' => $_GET['source'] ?? null,
 	]), 500);
 }

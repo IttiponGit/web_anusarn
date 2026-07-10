@@ -635,6 +635,197 @@ body[data-page="home"] .metric-note {
   line-height: 1.15;
 }
 
+.awards-page {
+  font-family: "Sarabun", "Tahoma", sans-serif;
+}
+
+.awards-page .awards-tabs {
+  display: flex;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.2rem;
+  scrollbar-width: thin;
+  flex-wrap: nowrap;
+}
+
+.awards-page .awards-tabs .nav-item {
+  flex: 1 0 auto;
+}
+
+.awards-page .awards-tabs .nav-link {
+  width: 100%;
+  flex: 1 0 auto;
+  min-width: max-content;
+  border: 1px solid var(--school-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--school-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 0.68rem 0.9rem;
+  transition: var(--school-transition);
+  white-space: nowrap;
+}
+
+.awards-page .awards-tabs .nav-link:hover,
+.awards-page .awards-tabs .nav-link:focus-visible {
+  border-color: rgba(37, 99, 235, 0.48);
+  box-shadow: 0 0 0 0.18rem rgba(37, 99, 235, 0.14);
+  outline: 0;
+}
+
+.awards-page .awards-tabs .nav-link.active {
+  border-color: var(--school-blue-700);
+  background: var(--school-blue-700);
+  color: #ffffff;
+  box-shadow: 0 0.75rem 1.5rem rgba(37, 99, 235, 0.18);
+}
+
+.awards-page .tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  margin-left: 0.35rem;
+  padding: 0.12rem 0.46rem;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: var(--school-blue-800);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.awards-page .awards-tabs .nav-link.active .tab-count {
+  background: #ffffff;
+  color: var(--school-blue-800);
+}
+
+.awards-page .awards-tab-content {
+  padding-top: 1rem;
+}
+
+.awards-page .award-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.awards-page .award-list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--school-border);
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.05);
+  color: var(--school-text);
+  text-align: left;
+  transition: var(--school-transition);
+}
+
+.awards-page .award-list-item:hover,
+.awards-page .award-list-item:focus-visible {
+  border-color: rgba(37, 99, 235, 0.42);
+  box-shadow: 0 0.75rem 1.35rem rgba(37, 99, 235, 0.12);
+  outline: 0;
+}
+
+.awards-page .award-list-info {
+  display: grid;
+  min-width: 0;
+  gap: 0.45rem;
+}
+
+.awards-page .award-title {
+  margin: 0;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.awards-page .award-meta {
+  margin-top: 5px;
+  color: #5f6b7a;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.awards-page .award-summary {
+  display: flex;
+  align-self: flex-start;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding-top: 0.1rem;
+}
+
+.awards-page .award-count {
+  background: #dbeafe;
+  color: var(--school-blue-800);
+}
+
+.awards-page .recipient-count {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.awards-page .award-summary .badge {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 5px 9px;
+}
+
+.awards-page .award-detail-collapse {
+  margin-top: 0.55rem;
+}
+
+.awards-page .award-detail-card {
+  padding: 18px 20px;
+  border: 1px solid var(--school-border);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.awards-page .award-result-item {
+  padding: 0.9rem 0;
+  border-top: 1px dashed var(--school-border);
+}
+
+.awards-page .award-result-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.awards-page .award-recipient-list {
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+@media (max-width: 575.98px) {
+  .awards-page .award-list-item {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .awards-page .award-summary {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 0.15rem;
+  }
+}
+
 .basic-info-card {
   min-height: 112px;
   padding: 1rem;

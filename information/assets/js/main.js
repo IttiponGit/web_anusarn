@@ -130,6 +130,7 @@
     }
     return {
       awardsSummary: payload.summary || {},
+      awardsSummaryDefinition: payload.summary_definition || 'award_activity_count',
       awards: Array.isArray(payload.data) ? payload.data : []
     };
   }
@@ -563,59 +564,155 @@
   }
 
   function renderAwards(data) {
-    const awards = Array.isArray(data.awards) ? data.awards : [];
+    const allAwards = Array.isArray(data.awards) ? data.awards : [];
     const summary = data.awardsSummary || {};
-    const total = summary.total ?? awards.length;
-    const studentTotal = summary.student ?? awards.filter((item) => item.award_group === 'student').length;
-    const staffTotal = summary.staff ?? awards.filter((item) => item.award_group === 'staff').length;
-    const institutionTotal = summary.institution ?? awards.filter((item) => item.award_group === 'institution').length;
-    const latestYear = awards.map((item) => item.award_year).filter(Boolean).sort().reverse()[0] || '-';
+    const categories = [
+      { key: 'student', title: 'รางวัลนักเรียน', badge: 'badge-soft-primary' },
+      { key: 'personnel', title: 'รางวัลครูและบุคลากร', badge: 'badge-soft-success' },
+      { key: 'school', title: 'รางวัลสถานศึกษา', badge: 'badge-soft-warning' }
+    ];
+    const normalizeCategory = (item) => {
+      const raw = `${item.award_group || ''} ${item.award_type || ''}`.toLowerCase();
+      if (raw.includes('student') || raw.includes('นักเรียน')) return 'student';
+      if (raw.includes('staff') || raw.includes('personnel') || raw.includes('ครู') || raw.includes('บุคลากร') || raw.includes('ผู้บริหาร')) return 'personnel';
+      if (raw.includes('institution') || raw.includes('school') || raw.includes('สถานศึกษา') || raw.includes('โรงเรียน')) return 'school';
+      return '';
+    };
+    const yearNumber = (item) => Number(String(item.award_year || '').replace(/\D/g, '')) || 0;
+    const displayOrder = (item) => Number(item.display_order || 0);
+    const awardsByCategory = Object.fromEntries(categories.map((category) => [category.key, []]));
 
-    setSummaryValues([
-      `${formatCount(total)} รายการ`,
-      `${formatCount(studentTotal)} รายการ`,
-      `${formatCount(staffTotal)} รายการ`,
-      `${formatCount(institutionTotal)} รายการ`
-    ]);
-    setMetricValues([
-      formatCount(total),
-      formatCount(studentTotal),
-      formatCount(staffTotal),
-      latestYear
-    ]);
-    setText('awardsTotal', formatCount(total));
-    setText('studentAwardsTotal', formatCount(studentTotal));
-    setText('staffAwardsTotal', formatCount(staffTotal));
-    setText('latestAwardYear', latestYear);
+    allAwards.forEach((item) => {
+      const category = normalizeCategory(item);
+      if (awardsByCategory[category]) awardsByCategory[category].push(item);
+    });
+    categories.forEach((category) => {
+      awardsByCategory[category.key].sort((a, b) => yearNumber(b) - yearNumber(a) || displayOrder(a) - displayOrder(b) || Number(b.award_id || 0) - Number(a.award_id || 0));
+    });
 
-    const cards = byId('awardsCardList');
-    if (cards) {
-      cards.innerHTML = awards.length
-        ? awards.map((item) => {
-          const recipients = Array.isArray(item.recipients) ? item.recipients : [];
-          const results = Array.isArray(item.results) ? item.results : [];
-          const group = item.award_group || '';
-          const groupBadge = group === 'student' ? 'badge-soft-primary' : (group === 'staff' ? 'badge-soft-success' : 'badge-soft-warning');
-          const groupLabel = group === 'student' ? 'นักเรียน' : (group === 'staff' ? 'ครูและบุคลากร' : 'สถานศึกษา');
-          const names = recipients.slice(0, 3).map((recipient) => recipient.recipient_name).filter(Boolean);
-          const resultText = results.map((result) => result.award_result || result.result_rank).filter(Boolean).slice(0, 2).join(' / ');
-          return `<div class="col-md-6 col-xl-4"><div class="soft-card p-3 h-100"><div class="d-flex justify-content-between align-items-start gap-2 mb-2"><span class="badge ${groupBadge}">${escapeHtml(groupLabel)}</span><span class="small text-muted">${escapeHtml(item.award_year || '-')}</span></div><div class="item-title mb-2">${escapeHtml(item.award_list || noDataText)}</div><div class="item-desc mb-2">${escapeHtml(item.award_agency || '')}</div>${resultText ? `<div class="small fw-semibold mb-2">${escapeHtml(resultText)}</div>` : ''}${names.length ? `<div class="small text-muted">${escapeHtml(names.join(', '))}${recipients.length > names.length ? ' ...' : ''}</div>` : ''}</div></div>`;
-        }).join('')
-        : `<div class="col-12"><div class="text-center text-muted py-4">${noDataText}</div></div>`;
-    }
+    // KPI definition: count main award activities from info_awards, not result rows or medal quantities.
+    const activityCounts = {
+      student: summary.student ?? awardsByCategory.student.length,
+      personnel: summary.personnel ?? summary.staff ?? awardsByCategory.personnel.length,
+      school: summary.school ?? summary.institution ?? awardsByCategory.school.length
+    };
+    document.querySelectorAll('[data-awards-summary]').forEach((item) => {
+      const summaryKey = item.dataset.awardsSummary === 'staff' ? 'personnel' : (item.dataset.awardsSummary === 'institution' ? 'school' : item.dataset.awardsSummary);
+      const count = activityCounts[summaryKey];
+      item.textContent = count === undefined ? '-' : `${formatCount(count)} รายการ`;
+    });
 
-    const tbody = byId('awardsTableBody');
-    if (tbody) {
-      tbody.innerHTML = awards.length
-        ? awards.map((item) => {
-          const recipients = Array.isArray(item.recipients) ? item.recipients : [];
-          const results = Array.isArray(item.results) ? item.results : [];
-          const recipientText = recipients.map((recipient) => recipient.recipient_name).filter(Boolean).join(', ') || '-';
-          const resultText = results.map((result) => result.award_result || result.result_rank).filter(Boolean).join(', ') || '-';
-          return `<tr><td>${escapeHtml(item.award_list || noDataText)}</td><td>${escapeHtml(item.award_agency || '-')}</td><td>${escapeHtml(resultText)}</td><td>${escapeHtml(recipientText)}</td><td>${escapeHtml(item.award_year || '-')}</td></tr>`;
-        }).join('')
-        : `<tr><td colspan="5" class="text-center text-muted">${noDataText}</td></tr>`;
-    }
+    const resultTitle = (result) => [result.award_result, result.result_rank].filter(Boolean).join(' ');
+    const recipientName = (recipient) => [recipient.recipient_name, recipient.recipient_detail].filter(Boolean).join(' - ');
+    const resultQuantity = (result) => {
+      const keys = ['quantity', 'result_count', 'count'];
+      for (const key of keys) {
+        if (Object.prototype.hasOwnProperty.call(result, key) && result[key] !== null && result[key] !== '') {
+          const value = Number(String(result[key]).replace(/,/g, ''));
+          return Number.isFinite(value) ? value : 0;
+        }
+      }
+      return 1;
+    };
+    const recipientKey = (recipient) => {
+      if (recipient.recipient_id !== null && recipient.recipient_id !== undefined && recipient.recipient_id !== '') {
+        return `id:${recipient.recipient_id}`;
+      }
+      return `name:${String(recipient.recipient_name || '').trim().replace(/\s+/g, ' ').toLowerCase()}`;
+    };
+    const uniqueRecipients = (results) => {
+      const seen = new Set();
+      const recipients = [];
+      results.forEach((result) => {
+        (Array.isArray(result.recipients) ? result.recipients : []).forEach((recipient) => {
+          const key = recipientKey(recipient);
+          if (!key || key === 'name:') return;
+          if (seen.has(key)) return;
+          seen.add(key);
+          recipients.push(recipient);
+        });
+      });
+      return recipients;
+    };
+    const renderRecipients = (recipients) => {
+      if (!recipients.length) return `<div class="text-muted small">ไม่ระบุรายชื่อ</div>`;
+      return `<ol class="award-recipient-list mb-0 ps-3">${recipients.map((recipient) => `<li>${escapeHtml(recipientName(recipient) || '-')}</li>`).join('')}</ol>`;
+    };
+    const renderResult = (result) => {
+      const countText = `${formatCount(resultQuantity(result))} รายการ`;
+      const details = [result.result_detail, result.team_name, result.note].filter(Boolean);
+      const recipients = uniqueRecipients([result]);
+      return `<div class="award-result-item">
+        <div class="d-flex align-items-start justify-content-between gap-2 flex-wrap">
+          <div>
+            <div class="fw-bold">${escapeHtml(resultTitle(result) || '-')}</div>
+            ${details.length ? `<div class="small text-muted">${escapeHtml(details.join(' | '))}</div>` : ''}
+          </div>
+          <span class="badge award-count">${escapeHtml(countText)}</span>
+        </div>
+        <div class="mt-2">${renderRecipients(recipients)}</div>
+      </div>`;
+    };
+    const renderAwardListItem = (item) => {
+      const results = Array.isArray(item.results) ? item.results : [];
+      const awardCount = results.reduce((sum, result) => sum + resultQuantity(result), 0);
+      const recipients = uniqueRecipients(results);
+      const recipientText = recipients.length ? `${formatCount(recipients.length)} คน` : 'ไม่ระบุรายชื่อ';
+      const detailId = `awardDetail-${String(item.award_id || Math.random().toString(36).slice(2)).replace(/[^a-zA-Z0-9_-]/g, '')}`;
+      const meta = [
+        item.award_year ? `ปีการศึกษา ${item.award_year}` : '',
+        item.award_level || '',
+        item.award_agency || ''
+      ].filter(Boolean).join(' · ');
+
+      return `<div class="award-list-entry">
+        <button class="award-list-item" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}" aria-expanded="false" aria-controls="${detailId}">
+          <span class="award-list-info">
+            <span class="award-title">${escapeHtml(item.award_list || noDataText)}</span>
+            <span class="award-meta">${escapeHtml(meta || '-')}</span>
+          </span>
+          <span class="award-summary">
+            <span class="badge award-count">${formatCount(awardCount)} รางวัล</span>
+            <span class="badge recipient-count">${escapeHtml(recipientText)}</span>
+          </span>
+        </button>
+        <div class="collapse award-detail-collapse" id="${detailId}">
+          <div class="award-detail-card">
+            <div class="award-results">${results.length ? results.map(renderResult).join('') : `<div class="text-muted small">${noDataText}</div>`}</div>
+          </div>
+        </div>
+      </div>`;
+    };
+
+    const paneTargets = {
+      student: byId('student-pane'),
+      personnel: byId('personnel-pane'),
+      school: byId('school-pane')
+    };
+    if (!paneTargets.student || !paneTargets.personnel || !paneTargets.school) return;
+
+    const updateTabCounts = () => {
+      document.querySelectorAll('[data-tab-count]').forEach((target) => {
+        const category = target.dataset.tabCount;
+        const count = activityCounts[category] ?? 0;
+        target.textContent = `${formatCount(count)} รายการ`;
+      });
+    };
+
+    const renderAwardsByCategory = (categoryKey) => {
+      const category = categories.find((item) => item.key === categoryKey) || categories[0];
+      const awards = awardsByCategory[category.key] || [];
+      const pane = paneTargets[category.key];
+      if (!pane) return;
+      pane.innerHTML = `<div class="award-tab-panel">
+        <div class="award-list">
+          ${awards.length ? awards.map(renderAwardListItem).join('') : `<div class="text-center text-muted py-4">${noDataText}</div>`}
+        </div>
+      </div>`;
+    };
+
+    updateTabCounts();
+    categories.forEach((category) => renderAwardsByCategory(category.key));
   }
 
   function renderDownloads(data) {

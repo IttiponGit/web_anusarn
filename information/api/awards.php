@@ -17,7 +17,9 @@ header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=utf-8");
 
-if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+$requestMethod = $_SERVER["REQUEST_METHOD"] ?? "GET";
+
+if ($requestMethod === "OPTIONS") {
     http_response_code(204);
     exit;
 }
@@ -33,7 +35,7 @@ if (!isset($pdo) || !($pdo instanceof PDO)) {
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] !== "GET") {
+if ($requestMethod !== "GET") {
     http_response_code(405);
     echo json_encode([
         "success" => false,
@@ -124,13 +126,13 @@ try {
             "display_order" => (int)($row["display_order"] ?? 0),
             "created_at" => $row["created_at"] ?? null,
             "updated_at" => $row["updated_at"] ?? null,
-            "results" => [],
-            "recipients" => []
+            "results" => []
         ];
     }
 
     if ($awardIds) {
         $inSql = placeholders($awardIds);
+        $resultIndexes = [];
 
         $resultStmt = $pdo->prepare(
             "SELECT
@@ -159,8 +161,9 @@ try {
                 continue;
             }
 
+            $resultId = (int)$row["result_id"];
             $awards[$awardId]["results"][] = [
-                "result_id" => (int)$row["result_id"],
+                "result_id" => $resultId,
                 "award_id" => $awardId,
                 "award_result" => $row["award_result"] ?? "",
                 "result_rank" => $row["result_rank"] ?? "",
@@ -171,7 +174,12 @@ try {
                 "note" => $row["note"] ?? "",
                 "display_order" => (int)($row["display_order"] ?? 0),
                 "created_at" => $row["created_at"] ?? null,
-                "updated_at" => $row["updated_at"] ?? null
+                "updated_at" => $row["updated_at"] ?? null,
+                "recipients" => []
+            ];
+            $resultIndexes[$resultId] = [
+                "award_id" => $awardId,
+                "index" => count($awards[$awardId]["results"]) - 1
             ];
         }
 
@@ -219,10 +227,33 @@ try {
                 continue;
             }
 
-            $awards[$awardId]["recipients"][] = [
-                "recipient_id" => (int)$row["recipient_id"],
+            $resultId = (int)($row["result_id"] ?? 0);
+            if ($resultId <= 0 || !isset($resultIndexes[$resultId])) {
+                continue;
+            }
+
+            $resultAwardId = $resultIndexes[$resultId]["award_id"];
+            $resultIndex = $resultIndexes[$resultId]["index"];
+            if ($resultAwardId !== $awardId || !isset($awards[$awardId]["results"][$resultIndex])) {
+                continue;
+            }
+
+            $recipientId = (int)$row["recipient_id"];
+            $alreadyAdded = false;
+            foreach ($awards[$awardId]["results"][$resultIndex]["recipients"] as $recipient) {
+                if ((int)$recipient["recipient_id"] === $recipientId) {
+                    $alreadyAdded = true;
+                    break;
+                }
+            }
+            if ($alreadyAdded) {
+                continue;
+            }
+
+            $awards[$awardId]["results"][$resultIndex]["recipients"][] = [
+                "recipient_id" => $recipientId,
                 "award_id" => $awardId,
-                "result_id" => (int)($row["result_id"] ?? 0),
+                "result_id" => $resultId,
                 "award_result" => $row["award_result"] ?? "",
                 "result_rank" => $row["result_rank"] ?? "",
                 "result_detail" => $row["result_detail"] ?? "",
@@ -255,6 +286,7 @@ try {
 
     awardsResponse(200, [
         "success" => true,
+        "summary_definition" => "award_activity_count",
         "summary" => $summary,
         "data" => array_values($awards)
     ]);

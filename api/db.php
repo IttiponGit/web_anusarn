@@ -5,7 +5,7 @@
 $configFile = __DIR__ . '/config.php';
 
 if (file_exists($configFile)) {
-    include $configFile;
+    include_once $configFile;
 } else {
     // ค่า default สำหรับ local development
     $host = '127.0.0.1';

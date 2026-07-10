@@ -11,6 +11,7 @@
 </head>
 
 <body data-page="awards">
+  <div class="awards-page">
   <div class="layout-shell">
     <aside class="app-sidebar d-none d-lg-flex flex-column">
       <div class="sidebar-brand">
@@ -62,103 +63,46 @@
               </div>
               <div class="col-xl-4">
                 <div class="summary-grid">
-                  <div class="summary-chip"><span class="label">ทั้งหมด</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">นักเรียน</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">ครูและบุคลากร</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">สถานศึกษา</span><strong>-</strong></div>
+                  <div class="summary-chip"><span class="label">รางวัลนักเรียน</span><strong data-awards-summary="student">-</strong></div>
+                  <div class="summary-chip"><span class="label">รางวัลครูและบุคลากร</span><strong data-awards-summary="staff">-</strong></div>
+                  <div class="summary-chip"><span class="label">รางวัลสถานศึกษา</span><strong data-awards-summary="institution">-</strong></div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section class="row g-3 mb-4">
-            <div class="col-12 col-md-6 col-xxl-3">
-              <div class="metric-card metric-blue h-100">
-                <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                    <div class="metric-heading">
-                      <span class="metric-icon"><i class="bi bi-award-fill"></i></span>
-                      <div class="metric-label">รางวัลทั้งหมด</div>
-                    </div>
-                    <span class="badge badge-soft-primary">รวม</span>
-                  </div>
-                  <div class="metric-value mb-0" id="awardsTotal">-</div>
-                </div>
+          <section class="award-section">
+            <div class="award-section-head">
+              <div>
+                <span class="badge badge-soft-primary rounded-pill mb-2">Award Groups</span>
+                <h3 class="h5 mb-1"><i class="bi bi-award-fill me-2 text-primary"></i>รายการผลงานและรางวัล</h3>
+                <p class="award-section-desc mb-0">แบ่งรายการตามประเภทผู้รับรางวัล และเรียงปีการศึกษาจากล่าสุดไปเก่าสุด</p>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-xxl-3">
-              <div class="metric-card metric-green h-100">
-                <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                    <div class="metric-heading">
-                      <span class="metric-icon"><i class="bi bi-people-fill"></i></span>
-                      <div class="metric-label">รางวัลนักเรียน</div>
-                    </div>
-                    <span class="badge badge-soft-success">นักเรียน</span>
-                  </div>
-                  <div class="metric-value mb-0" id="studentAwardsTotal">-</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-xxl-3">
-              <div class="metric-card metric-yellow h-100">
-                <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                    <div class="metric-heading">
-                      <span class="metric-icon"><i class="bi bi-person-badge-fill"></i></span>
-                      <div class="metric-label">รางวัลบุคลากร</div>
-                    </div>
-                    <span class="badge badge-soft-warning">บุคลากร</span>
-                  </div>
-                  <div class="metric-value mb-0" id="staffAwardsTotal">-</div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-xxl-3">
-              <div class="metric-card metric-purple h-100">
-                <div class="card-body">
-                  <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                    <div class="metric-heading">
-                      <span class="metric-icon"><i class="bi bi-calendar2-week-fill"></i></span>
-                      <div class="metric-label">ปีล่าสุด</div>
-                    </div>
-                    <span class="badge badge-soft-purple">อัปเดต</span>
-                  </div>
-                  <div class="metric-value mb-0" id="latestAwardYear">-</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="section-card mb-4">
-            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0"><i class="bi bi-stars me-2 text-primary"></i>รายการผลงานและรางวัล</h3>
-              <span class="badge badge-soft-primary">ข้อมูลจาก API</span>
-            </div>
-            <div class="card-body">
-              <div class="row g-3" id="awardsCardList"></div>
-            </div>
-          </section>
-
-          <section class="section-card">
-            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
-              <h3 class="h5 mb-0"><i class="bi bi-table me-2 text-primary"></i>ตารางรายละเอียดรางวัล</h3>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                  <thead>
-                    <tr>
-                      <th>รายการรางวัล</th>
-                      <th>หน่วยงาน</th>
-                      <th>ผลรางวัล</th>
-                      <th>ผู้ได้รับรางวัล</th>
-                      <th>ปี</th>
-                    </tr>
-                  </thead>
-                  <tbody id="awardsTableBody"></tbody>
-                </table>
-              </div>
+            <ul class="nav nav-tabs nav-fill awards-tabs" id="awardsTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="student-tab" type="button" role="tab" data-bs-toggle="tab"
+                  data-bs-target="#student-pane" aria-controls="student-pane" aria-selected="true">
+                  รางวัลนักเรียน <span class="badge rounded-pill tab-count" data-tab-count="student">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="personnel-tab" type="button" role="tab" data-bs-toggle="tab"
+                  data-bs-target="#personnel-pane" aria-controls="personnel-pane" aria-selected="false">
+                  รางวัลครูและบุคลากร <span class="badge rounded-pill tab-count" data-tab-count="personnel">0</span>
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="school-tab" type="button" role="tab" data-bs-toggle="tab"
+                  data-bs-target="#school-pane" aria-controls="school-pane" aria-selected="false">
+                  รางวัลสถานศึกษา <span class="badge rounded-pill tab-count" data-tab-count="school">0</span>
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content awards-tab-content" id="awardsTabContent">
+              <div class="tab-pane fade show active" id="student-pane" role="tabpanel" aria-labelledby="student-tab" tabindex="0"></div>
+              <div class="tab-pane fade" id="personnel-pane" role="tabpanel" aria-labelledby="personnel-tab" tabindex="0"></div>
+              <div class="tab-pane fade" id="school-pane" role="tabpanel" aria-labelledby="school-tab" tabindex="0"></div>
             </div>
           </section>
 
@@ -196,6 +140,7 @@
   <script src="../assets/vendor/chartjs/chart.umd.min.js"></script>
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/charts.js"></script>
+  </div>
 </body>
 
 </html>
