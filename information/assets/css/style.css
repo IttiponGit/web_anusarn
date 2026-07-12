@@ -15,7 +15,7 @@
   --school-text: #1f2937;
   --school-muted: #6b7280;
   --school-border: #dde6f2;
-  --school-shadow: 0 0.75rem 1.8rem rgba(15, 23, 42, 0.08);
+  --school-shadow: 0 0.45rem 1.2rem rgba(15, 23, 42, 0.07);
   --sidebar-width: 250px;
   --topbar-height: 64px;
   --chart-height: 350px;
@@ -244,7 +244,13 @@ body::before {
 }
 
 .page-content {
-  padding: calc(var(--topbar-height) + 0.9rem) 1rem 1rem;
+  padding: calc(var(--topbar-height) + 1rem) 1.1rem 1.25rem;
+}
+
+.page-content > .container-fluid {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
 }
 
 .hero-panel,
@@ -252,17 +258,17 @@ body::before {
 .table-card,
 .metric-card {
   border: 1px solid var(--school-border);
-  border-radius: 1rem;
+  border-radius: 0.9rem;
   box-shadow: var(--school-shadow);
 }
 
 .hero-panel {
   position: relative;
   overflow: hidden;
-  padding: 1.6rem 1.8rem;
-  margin-bottom: 1rem;
+  padding: 1.45rem 1.6rem;
+  margin-bottom: 1.25rem;
   background:
-    linear-gradient(135deg, rgba(37, 99, 235, 0.98), rgba(79, 70, 229, 0.92) 52%, rgba(139, 92, 246, 0.94));
+    linear-gradient(135deg, #1d4ed8, #3730a3);
   color: #fff;
 }
 
@@ -308,11 +314,11 @@ body::before {
 .section-card .card-header,
 .table-card .card-header,
 .metric-card .card-header {
-  padding: 0.7rem 0.9rem;
-  background: linear-gradient(180deg, rgba(244, 247, 251, 0.94), rgba(255, 255, 255, 0.96));
+  padding: 0.85rem 1rem;
+  background: #fff;
   border-bottom: 1px solid var(--school-border);
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: 0.9rem;
+  border-top-right-radius: 0.9rem;
 }
 
 .section-card .card-header h3,
@@ -1269,18 +1275,6 @@ body[data-page="students"] .metric-icon {
   margin-bottom: 0;
 }
 
-body[data-page="direction"] .section-card .card-header .badge {
-  display: none;
-}
-
-body[data-page="performance"] .section-card .card-header .badge {
-  display: none;
-}
-
-body[data-page="personnel"] .section-card .card-header .badge {
-  display: none;
-}
-
 body[data-page="personnel"] .admin-card {
   display: flex;
   gap: 18px;
@@ -1566,5 +1560,183 @@ body[data-page="personnel"] .personnel-legend-count {
 
   .table > :not(caption) > * > * {
     padding: 0.55rem 0.6rem;
+  }
+}
+
+/* Unified information dashboard components */
+.section-card .card-header > .badge {
+  display: none;
+}
+
+.section-card .card-header {
+  min-height: 3.25rem;
+}
+
+.section-card .card-header h3 i {
+  color: var(--school-blue-700) !important;
+}
+
+.metric-card {
+  --metric-accent: var(--school-blue-700);
+  min-height: 104px;
+  background: var(--school-surface) !important;
+  border: 1px solid var(--school-border);
+  border-top: 3px solid var(--metric-accent);
+  color: var(--school-text);
+  box-shadow: var(--school-shadow);
+}
+
+.metric-card::after {
+  display: none;
+}
+
+.metric-blue { --metric-accent: var(--school-blue-700); }
+.metric-green { --metric-accent: #16a34a; }
+.metric-yellow { --metric-accent: #d97706; }
+.metric-purple,
+.metric-pink { --metric-accent: #7c3aed; }
+
+body[data-page] .metric-card > .card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: inherit;
+  padding: 1rem 1.1rem;
+}
+
+.metric-card .metric-heading {
+  width: 100%;
+  gap: 0.85rem;
+}
+
+.metric-card .metric-heading > div {
+  min-width: 0;
+}
+
+.metric-card .metric-icon {
+  width: 2.65rem;
+  height: 2.65rem;
+  color: var(--metric-accent);
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+}
+
+.metric-card .metric-label,
+body[data-page="students"] .metric-card .metric-label {
+  color: var(--school-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.metric-card .metric-value,
+body[data-page="home"] .metric-card .metric-value,
+body[data-page="students"] .metric-card .metric-value {
+  margin: 0.22rem 0 0 !important;
+  color: var(--school-text);
+  font-size: clamp(1.45rem, 1.8vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.metric-card .metric-value-long {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.metric-card .metric-note,
+body[data-page="home"] .metric-card .metric-note {
+  margin-top: 0.35rem;
+  color: var(--school-muted);
+  font-size: 0.76rem;
+}
+
+.summary-chip {
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.75rem 0.85rem;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.summary-chip .label {
+  line-height: 1.35;
+}
+
+.summary-chip strong {
+  margin-top: 0.18rem;
+  font-size: 0.92rem;
+}
+
+.award-section-head {
+  margin-bottom: 0;
+}
+
+.award-section-desc {
+  margin-top: 0.2rem;
+}
+
+.awards-page .awards-tab-content {
+  padding-top: 0.8rem;
+}
+
+.nav-link:focus-visible,
+.btn:focus-visible,
+.award-list-item:focus-visible,
+.main-site-link:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.28);
+  outline-offset: 2px;
+}
+
+@media (max-width: 991.98px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-panel {
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .page-content {
+    padding-top: calc(var(--topbar-height) + 0.75rem);
+  }
+
+  .hero-panel {
+    margin-bottom: 1rem;
+  }
+
+  .metric-card {
+    min-height: 96px;
+  }
+
+  body[data-page] .metric-card > .card-body {
+    padding: 0.9rem;
+  }
+
+  .metric-card .metric-icon {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+
+  .section-card .nav-pills {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+
+  .section-card .nav-pills .nav-link {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
   }
 }

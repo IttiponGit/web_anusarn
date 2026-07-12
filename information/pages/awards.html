@@ -36,7 +36,7 @@
         <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
           <div class="d-flex align-items-center gap-3 topbar-shell">
             <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas"
-              data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+              data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="เปิดเมนูสารสนเทศ">
               <i class="bi bi-list"></i>
             </button>
             <div class="d-flex flex-column">
@@ -57,7 +57,7 @@
           <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
             <div class="row align-items-center g-4">
               <div class="col-xl-8">
-                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Awards Dashboard</span>
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">ผลงานและรางวัล</span>
                 <h2 class="display-6 fw-bold mb-3" id="heroTitle">ผลงานและรางวัล</h2>
                 <p class="lead mb-0" id="heroSubtitle">รวบรวมรางวัลและผลงานในรูปแบบการ์ด</p>
               </div>
@@ -66,19 +66,20 @@
                   <div class="summary-chip"><span class="label">รางวัลนักเรียน</span><strong data-awards-summary="student">-</strong></div>
                   <div class="summary-chip"><span class="label">รางวัลครูและบุคลากร</span><strong data-awards-summary="staff">-</strong></div>
                   <div class="summary-chip"><span class="label">รางวัลสถานศึกษา</span><strong data-awards-summary="institution">-</strong></div>
+                  <div class="summary-chip"><span class="label">รางวัลรวม</span><strong data-awards-summary="total">-</strong></div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section class="award-section">
-            <div class="award-section-head">
+          <section class="section-card">
+            <div class="card-header award-section-head">
               <div>
-                <span class="badge badge-soft-primary rounded-pill mb-2">Award Groups</span>
                 <h3 class="h5 mb-1"><i class="bi bi-award-fill me-2 text-primary"></i>รายการผลงานและรางวัล</h3>
                 <p class="award-section-desc mb-0">แบ่งรายการตามประเภทผู้รับรางวัล และเรียงปีการศึกษาจากล่าสุดไปเก่าสุด</p>
               </div>
             </div>
+            <div class="card-body">
             <ul class="nav nav-tabs nav-fill awards-tabs" id="awardsTabs" role="tablist">
               <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="student-tab" type="button" role="tab" data-bs-toggle="tab"
@@ -104,6 +105,7 @@
               <div class="tab-pane fade" id="personnel-pane" role="tabpanel" aria-labelledby="personnel-tab" tabindex="0"></div>
               <div class="tab-pane fade" id="school-pane" role="tabpanel" aria-labelledby="school-tab" tabindex="0"></div>
             </div>
+            </div>
           </section>
 
           <footer class="mt-4 pb-1">
@@ -122,7 +124,7 @@
         <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
         <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
       </div>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="ปิดเมนู"></button>
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3">

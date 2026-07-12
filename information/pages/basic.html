@@ -32,7 +32,7 @@
         <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
           <div class="d-flex align-items-center gap-3 topbar-shell"><button
               class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas"
-              data-bs-target="#mobileSidebar"><i class="bi bi-list"></i></button>
+              data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="เปิดเมนูสารสนเทศ"><i class="bi bi-list"></i></button>
             <div class="d-flex flex-column">
               <h1 class="page-title" id="pageTitle">ข้อมูลพื้นฐานโรงเรียน</h1>
               <p class="page-subtitle" id="pageSubtitle">ข้อมูลอ้างอิงหลักของสถานศึกษา • ปีการศึกษา 2569</p>
@@ -48,8 +48,7 @@
           <div id="errorBox" class="alert alert-danger d-none"></div>
           <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
             <div class="row align-items-center g-4">
-              <div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">School
-                  Profile</span>
+              <div class="col-lg-8"><span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">ข้อมูลสถานศึกษา</span>
                 <h2 class="display-6 fw-bold mb-3" id="heroTitle">ข้อมูลพื้นฐานโรงเรียน</h2>
                 <p class="lead mb-0" id="heroSubtitle">รายละเอียดสำคัญของโรงเรียนที่จัดวางในรูปแบบการ์ดและตาราง</p>
               </div>
@@ -65,27 +64,35 @@
           </section>
           <section class="row g-3 mb-4">
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="basic-info-card basic-info-card-blue h-100">
-                <div class="basic-info-label">ชื่อสถานศึกษา</div>
-                <div class="basic-info-value basic-info-value-long">โรงเรียนโสตศึกษาอนุสารสุนทร</div>
+              <div class="metric-card metric-blue h-100">
+                <div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-building"></i></span><div>
+                  <div class="metric-label">ชื่อสถานศึกษา</div>
+                  <div class="metric-value metric-value-long">โรงเรียนโสตศึกษาอนุสารสุนทร</div>
+                </div></div></div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="basic-info-card basic-info-card-green h-100">
-                <div class="basic-info-label">ระดับที่เปิดสอน</div>
-                <div class="basic-info-value basic-info-value-long">อนุบาล 2 - มัธยมศึกษาปีที่ 6</div>
+              <div class="metric-card metric-green h-100">
+                <div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-mortarboard-fill"></i></span><div>
+                  <div class="metric-label">ระดับที่เปิดสอน</div>
+                  <div class="metric-value metric-value-long">อนุบาล 2 - มัธยมศึกษาปีที่ 6</div>
+                </div></div></div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="basic-info-card basic-info-card-yellow h-100">
-                <div class="basic-info-label">จำนวนนักเรียน</div>
-                <div class="basic-info-value">195 คน</div>
+              <div class="metric-card metric-yellow h-100">
+                <div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-people-fill"></i></span><div>
+                  <div class="metric-label">จำนวนนักเรียน</div>
+                  <div class="metric-value">195 คน</div>
+                </div></div></div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="basic-info-card basic-info-card-purple h-100">
-                <div class="basic-info-label">ปีการศึกษา</div>
-                <div class="basic-info-value">2569</div>
+              <div class="metric-card metric-purple h-100">
+                <div class="card-body"><div class="metric-heading"><span class="metric-icon"><i class="bi bi-calendar2-week-fill"></i></span><div>
+                  <div class="metric-label">ปีการศึกษา</div>
+                  <div class="metric-value">2569</div>
+                </div></div></div>
               </div>
             </div>
           </section>
@@ -115,7 +122,7 @@
       <div>
         <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
         <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
-      </div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div><button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="ปิดเมนู"></button>
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3"><span class="badge rounded-pill">ปีการศึกษา <span

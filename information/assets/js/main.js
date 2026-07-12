@@ -40,6 +40,19 @@
     downloads: ['ดาวน์โหลดเอกสาร', 'รายการไฟล์และเอกสารสำคัญ', 'ดาวน์โหลดเอกสาร', 'เอกสารสำหรับใช้งานทั่วไปในรูปแบบตารางที่อ่านง่าย']
   };
 
+  const pageKicker = {
+    home: 'ภาพรวมสารสนเทศ',
+    basic: 'ข้อมูลสถานศึกษา',
+    direction: 'ทิศทางการศึกษา',
+    performance: 'ผลการดำเนินงาน',
+    personnel: 'ข้อมูลบุคลากร',
+    students: 'ข้อมูลนักเรียน',
+    academic: 'ข้อมูลวิชาการ',
+    budget: 'ข้อมูลงบประมาณ',
+    awards: 'ผลงานและรางวัล',
+    downloads: 'ศูนย์รวมเอกสาร'
+  };
+
   const dataFilesByPage = {
     home: ['school', 'personnel', 'students'],
     basic: ['school'],
@@ -229,6 +242,19 @@
       target.innerHTML = menuMarkup;
     });
 
+    document.querySelectorAll('[data-bs-target="#mobileSidebar"]').forEach((button) => {
+      button.setAttribute('aria-controls', 'mobileSidebar');
+      button.setAttribute('aria-label', 'เปิดเมนูสารสนเทศ');
+    });
+    document.querySelectorAll('.mobile-sidebar .btn-close').forEach((button) => {
+      button.setAttribute('aria-label', 'ปิดเมนู');
+    });
+    document.querySelectorAll('[data-bs-toggle="pill"], [data-bs-toggle="tab"]').forEach((button) => {
+      const target = button.getAttribute('data-bs-target');
+      if (target?.startsWith('#')) button.setAttribute('aria-controls', target.slice(1));
+      button.setAttribute('aria-selected', button.classList.contains('active') ? 'true' : 'false');
+    });
+
     const offcanvasEl = byId('mobileSidebar');
     if (offcanvasEl && window.bootstrap) {
       const instance = window.bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
@@ -261,6 +287,8 @@
     setText('heroSubtitle', heroSubtitle);
     setText('heroYear', academicYear);
     setText('heroSchoolName', SCHOOL_NAME);
+    const kicker = document.querySelector('.hero-panel .badge');
+    if (kicker && pageKicker[page]) kicker.textContent = pageKicker[page];
 
     const breadcrumb = byId('breadcrumbTrail');
     if (breadcrumb) {
@@ -319,7 +347,37 @@
 
   function renderPerformance(data) {
     const indicators = data.school?.sarIndicators || [];
-    setSummaryValues([`${indicators.length} ตัวชี้วัด`, `${indicators.filter((x) => String(x.status).includes('ผ่าน')).length} รายการ`, ACADEMIC_YEAR, 'SAR']);
+    const passedCount = indicators.filter((item) => String(item.status).includes('ผ่าน')).length;
+    const developingCount = indicators.length - passedCount;
+    const reportYear = data.school?.academicYear || ACADEMIC_YEAR || '-';
+    setSummaryValues([
+      `${indicators.length} ตัวชี้วัด`,
+      `${passedCount} รายการ`,
+      `${developingCount} รายการ`,
+      reportYear
+    ]);
+    const cards = byId('sarCards');
+    if (cards) {
+      const icons = ['bi-bullseye', 'bi-graph-up-arrow', 'bi-check2-circle', 'bi-clipboard-data-fill'];
+      cards.innerHTML = indicators.map((item, index) => {
+        const color = String(item.status).includes('ผ่าน') ? 'metric-green' : 'metric-yellow';
+        return `
+        <div class="col-12 col-md-6 col-xxl-3">
+          <div class="metric-card ${color} h-100">
+            <div class="card-body">
+              <div class="metric-heading">
+                <span class="metric-icon"><i class="bi ${icons[index % icons.length]}"></i></span>
+                <div>
+                  <div class="metric-label">${escapeHtml(item.name)}</div>
+                  <div class="metric-value">${escapeHtml(item.actual)}%</div>
+                  <div class="metric-note">เป้าหมาย ${escapeHtml(item.target)}% • ${escapeHtml(item.status)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
     const tbody = byId('sarTableBody');
     if (tbody) {
       const toPercentNumber = (value) => Number(String(value ?? '').replace('%', '').trim());
@@ -476,7 +534,7 @@
     const categoryCountDisplay = `${formatCount(categoryCount)} หมวด`;
     const itemCountDisplay = `${formatCount(itemCount)} รายการ`;
 
-    setSummaryValues([fiscalYear, `${formatCurrency(totalBudget)} บาท`, `${categoryCount} หมวด`, 'API']);
+    setSummaryValues([fiscalYear, `${formatCurrency(totalBudget)} บาท`, `${categoryCount} หมวด`, 'ข้อมูลล่าสุด']);
     setMetricValues([
       fiscalYear,
       categoryCountDisplay,
@@ -594,7 +652,8 @@
     const activityCounts = {
       student: summary.student ?? awardsByCategory.student.length,
       personnel: summary.personnel ?? summary.staff ?? awardsByCategory.personnel.length,
-      school: summary.school ?? summary.institution ?? awardsByCategory.school.length
+      school: summary.school ?? summary.institution ?? awardsByCategory.school.length,
+      total: summary.total ?? allAwards.length
     };
     document.querySelectorAll('[data-awards-summary]').forEach((item) => {
       const summaryKey = item.dataset.awardsSummary === 'staff' ? 'personnel' : (item.dataset.awardsSummary === 'institution' ? 'school' : item.dataset.awardsSummary);

@@ -32,7 +32,7 @@
       <header class="app-topbar d-flex align-items-center">
         <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
           <div class="d-flex align-items-center gap-3 topbar-shell">
-            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="เปิดเมนูสารสนเทศ">
               <i class="bi bi-list"></i>
             </button>
             <div class="d-flex flex-column">
@@ -53,7 +53,7 @@
           <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
             <div class="row align-items-center g-4">
               <div class="col-lg-8">
-                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Personnel Dashboard</span>
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">ข้อมูลบุคลากร</span>
                 <h2 class="display-6 fw-bold mb-3" id="heroTitle">ข้อมูลบุคลากร</h2>
                 <p class="lead mb-0" id="heroSubtitle">แสดงข้อมูลฝ่ายบริหาร สถิติ คุณวุฒิ ประสบการณ์ และผลงานบุคลากร</p>
               </div>
@@ -70,34 +70,38 @@
 
           <section class="row g-3 mb-4">
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="personnel-info-card personnel-info-card-blue h-100">
-                <div class="personnel-info-heading">
-                  <span class="personnel-info-icon"><i class="bi bi-person-vcard"></i></span>
-                  <div class="personnel-info-label">บุคลากรรวม <span class="personnel-info-value" id="personnelTotal">ไม่มีข้อมูล</span></div>
+              <div class="metric-card metric-blue h-100">
+                <div class="card-body"><div class="metric-heading">
+                  <span class="metric-icon"><i class="bi bi-person-vcard"></i></span>
+                  <div><div class="metric-label">บุคลากรรวม</div><div class="metric-value" id="personnelTotal">ไม่มีข้อมูล</div></div>
+                </div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="personnel-info-card personnel-info-card-green h-100">
-                <div class="personnel-info-heading">
-                  <span class="personnel-info-icon"><i class="bi bi-mortarboard-fill"></i></span>
-                  <div class="personnel-info-label">ครูผู้สอน <span class="personnel-info-value" id="teacherCount">ไม่มีข้อมูล</span></div>
+              <div class="metric-card metric-green h-100">
+                <div class="card-body"><div class="metric-heading">
+                  <span class="metric-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                  <div><div class="metric-label">ครูผู้สอน</div><div class="metric-value" id="teacherCount">ไม่มีข้อมูล</div></div>
+                </div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="personnel-info-card personnel-info-card-purple h-100">
-                <div class="personnel-info-heading">
-                  <span class="personnel-info-icon"><i class="bi bi-people"></i></span>
-                  <div class="personnel-info-label">บุคลากรสนับสนุน <span class="personnel-info-value" id="supportCount">ไม่มีข้อมูล</span></div>
+              <div class="metric-card metric-purple h-100">
+                <div class="card-body"><div class="metric-heading">
+                  <span class="metric-icon"><i class="bi bi-people"></i></span>
+                  <div><div class="metric-label">บุคลากรสนับสนุน</div><div class="metric-value" id="supportCount">ไม่มีข้อมูล</div></div>
+                </div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-3">
-              <div class="personnel-info-card personnel-info-card-yellow h-100">
-                <div class="personnel-info-heading">
-                  <span class="personnel-info-icon"><i class="bi bi-person-gear"></i></span>
-                  <div class="personnel-info-label">ผู้บริหาร <span class="personnel-info-value" id="administratorCount">ไม่มีข้อมูล</span></div>
+              <div class="metric-card metric-yellow h-100">
+                <div class="card-body"><div class="metric-heading">
+                  <span class="metric-icon"><i class="bi bi-person-gear"></i></span>
+                  <div><div class="metric-label">ผู้บริหาร</div><div class="metric-value" id="administratorCount">ไม่มีข้อมูล</div></div>
+                </div>
                 </div>
               </div>
             </div>
@@ -202,7 +206,7 @@
         <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
         <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
       </div>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="ปิดเมนู"></button>
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3">

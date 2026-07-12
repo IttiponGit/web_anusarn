@@ -32,7 +32,7 @@
       <header class="app-topbar d-flex align-items-center">
         <div class="container-fluid d-flex align-items-center justify-content-between gap-3">
           <div class="d-flex align-items-center gap-3 topbar-shell">
-            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+            <button class="btn btn-primary d-lg-none rounded-circle shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="เปิดเมนูสารสนเทศ">
               <i class="bi bi-list"></i>
             </button>
             <div class="d-flex flex-column">
@@ -53,7 +53,7 @@
           <section class="hero-panel rounded-4 p-3 p-xl-4 mb-3">
             <div class="row align-items-center g-4">
               <div class="col-lg-8">
-                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">Budget Dashboard</span>
+                <span class="badge rounded-pill bg-white text-primary mb-3 px-3 py-2">ข้อมูลงบประมาณ</span>
                 <h2 class="display-6 fw-bold mb-3" id="heroTitle">งบประมาณ</h2>
                 <p class="lead mb-0" id="heroSubtitle">มุมมองการใช้ทรัพยากรในปีงบประมาณปัจจุบัน</p>
               </div>
@@ -62,7 +62,7 @@
                   <div class="summary-chip"><span class="label">ปีงบประมาณ</span><strong>2569</strong></div>
                   <div class="summary-chip"><span class="label">งบรวม</span><strong>-</strong></div>
                   <div class="summary-chip"><span class="label">หมวดงบ</span><strong>-</strong></div>
-                  <div class="summary-chip"><span class="label">ข้อมูล</span><strong>API</strong></div>
+                  <div class="summary-chip"><span class="label">สถานะข้อมูล</span><strong>ข้อมูลล่าสุด</strong></div>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@
                 <div class="card-body">
                   <div class="metric-heading">
                     <span class="metric-icon"><i class="bi bi-calendar-date-fill"></i></span>
-                    <div class="metric-label">ปีงบประมาณ <span class="metric-value" id="fiscalYear">-</span></div>
+                    <div><div class="metric-label">ปีงบประมาณ</div><div class="metric-value" id="fiscalYear">-</div></div>
                   </div>
                 </div>
               </div>
@@ -84,7 +84,7 @@
                 <div class="card-body">
                   <div class="metric-heading">
                     <span class="metric-icon"><i class="bi bi-layers-fill"></i></span>
-                    <div class="metric-label">หมวดงบประมาณ <span class="metric-value" id="budgetCategoryCount">-</span></div>
+                    <div><div class="metric-label">หมวดงบประมาณ</div><div class="metric-value" id="budgetCategoryCount">-</div></div>
                   </div>
                 </div>
               </div>
@@ -94,7 +94,7 @@
                 <div class="card-body">
                   <div class="metric-heading">
                     <span class="metric-icon"><i class="bi bi-list-ul"></i></span>
-                    <div class="metric-label">รายการงบประมาณ <span class="metric-value" id="budgetItemCount">-</span></div>
+                    <div><div class="metric-label">รายการงบประมาณ</div><div class="metric-value" id="budgetItemCount">-</div></div>
                   </div>
                 </div>
               </div>
@@ -275,7 +275,7 @@
         <h5 class="offcanvas-title mb-1" id="mobileSidebarLabel">สารสนเทศโรงเรียน</h5>
         <p class="mb-0 small" data-school-name>โรงเรียนโสตศึกษาอนุสารสุนทร</p>
       </div>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="ปิดเมนู"></button>
     </div>
     <div class="offcanvas-body">
       <div class="sidebar-meta mb-3">
