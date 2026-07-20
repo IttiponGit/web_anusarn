@@ -4,7 +4,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 // หลังสร้าง admin คนแรกแล้ว ควรลบหรือปิดไฟล์นี้ทันทีเพื่อความปลอดภัย
 
-require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../../includes/auth.php';
+
+$admin = requireRole('admin');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

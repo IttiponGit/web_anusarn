@@ -2,14 +2,10 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-session_set_cookie_params([
-    'httponly' => true,
-    'samesite' => 'Lax',
-]);
+require_once __DIR__ . '/../../includes/auth.php';
 
-session_start();
-
-require_once __DIR__ . '/../db.php';
+startAuthSession();
+$pdo = authPdo();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -22,6 +18,28 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $username = trim((string)($_POST['username'] ?? ''));
 $password = (string)($_POST['password'] ?? '');
+
+function logLoginFailure(string $reason, string $username): void
+{
+    $safeUsername = preg_replace('/[^a-zA-Z0-9_.@-]/', '?', $username) ?? '';
+    $ipAddress = (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    error_log(sprintf(
+        '[auth] login_failed reason=%s username=%s ip=%s',
+        $reason,
+        $safeUsername,
+        $ipAddress
+    ));
+}
+
+function invalidCredentialsResponse(): void
+{
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Invalid username or password'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if ($username === '' || $password === '') {
     http_response_code(400);
@@ -45,27 +63,39 @@ try {
 
     $admin = $stmt->fetch();
 
-    if (!$admin || $admin['status'] !== 'active' || !password_verify($password, $admin['password_hash'])) {
-        http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'error' => 'Invalid username or password'
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+    if (!$admin) {
+        logLoginFailure('username_not_found', $username);
+        invalidCredentialsResponse();
+    }
+
+    if ($admin['status'] !== 'active') {
+        logLoginFailure('account_inactive', $username);
+        invalidCredentialsResponse();
+    }
+
+    if (!password_verify($password, (string) $admin['password_hash'])) {
+        logLoginFailure('password_mismatch', $username);
+        invalidCredentialsResponse();
     }
 
     session_regenerate_id(true);
-    $_SESSION['admin_user'] = [
+    $_SESSION[AUTH_SESSION_KEY] = [
         'id' => (int) $admin['id'],
         'username' => $admin['username'],
         'full_name' => $admin['full_name'],
         'role' => $admin['role'],
+        'status' => $admin['status'],
     ];
 
     echo json_encode([
         'success' => true
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
+    error_log(sprintf(
+        '[auth] login_error type=%s message=%s',
+        get_class($e),
+        $e->getMessage()
+    ));
     http_response_code(500);
     echo json_encode([
         'success' => false,

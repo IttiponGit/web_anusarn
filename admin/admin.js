@@ -574,6 +574,13 @@
     return response.json();
   }
 
+  function getSafeLoginReturnUrl() {
+    const returnUrl = new URLSearchParams(window.location.search).get('return');
+    return returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')
+      ? returnUrl
+      : 'dashboard.html';
+  }
+
   async function fetchDashboardStats() {
     const response = await fetch('../api/admin/dashboard_stats.php', {
       credentials: 'same-origin'
@@ -2701,7 +2708,7 @@
         const result = await login(username, password);
 
         if (result.success) {
-          window.location.href = 'dashboard.html';
+          window.location.href = getSafeLoginReturnUrl();
           return;
         }
 
@@ -2713,7 +2720,7 @@
 
     fetchMe().then((admin) => {
       if (admin) {
-        window.location.href = 'dashboard.html';
+        window.location.href = getSafeLoginReturnUrl();
       }
     });
   }

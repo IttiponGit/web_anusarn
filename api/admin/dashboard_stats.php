@@ -2,7 +2,7 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-session_start();
+require_once __DIR__ . '/../../includes/auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -13,18 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-$admin = $_SESSION['admin_user'] ?? null;
-
-if (!$admin) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Unauthorized'
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-require_once __DIR__ . '/../db.php';
+$admin = requireLogin();
 
 try {
     $tables = [

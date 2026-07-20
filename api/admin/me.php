@@ -2,7 +2,7 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-session_start();
+require_once __DIR__ . '/../../includes/auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-$admin = $_SESSION['admin_user'] ?? null;
+$admin = currentUser();
 
 if (!$admin) {
     http_response_code(401);
