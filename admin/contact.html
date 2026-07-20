@@ -6,7 +6,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <title>ข้อมูลติดต่อโรงเรียน | Admin</title>
   <script>
-    fetch('../api/admin/me.php', { credentials: 'same-origin' })
+    fetch('/api/admin/me.php', { credentials: 'same-origin' })
       .then((response) => response.ok ? response.json() : null)
       .then((data) => {
         if (!data || !data.success || !data.logged_in) {

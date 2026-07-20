@@ -2,10 +2,19 @@
 
 declare(strict_types=1);
 
+const AUTH_SESSION_NAME = 'ANUSARNSESSID';
 const AUTH_SESSION_KEY = 'admin_user';
 const AUTH_LOGIN_PATH = '/admin/login.html';
 const AUTH_ALLOWED_ROLES = [
     'admin',
+    'students',
+    'academic',
+    'personnel',
+    'budget',
+    'general',
+    'plan',
+];
+const AUTH_MANAGE_AREAS = [
     'students',
     'academic',
     'personnel',
@@ -23,13 +32,37 @@ function startAuthSession(): void
     $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && $_SERVER['HTTPS'] !== 'off';
 
     ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    session_name(AUTH_SESSION_NAME);
     session_set_cookie_params([
         'path' => '/',
         'secure' => $isHttps,
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
-    session_start();
+    if (!session_start()) {
+        throw new RuntimeException('Unable to start authentication session');
+    }
+}
+
+function authSessionUser(array $databaseUser): array
+{
+    return [
+        'user_id' => (int) $databaseUser['id'],
+        'username' => (string) $databaseUser['username'],
+        'full_name' => $databaseUser['full_name'],
+        'role' => strtolower(trim((string) $databaseUser['role'])),
+        'status' => (string) $databaseUser['status'],
+        'logged_in' => true,
+    ];
+}
+
+function storeAuthSessionUser(array $databaseUser): array
+{
+    startAuthSession();
+    $sessionUser = authSessionUser($databaseUser);
+    $_SESSION[AUTH_SESSION_KEY] = $sessionUser;
+    return $sessionUser;
 }
 
 function authPdo(): PDO
@@ -62,9 +95,12 @@ function currentUser(): ?array
     startAuthSession();
 
     $sessionUser = $_SESSION[AUTH_SESSION_KEY] ?? null;
-    $userId = is_array($sessionUser) ? filter_var($sessionUser['id'] ?? null, FILTER_VALIDATE_INT) : false;
+    $userId = is_array($sessionUser)
+        ? filter_var($sessionUser['user_id'] ?? ($sessionUser['id'] ?? null), FILTER_VALIDATE_INT)
+        : false;
+    $loggedIn = is_array($sessionUser) && ($sessionUser['logged_in'] ?? true) === true;
 
-    if ($userId === false || $userId < 1) {
+    if (!$loggedIn || $userId === false || $userId < 1) {
         return null;
     }
 
@@ -90,6 +126,7 @@ function currentUser(): ?array
 
     $user = [
         'id' => (int) $databaseUser['id'],
+        'user_id' => (int) $databaseUser['id'],
         'username' => (string) $databaseUser['username'],
         'full_name' => $databaseUser['full_name'],
         'role' => $role,
@@ -97,13 +134,7 @@ function currentUser(): ?array
     ];
 
     // Refresh non-sensitive session data from the database. Never store a password hash.
-    $_SESSION[AUTH_SESSION_KEY] = [
-        'id' => $user['id'],
-        'username' => $user['username'],
-        'full_name' => $user['full_name'],
-        'role' => $user['role'],
-        'status' => $user['status'],
-    ];
+    storeAuthSessionUser($databaseUser);
 
     return $user;
 }
@@ -117,6 +148,22 @@ function isAdmin(): bool
 {
     $user = currentUser();
     return $user !== null && $user['role'] === 'admin';
+}
+
+function canManage(string $area, ?array $user = null): bool
+{
+    $normalizedArea = strtolower(trim($area));
+    if (!in_array($normalizedArea, AUTH_MANAGE_AREAS, true)) {
+        return false;
+    }
+
+    $user = $user ?? currentUser();
+    if ($user === null || ($user['status'] ?? '') !== 'active') {
+        return false;
+    }
+
+    $role = strtolower(trim((string) ($user['role'] ?? '')));
+    return $role === 'admin' || $role === $normalizedArea;
 }
 
 function isApiRequest(): bool
@@ -167,6 +214,16 @@ function requireLogin(): array
 function requireRole(string $role): array
 {
     return requireAnyRole([$role]);
+}
+
+function requireManage(string $area): array
+{
+    $user = requireLogin();
+    if (!canManage($area, $user)) {
+        denyAuthentication(403, 'Forbidden');
+    }
+
+    return $user;
 }
 
 function requireAnyRole(array $roles): array

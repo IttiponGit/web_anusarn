@@ -1,8 +1,9 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../../includes/auth.php';
+
+startAuthSession();
+header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
@@ -16,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $admin = currentUser();
 
 if (!$admin) {
+    session_write_close();
     http_response_code(401);
     echo json_encode([
         'success' => false,
@@ -24,8 +26,16 @@ if (!$admin) {
     exit;
 }
 
+session_write_close();
+
 echo json_encode([
     'success' => true,
     'logged_in' => true,
-    'data' => $admin
+    'data' => [
+        'user_id' => $admin['user_id'],
+        'username' => $admin['username'],
+        'full_name' => $admin['full_name'],
+        'role' => $admin['role'],
+        'status' => $admin['status'],
+    ]
 ], JSON_UNESCAPED_UNICODE);

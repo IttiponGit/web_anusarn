@@ -4,7 +4,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../includes/auth.php';
 
-$admin = requireRole('general');
+$admin = requireManage('general');
 
 const CONTACT_ADMIN_KEYS = [
     'school_name' => ['group' => 'school', 'required' => true],

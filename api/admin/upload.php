@@ -4,7 +4,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../includes/auth.php';
 
-$admin = requireRole('general');
+$admin = requireLogin();
 
 function json_response(int $statusCode, array $payload): void
 {
@@ -59,6 +59,12 @@ if ($method !== 'POST') {
         'success' => false,
         'message' => 'Method not allowed'
     ]);
+}
+
+$category = trim((string) ($_POST['category'] ?? ''));
+$uploadArea = $category === 'personnel_image' ? 'personnel' : 'general';
+if (!canManage($uploadArea, $admin)) {
+    denyAuthentication(403, 'Forbidden');
 }
 
 if (!isset($_FILES['file']) || !is_array($_FILES['file'])) {
@@ -168,7 +174,6 @@ if ($isImage) {
     }
 }
 
-$category = trim((string) ($_POST['category'] ?? ''));
 $relatedType = normalize_related_type((string) ($_POST['related_type'] ?? ''));
 $relatedId = filter_var($_POST['related_id'] ?? null, FILTER_VALIDATE_INT);
 $relatedType = $relatedType ?? '';

@@ -253,6 +253,79 @@ body::before {
   margin-inline: auto;
 }
 
+.manage-page-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.manage-page-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.25rem;
+  max-width: 100%;
+  padding: 0.48rem 0.8rem;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--school-blue-700), var(--school-indigo-600));
+  color: #fff;
+  box-shadow: 0 0.4rem 1rem rgba(37, 99, 235, 0.2);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.manage-page-badge:hover,
+.manage-page-badge:focus-visible {
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0.55rem 1.15rem rgba(37, 99, 235, 0.28);
+}
+
+.manage-page-badge:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.24);
+  outline-offset: 2px;
+}
+
+.manage-page-badge:disabled {
+  cursor: not-allowed;
+  opacity: 0.78;
+  background: linear-gradient(135deg, #64748b, #475569);
+  border-color: rgba(71, 85, 105, 0.28);
+  box-shadow: none;
+}
+
+.manage-page-badge small {
+  padding-left: 0.45rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.38);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.general-empty-state {
+  display: grid;
+  min-height: 320px;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.general-empty-state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  margin-bottom: 1rem;
+  border-radius: 1.25rem;
+  background: var(--school-surface-alt);
+  color: var(--school-blue-700);
+  font-size: 1.7rem;
+}
+
 .hero-panel,
 .section-card,
 .table-card,

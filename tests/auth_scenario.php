@@ -6,6 +6,7 @@ $scenario = $argv[1] ?? 'allowed';
 $userRole = $argv[2] ?? 'students';
 $requiredRole = $argv[3] ?? 'students';
 $status = $argv[4] ?? 'active';
+$permissionMode = $argv[5] ?? 'role';
 
 $_SERVER['REQUEST_URI'] = '/api/test';
 $_SERVER['HTTP_ACCEPT'] = 'application/json';
@@ -40,14 +41,27 @@ require_once __DIR__ . '/../includes/auth.php';
 
 startAuthSession();
 if ($scenario !== 'guest') {
-    $_SESSION[AUTH_SESSION_KEY] = ['id' => 1];
+    $_SESSION[AUTH_SESSION_KEY] = [
+        'user_id' => 1,
+        'username' => 'test-user',
+        'full_name' => 'Test User',
+        'role' => $userRole,
+        'status' => $status,
+        'logged_in' => true,
+    ];
 }
 
-$user = requireRole($requiredRole);
+$user = $permissionMode === 'manage'
+    ? requireManage($requiredRole)
+    : requireRole($requiredRole);
 echo json_encode([
     'success' => true,
     'role' => $user['role'],
     'status' => $user['status'],
     'is_admin' => isAdmin(),
     'password_in_session' => array_key_exists('password_hash', $_SESSION[AUTH_SESSION_KEY]),
+    'can_manage' => canManage($requiredRole, $user),
+    'session_name' => session_name(),
+    'session_fields' => array_keys($_SESSION[AUTH_SESSION_KEY]),
+    'session_logged_in' => $_SESSION[AUTH_SESSION_KEY]['logged_in'] ?? false,
 ], JSON_UNESCAPED_UNICODE);
