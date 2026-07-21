@@ -13,6 +13,10 @@ RedirectMatch 410 ^/wp-content/
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+# Friendly URLs for the academic public page and the protected management page.
+RewriteRule ^information/academic\.html$ information/academic.php [L]
+RewriteRule ^admin/information/academic\.html$ admin/information/academic.php [L]
+
 # Force HTTPS + non-www on production domain only.
 RewriteCond %{HTTP_HOST} ^(?:www\.)?anusarn-deaf\.ac\.th$ [NC]
 RewriteCond %{HTTPS} !=on [OR]

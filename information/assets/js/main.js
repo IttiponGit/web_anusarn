@@ -148,6 +148,10 @@
     };
   }
 
+  async function loadAcademicData() {
+    return loadApiJson(`${INFORMATION_API_ROOT}/academic.php`);
+  }
+
   async function loadBudgetData(year = '2569') {
     return loadApiJson(`${SITE_API_ROOT}/budget.php?action=all&year=${encodeURIComponent(year)}`);
   }
@@ -209,6 +213,14 @@
           items: budgetData.categories || []
         }
       };
+    }
+
+    if (page === 'academic') {
+      const [settingsData, academic] = await Promise.all([
+        loadSettingsData(),
+        loadAcademicData()
+      ]);
+      return { ...settingsData, academic };
     }
 
     const keys = dataFilesByPage[page] || dataFilesByPage.home;
