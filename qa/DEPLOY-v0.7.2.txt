@@ -1,0 +1,48 @@
+QA v0.7.2 - Fix prepared statement qa_projects
+
+ปัญหา:
+No data supplied for parameters in prepared statement
+
+สาเหตุ:
+คำสั่ง INSERT INTO qa_projects มี ? จำนวน 18 parameters
+แต่ bind_param() ใน v0.7/v0.7.1 ระบุ type string เพียง 17 ตัว
+ทำให้ submitted_at ไม่มี type binding ที่ตรงตำแหน่ง
+
+แก้จาก:
+siiisssssssssidsi
+
+เป็น:
+siiisssssssssidssi
+
+ลำดับ parameter ที่ถูกต้อง:
+1  project_code        s
+2  year_id             i
+3  plan_id             i
+4  division_id         i
+5  project_type        s
+6  project_name        s
+7  principle_reason    s
+8  need_problem        s
+9  expected_output     s
+10 expected_outcome    s
+11 location_text       s
+12 start_date          s
+13 end_date            s
+14 owner_user_id       i
+15 requested_budget    d
+16 status_code         s
+17 submitted_at        s
+18 created_by          i
+
+วิธีอัปเดตแบบเร็ว:
+อัปโหลดไฟล์
+qa/projects/create.php
+ไปทับ
+/public_html/qa/projects/create.php
+
+ไม่ต้อง Import SQL เพิ่ม
+
+จากนั้น:
+1. Ctrl+F5
+2. เปิด /qa/projects/create.php ใหม่
+3. กรอกและส่งโครงการอีกครั้ง

@@ -1,0 +1,34 @@
+QA v1.1.1 — Bright Theme
+
+SQL
+===
+ไม่ต้อง Import SQL เพิ่ม
+ใช้ฐานจาก v1.1 เดิม
+
+อัปเดต QA
+=========
+1. สำรอง /public_html/qa/
+2. แตก qa-website-v1.1.1-php56.zip
+3. นำไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+4. ห้ามเขียนทับ /public_html/qa/includes/config.php
+5. Ctrl+F5
+
+สิ่งที่เปลี่ยน
+=============
+- Sidebar สว่างขึ้น: ฟ้าอ่อน/ขาว
+- Menu และ Active state อ่านง่ายขึ้น
+- Background, Card, Topbar และ Login ปรับโทนสว่าง
+- ไม่มีการเปลี่ยนฐานข้อมูลหรือ Workflow
+
+เพิ่มเมนูในเว็บไซต์หลัก
+======================
+ใช้ package:
+main-site-qa-menu-patch.zip
+
+ลิงก์ใหม่:
+ระบบประกันคุณภาพ → /qa/
+
+วางไว้ก่อนเมนู:
+ติดต่อโรงเรียน
+
+ดู INSTALL.txt ใน package สำหรับขั้นตอน

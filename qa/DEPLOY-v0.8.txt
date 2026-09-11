@@ -1,0 +1,55 @@
+QA v0.8 - วิธีอัปเดตจาก v0.7.2
+
+ไม่ต้อง Import SQL เพิ่ม
+
+1) สำรอง /public_html/qa/ เดิม
+2) แตก qa-website-v0.8-php56.zip
+3) นำ "ไฟล์ภายในโฟลเดอร์ qa/" ไปทับ /public_html/qa/
+4) ห้ามเขียนทับ /public_html/qa/includes/config.php
+5) กด Ctrl+F5
+
+ไฟล์สำคัญที่เปลี่ยน:
+- includes/bootstrap.php
+- includes/project_workflow.php (ไฟล์ใหม่)
+- approvals/index.php
+- projects/edit.php
+- projects/view.php
+- projects/index.php
+- projects/create.php
+- assets/css/app.css
+- includes/footer.php
+
+ทดสอบกับ PRJ-2570-001:
+A) Login ด้วย admin หรือ role plan
+   /qa/approvals/index.php
+   -> ต้องเห็น PRJ-2570-001 ในคิว "งานแผน"
+
+B) งานแผนกด "ผ่าน / ส่งต่อ"
+   -> โครงการเปลี่ยนเป็น BUDGET_REVIEW
+   -> คิวถัดไปเป็น "งานงบประมาณ"
+
+C) งานงบประมาณ
+   -> กำหนดวงเงินอนุมัติรายรายการ
+   -> กดผ่าน
+   -> โครงการเป็น PENDING_APPROVAL
+   -> approved_budget เปลี่ยนตามยอดที่อนุมัติ
+
+D) ผู้อำนวยการ
+   -> กดผ่าน
+   -> โครงการเป็น APPROVED
+   -> approved_at มีวันเวลา
+
+ทดสอบส่งกลับแก้ไข:
+1) ในขั้นใดขั้นหนึ่งใส่ความเห็น
+2) กด "ส่งกลับแก้ไข"
+3) โครงการเป็น REVISION
+4) เจ้าของเปิด projects/view.php แล้วกด "แก้ไขตามข้อเสนอแนะ"
+5) แก้ข้อมูลและกด "ส่งใหม่"
+6) ระบบ reset Workflow เป็น plan -> budget -> director ใหม่
+
+Role:
+- admin: ทำได้ทุกขั้น
+- plan: งานแผน
+- budget: งานงบประมาณ
+- director: ผู้อำนวยการ
+- owner/admin: แก้ DRAFT / REVISION

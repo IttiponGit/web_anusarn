@@ -1,0 +1,19 @@
+QA v1.0.2 - Roadmap HTTP 500 Fix
+
+สาเหตุ:
+- /settings/roadmap.php เรียก qa_url() ใน $breadcrumbs
+  ก่อนโหลด /includes/bootstrap.php
+- PHP จึงเกิด Fatal error: Call to undefined function qa_url()
+  และ Browser แสดง HTTP ERROR 500
+
+วิธีอัปเดตแบบเร็ว:
+1. อัปโหลดไฟล์ qa/settings/roadmap.php
+   ไปทับ /public_html/qa/settings/roadmap.php
+2. Ctrl+F5
+3. เปิด /qa/settings/roadmap.php ใหม่
+
+หรืออัปโหลดทั้งชุด v1.0.2 โดย:
+- นำไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+- ห้ามเขียนทับ /public_html/qa/includes/config.php
+
+ไม่ต้อง Import SQL

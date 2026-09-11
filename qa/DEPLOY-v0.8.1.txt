@@ -1,0 +1,33 @@
+QA v0.8.1 - Fix HTTP 500 หน้า approvals
+
+อาการ:
+เปิด /qa/approvals/index.php แล้ว HTTP ERROR 500
+
+สาเหตุ:
+v0.8 เพิ่มไฟล์ใหม่:
+  /qa/includes/project_workflow.php
+
+แต่ bootstrap.php ยังไม่ได้ require ไฟล์นี้จริง
+จึงทำให้ approvals/index.php เรียกฟังก์ชัน เช่น:
+  qa_project_stage_allowed()
+  qa_project_active_approval()
+แล้วเกิด PHP Fatal Error: Call to undefined function
+
+แก้ไข:
+เพิ่มบรรทัดนี้หลัง auth.php ใน /qa/includes/bootstrap.php
+
+require_once __DIR__ . '/project_workflow.php';
+
+วิธีอัปเดตแบบเร็วที่สุด:
+1. ตรวจให้แน่ใจว่าไฟล์นี้มีอยู่บนเซิร์ฟเวอร์:
+   /public_html/qa/includes/project_workflow.php
+
+2. อัปโหลด bootstrap.php จาก v0.8.1 ไปทับ:
+   /public_html/qa/includes/bootstrap.php
+
+3. เปิดใหม่:
+   /qa/approvals/index.php
+
+ไม่ต้อง Import SQL เพิ่ม
+ไม่ต้องลบข้อมูลโครงการเดิม
+PRJ-2570-001 ยังคงใช้ทดสอบ Workflow ต่อได้
