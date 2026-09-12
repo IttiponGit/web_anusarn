@@ -13,10 +13,31 @@
   const page = document.body.dataset.page || 'home';
   const SCHOOL_NAME = 'โรงเรียนโสตศึกษาอนุสารสุนทร';
   const ACADEMIC_YEAR = '';
+  const manageRoleByPage = Object.freeze({
+    students: 'students',
+    academic: 'academic',
+    personnel: 'personnel',
+    budget: 'budget',
+    general: 'general',
+    performance: 'plan'
+  });
+  const managementHrefByPage = Object.freeze({
+    home: `${APP_BASE_PATH}/admin/dashboard.html`,
+    basic: `${APP_BASE_PATH}/information/admin/`,
+    direction: `${APP_BASE_PATH}/information/admin/`,
+    performance: `${APP_BASE_PATH}/information/admin/`,
+    personnel: `${APP_BASE_PATH}/admin/personnel.html`,
+    students: `${APP_BASE_PATH}/information/admin/`,
+    academic: `${APP_BASE_PATH}/information/admin/`,
+    budget: `${APP_BASE_PATH}/information/admin/`,
+    awards: `${APP_BASE_PATH}/information/admin/`,
+    downloads: `${APP_BASE_PATH}/admin/downloads.html`
+  });
 
   const navItems = [
     { key: 'home', label: 'หน้าแรก', icon: 'bi-house-door-fill', href: isSubPage ? '../index.html' : 'index.html' },
     { key: 'basic', label: 'ข้อมูลพื้นฐานโรงเรียน', icon: 'bi-building', href: isSubPage ? 'basic.html' : 'pages/basic.html' },
+    { key: 'general', label: 'ข้อมูลทั่วไป', icon: 'bi-info-square-fill', href: isSubPage ? 'general.html' : 'pages/general.html' },
     { key: 'direction', label: 'ทิศทางการศึกษา', icon: 'bi-signpost-split-fill', href: isSubPage ? 'direction.html' : 'pages/direction.html' },
     { key: 'performance', label: 'ผลการดำเนินงาน / SAR', icon: 'bi-bar-chart-line-fill', href: isSubPage ? 'performance.html' : 'pages/performance.html' },
     { key: 'personnel', label: 'ข้อมูลบุคลากร', icon: 'bi-person-badge-fill', href: isSubPage ? 'personnel.html' : 'pages/personnel.html' },
@@ -30,6 +51,7 @@
   const pageMeta = {
     home: ['หน้าแรก', 'ภาพรวมสำคัญของระบบสารสนเทศสถานศึกษา', 'ระบบสารสนเทศโรงเรียนโสตศึกษาอนุสารสุนทร', 'สรุปข้อมูลสำคัญแบบอ่านง่ายสำหรับการติดตามภาพรวมสถานศึกษา'],
     basic: ['ข้อมูลพื้นฐานโรงเรียน', 'ข้อมูลอ้างอิงหลักของสถานศึกษา', 'ข้อมูลพื้นฐานโรงเรียน', 'รายละเอียดสำคัญของโรงเรียนที่จัดวางในรูปแบบการ์ดและตาราง'],
+    general: ['ข้อมูลทั่วไป', 'ข้อมูลทั่วไปของสถานศึกษา', 'ข้อมูลทั่วไป', 'ข้อมูลทั่วไปสำหรับผู้เยี่ยมชมเว็บไซต์สารสนเทศ'],
     direction: ['ทิศทางการศึกษา', 'วิสัยทัศน์ พันธกิจ และกลยุทธ์', 'ทิศทางการศึกษา', 'กรอบการพัฒนาของโรงเรียนที่อ่านง่ายและติดตามได้'],
     performance: ['ผลการดำเนินงาน / SAR', 'ตัวชี้วัดการประเมินตนเองของสถานศึกษา', 'ผลการดำเนินงาน / SAR', 'สรุปผลการดำเนินงานพร้อมกราฟและสถานะเป้าหมาย'],
     personnel: ['ข้อมูลบุคลากร', 'สถิติและโครงสร้างบุคลากรของโรงเรียน', 'ข้อมูลบุคลากร', 'แสดงข้อมูลฝ่ายบริหาร สถิติบุคลากร คุณวุฒิ ประสบการณ์ และรางวัล'],
@@ -43,6 +65,7 @@
   const pageKicker = {
     home: 'ภาพรวมสารสนเทศ',
     basic: 'ข้อมูลสถานศึกษา',
+    general: 'ข้อมูลทั่วไป',
     direction: 'ทิศทางการศึกษา',
     performance: 'ผลการดำเนินงาน',
     personnel: 'ข้อมูลบุคลากร',
@@ -56,6 +79,7 @@
   const dataFilesByPage = {
     home: ['school', 'personnel', 'students'],
     basic: ['school'],
+    general: ['school'],
     direction: ['school'],
     performance: ['school'],
     personnel: ['school', 'personnel'],
@@ -786,6 +810,55 @@
     categories.forEach((category) => renderAwardsByCategory(category.key));
   }
 
+  function canManage(area, user) {
+    if (!user || user.status !== 'active') return false;
+    const role = String(user.role || '').trim().toLowerCase();
+    if (role === 'admin') return true;
+    return manageRoleByPage[area] === role;
+  }
+
+  async function setupManageBadge() {
+    try {
+      const response = await fetch(`${SITE_API_ROOT}/admin/me.php`, {
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) return;
+
+      const payload = await response.json();
+      const user = payload?.success && payload?.logged_in ? payload.data : null;
+      if (!canManage(page, user)) return;
+
+      const content = document.querySelector('.page-content > .container-fluid');
+      if (!content || content.querySelector('[data-manage-toolbar]')) return;
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'manage-page-toolbar';
+      toolbar.dataset.manageToolbar = 'true';
+
+      if (page === 'general') {
+        toolbar.innerHTML = `
+          <button class="manage-page-badge" type="button" disabled aria-disabled="true" title="ระบบจัดการข้อมูลทั่วไปอยู่ระหว่างพัฒนา">
+            <i class="bi bi-gear-fill" aria-hidden="true"></i>
+            <span>จัดการข้อมูล</span>
+            <small>อยู่ระหว่างพัฒนา</small>
+          </button>`;
+      } else {
+        const href = managementHrefByPage[page] || `${APP_BASE_PATH}/information/admin/`;
+        toolbar.innerHTML = `
+          <a class="manage-page-badge" href="${escapeHtml(href)}">
+            <i class="bi bi-pencil-square" aria-hidden="true"></i>
+            <span>จัดการข้อมูล</span>
+          </a>`;
+      }
+
+      content.prepend(toolbar);
+    } catch (error) {
+      // Public pages must remain usable when there is no authenticated session.
+    }
+  }
+
   function renderDownloads(data) {
     const items = data.downloads?.items || [];
     setSummaryValues([`${items.length} รายการ`, [...new Set(items.map((item) => item.type))].join(' / '), items.map((item) => item.updatedAt).sort().reverse()[0] || '-', 'สาธารณะ']);
@@ -796,6 +869,7 @@
   async function init() {
     try {
       buildMenus();
+      setupManageBadge();
       const data = await loadPageData();
       fillSchoolIdentity(data.school);
       applyPageChrome(data.school);

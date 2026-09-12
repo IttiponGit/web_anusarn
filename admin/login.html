@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    if (window.location.hostname.toLowerCase() === 'www.anusarn-deaf.ac.th') {
+      const canonicalUrl = new URL(window.location.href);
+      canonicalUrl.hostname = 'anusarn-deaf.ac.th';
+      window.location.replace(canonicalUrl.href);
+    }
+  </script>
   
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <title>Admin Login | โรงเรียนโสตศึกษาอนุสารสุนทร</title>

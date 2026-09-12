@@ -1,4 +1,15 @@
 (function () {
+  const CANONICAL_PRODUCTION_HOST = 'anusarn-deaf.ac.th';
+  if (window.location.hostname.toLowerCase() === `www.${CANONICAL_PRODUCTION_HOST}`) {
+    const canonicalUrl = new URL(window.location.href);
+    canonicalUrl.hostname = CANONICAL_PRODUCTION_HOST;
+    window.location.replace(canonicalUrl.href);
+    return;
+  }
+
+  const AUTH_API_URL = '/api/admin/auth.php';
+  const ME_API_URL = '/api/admin/me.php';
+  const LOGOUT_API_URL = '/api/admin/logout.php';
   const NEWS_API_URL = '/api/admin/news_admin.php';
   const PERSONNEL_API_URL = '/api/admin/personnel_admin.php';
   const DOWNLOADS_API_URL = '/api/admin/downloads_admin.php';
@@ -548,16 +559,34 @@
   ].forEach(setupMessageRegion);
 
   async function fetchMe() {
-    const response = await fetch('/api/admin/me.php', {
-      credentials: 'same-origin'
-    });
+    try {
+      const response = await fetch(ME_API_URL, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+          Accept: 'application/json'
+        },
+        cache: 'no-store'
+      });
 
-    if (!response.ok) {
+      if (response.status === 401) {
+        return null;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Session check failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!data.success || !data.logged_in) {
+        return null;
+      }
+
+      return data.data || data.user || null;
+    } catch (error) {
+      console.error('Unable to check login session:', error);
       return null;
     }
-
-    const data = await response.json();
-    return data.success && data.logged_in ? data.data : null;
   }
 
   async function login(username, password) {
@@ -565,13 +594,29 @@
     formData.append('username', username);
     formData.append('password', password);
 
-    const response = await fetch('../api/admin/auth.php', {
+    const response = await fetch(AUTH_API_URL, {
       method: 'POST',
       body: formData,
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json'
+      }
     });
 
-    return response.json();
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (error) {
+      if (response.ok) {
+        throw error;
+      }
+    }
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data
+    };
   }
 
   function getSafeLoginReturnUrl() {
@@ -2689,7 +2734,7 @@
   }
 
   async function logout() {
-    await fetch('../api/admin/logout.php', {
+    await fetch(LOGOUT_API_URL, {
       method: 'POST',
       credentials: 'same-origin'
     });
@@ -2705,22 +2750,41 @@
       const password = document.getElementById('password').value;
 
       try {
-        const result = await login(username, password);
+        const loginResponse = await login(username, password);
 
-        if (result.success) {
-          window.location.href = getSafeLoginReturnUrl();
+        if (loginResponse.status === 401) {
+          loginMessage.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
           return;
         }
 
-        loginMessage.textContent = result.error || 'เข้าสู่ระบบไม่สำเร็จ';
+        if (!loginResponse.ok) {
+          console.error(`Login request failed with status ${loginResponse.status}`);
+          loginMessage.textContent = 'ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่';
+          return;
+        }
+
+        const result = loginResponse.data || {};
+
+        if (result.success && result.logged_in) {
+          const admin = await fetchMe();
+          if (!admin) {
+            loginMessage.textContent = 'สร้าง Session ไม่สำเร็จ กรุณาลองเข้าสู่ระบบอีกครั้ง';
+            return;
+          }
+          window.location.replace(getSafeLoginReturnUrl());
+          return;
+        }
+
+        loginMessage.textContent = 'ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่';
       } catch (error) {
-        loginMessage.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
+        console.error('Unable to complete login request:', error);
+        loginMessage.textContent = 'ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่';
       }
     });
 
     fetchMe().then((admin) => {
       if (admin) {
-        window.location.href = getSafeLoginReturnUrl();
+        window.location.replace(getSafeLoginReturnUrl());
       }
     });
   }

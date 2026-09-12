@@ -1,10 +1,9 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../../includes/auth.php';
 
 startAuthSession();
+header('Content-Type: application/json; charset=utf-8');
 $pdo = authPdo();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -62,6 +61,9 @@ try {
     ]);
 
     $admin = $stmt->fetch();
+    $passwordOk = $admin
+        ? password_verify($password, (string) $admin['password_hash'])
+        : false;
 
     if (!$admin) {
         logLoginFailure('username_not_found', $username);
@@ -73,22 +75,20 @@ try {
         invalidCredentialsResponse();
     }
 
-    if (!password_verify($password, (string) $admin['password_hash'])) {
+    if (!$passwordOk) {
         logLoginFailure('password_mismatch', $username);
         invalidCredentialsResponse();
     }
 
-    session_regenerate_id(true);
-    $_SESSION[AUTH_SESSION_KEY] = [
-        'id' => (int) $admin['id'],
-        'username' => $admin['username'],
-        'full_name' => $admin['full_name'],
-        'role' => $admin['role'],
-        'status' => $admin['status'],
-    ];
+    if (!session_regenerate_id(true)) {
+        throw new RuntimeException('Unable to regenerate authentication session');
+    }
+    storeAuthSessionUser($admin);
+    session_write_close();
 
     echo json_encode([
-        'success' => true
+        'success' => true,
+        'logged_in' => true,
     ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     error_log(sprintf(
