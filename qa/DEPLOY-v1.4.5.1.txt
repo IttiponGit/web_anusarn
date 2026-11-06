@@ -1,0 +1,17 @@
+QA v1.4.5.1 — Budget Visibility for General Users
+
+ต้อง Import SQL:
+anusarn_qa_v1.4.5.1_budget_visibility.sql
+
+ขั้นตอน:
+1) สำรองฐาน anusarn_qa
+2) Import SQL ข้างต้น
+3) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+4) ห้ามทับ includes/config.php
+5) Ctrl+F5
+6) Logout/Login ใหม่
+
+ผล:
+- ครู/project_owner ดูงบรวมและการจัดสรร 5 ฝ่ายได้
+- หัวหน้าฝ่ายดูได้
+- ไม่มีสิทธิ์แก้ไข/จัดสรร ถ้าไม่มี manage permission

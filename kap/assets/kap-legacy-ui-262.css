@@ -1,0 +1,19 @@
+/* Phase 2.6.2: local styling only; no global button or form overrides. */
+.kap262-action-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 18px 0 8px;
+}
+.kap262-action-group > button,
+.kap262-action-group > input,
+.kap262-action-group > a { position: static !important; float: none !important; margin: 0 !important; }
+.kap262-action-group .kap262-cancel { order: 1; }
+.kap262-action-group .kap262-save { order: 2; }
+@media (max-width: 540px) {
+  .kap262-action-group { justify-content: stretch; }
+  .kap262-action-group > * { flex: 1 1 auto; text-align: center; }
+}

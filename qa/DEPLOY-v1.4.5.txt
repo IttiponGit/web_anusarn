@@ -1,0 +1,14 @@
+QA v1.4.5 — Dashboard Budget Summary & Role Scope Fix
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+5) Logout/Login ใหม่เพื่อทดสอบ Role
+
+ตรวจ:
+- ผู้บริหาร/งานงบ/การเงิน: เห็นงบรวมและงบรายฝ่าย
+- project_owner: ไม่เห็นงบรวมทั้งโรงเรียน
+- สรุปงบใต้กราฟแสดงเป็น 4 กล่อง ไม่เป็นข้อความติดกัน

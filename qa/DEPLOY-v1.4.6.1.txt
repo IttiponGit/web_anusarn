@@ -1,0 +1,11 @@
+QA v1.4.6.1 — Project List Column Alignment Fix
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ตรวจหน้า /qa/projects/index.php:
+กิจกรรมย่อย สพฐ. / งบที่ขอ / อนุมัติ / ผู้รับผิดชอบ / สถานะ ต้องตรงหัวตาราง

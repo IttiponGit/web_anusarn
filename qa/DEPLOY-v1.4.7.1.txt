@@ -1,0 +1,16 @@
+QA v1.4.7.1 — Thai Calendar Month/Year Navigation Fix
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ตรวจหลังอัปเดต:
+- เปิดช่องวันที่
+- ต้องเห็น dropdown เดือนภาษาไทย
+- ต้องเห็น dropdown ปีรูปแบบ “พ.ศ. 2569”
+- เปลี่ยนเดือน/ปีได้โดยตรง
+- ปุ่ม ‹ และ › ยังเปลี่ยนเดือนทีละเดือนได้
+- เลือกวันที่แล้วค่าที่ PHP/DB ได้ยังเป็น YYYY-MM-DD

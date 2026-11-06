@@ -1,0 +1,15 @@
+QA v1.4.2 — User Management Redirect Fix
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ทดสอบ:
+- Admin → จัดการผู้ใช้งาน → เพิ่มผู้ใช้งาน
+- กรอกข้อมูลและบันทึก
+- ต้องกลับมาที่ /qa/settings/users.php
+- ต้องเห็นข้อความ “เพิ่มผู้ใช้งานเรียบร้อยแล้ว”
+- ต้องไม่เปิดหน้าแก้ไข User ID ที่เพิ่งสร้าง

@@ -1,0 +1,9 @@
+QA v1.2.2 — Phase 3.6.2 Sidebar UX Improvement
+
+ไม่ต้อง Import SQL
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ทดสอบ: คลิกหัวข้อหมวด, refresh, เปิดหน้าภายในแต่ละหมวด แล้วตรวจว่าหมวด active เปิดอัตโนมัติ

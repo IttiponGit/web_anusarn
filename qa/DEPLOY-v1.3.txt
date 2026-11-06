@@ -1,0 +1,49 @@
+QA v1.3 — Phase 4.1 SAR Builder
+
+ต้อง Import SQL
+===============
+1) สำรองฐาน anusarn_qa
+2) Import:
+   anusarn_qa_v1.3_phase4.1_sar_builder.sql
+
+อัปเดตโค้ด
+===========
+3) สำรอง /public_html/qa/
+4) แตก qa-website-v1.3-php56.zip
+5) นำไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+6) ห้ามเขียนทับ /public_html/qa/includes/config.php
+7) Ctrl+F5
+
+เมนูใหม่
+========
+สารสนเทศและระบบ
+  → รายงาน / SAR / สมศ.
+  → SAR Builder
+
+URL
+===
+/qa/reports/sar/index.php
+
+Workflow
+========
+DRAFT
+  ↓ plan/admin ส่งตรวจ
+REVIEW
+  ↓ director/admin
+FINAL
+
+ทดสอบ
+======
+1) Login admin หรือ plan
+2) เปิด SAR Builder
+3) สร้างร่าง SAR ปีปัจจุบัน
+4) เปิดตัวชี้วัดและบันทึกบทวิเคราะห์
+5) บันทึกบทสรุปรายมาตรฐาน
+6) ส่งตรวจรับรอง
+7) Login director/admin แล้วรับรอง
+8) เปิดฉบับพิมพ์และลอง Print / Save as PDF
+
+หมายเหตุ
+========
+ข้อความอัตโนมัติเป็นสารสนเทศตั้งต้นจากฐานข้อมูล
+ระบบไม่ตัดสินระดับคุณภาพหรือผลผ่าน/ไม่ผ่านแทนผู้จัดทำ SAR

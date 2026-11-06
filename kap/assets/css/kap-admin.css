@@ -1,0 +1,24 @@
+.kap-admin-title{font-size:1.14rem;font-weight:700;margin-bottom:1rem;color:#273f6c}
+.kap-role-grid{display:flex;flex-wrap:wrap;gap:.6rem 1rem;min-height:40px;align-items:center}
+.kap-role-grid .form-check{display:flex;align-items:center;gap:.45rem;background:#f5f8ff;border:1px solid #dbe5f8;border-radius:12px;padding:.55rem .8rem;margin:0}
+.kap-role-grid .form-check-input{margin:0;flex-shrink:0}
+.kap-admin-hint{color:#617187;font-size:.87rem}
+.kap-admin-form [hidden]{display:none!important}
+.kap-admin-form .form-label{font-size:.92rem;font-weight:600}
+.kap-admin-form .form-control,.kap-admin-form .form-select{border-radius:11px;border-color:#d6e0f1}
+.kap-admin-form .form-control:focus,.kap-admin-form .form-select:focus{border-color:#94b8f7;box-shadow:0 0 0 .2rem rgba(122,168,240,.17)}
+
+/* Admin 3.0: compact shell additions without changing teacher score screens. */
+.kap-admin-stat{display:flex;flex-direction:column;gap:.25rem;min-height:118px}
+.kap-admin-stat strong{font-size:1.65rem;color:#233d73;font-variant-numeric:tabular-nums}
+.kap-admin-links{display:flex;flex-direction:column;gap:.6rem}
+.kap-admin-links a{display:flex;align-items:center;gap:.9rem;padding:.85rem;border:1px solid #dce5f2;border-radius:12px;text-decoration:none;color:#284475;background:#f9fbff}
+.kap-admin-links a span{flex:1;display:grid;gap:.2rem}
+.kap-admin-links a span small{color:#64728d}
+.kap-admin-links a:hover{background:#eef5ff}
+.kap-admin-roadmap{padding-left:1.25rem;line-height:1.85;color:#51637e}
+.kap-subject-table th{white-space:nowrap}
+.kap-activate-form{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.kap-small-check{display:inline-flex;gap:.3rem;align-items:center;white-space:nowrap;font-size:.81rem}
+.kap-nav-upcoming{font-size:.81rem;color:#8b9cb7;line-height:1.6;padding:.5rem 1.4rem}
+@media(max-width:767px){.kap-admin-links a{padding:.65rem}.kap-subject-table{min-width:760px}}

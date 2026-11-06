@@ -208,10 +208,16 @@ function cleanup_replaced_download_file(PDO $pdo, int $downloadId, string $oldPa
     }
 
     $projectRoot = dirname(__DIR__, 2);
-    $absolutePath = $projectRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $oldPath);
+    $uploadsRoot = realpath($projectRoot . DIRECTORY_SEPARATOR . 'uploads');
+    $absolutePath = realpath(
+        $projectRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $oldPath)
+    );
 
-    if (is_file($absolutePath)) {
-        @unlink($absolutePath);
+    if ($uploadsRoot !== false && $absolutePath !== false && is_file($absolutePath)) {
+        $uploadsPrefix = rtrim($uploadsRoot, '/\\') . DIRECTORY_SEPARATOR;
+        if (strpos($absolutePath, $uploadsPrefix) === 0) {
+            @unlink($absolutePath);
+        }
     }
 
     $deleteUploadStmt = $pdo->prepare('DELETE FROM uploads WHERE file_path = :file_path');

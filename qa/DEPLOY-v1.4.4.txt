@@ -1,0 +1,6 @@
+QA v1.4.4 — Simplified Dashboard
+
+ไม่ต้อง Import SQL
+1) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+2) ห้ามทับ includes/config.php
+3) Ctrl+F5

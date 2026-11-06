@@ -1,0 +1,22 @@
+/* KAP unified layout. Prefix all rules to avoid breaking the existing page modules. */
+:root{--kap-ui-bg:#f3f6fd;--kap-ui-white:#fff;--kap-ui-text:#1c3355;--kap-ui-muted:#7182a1;--kap-ui-border:#dee6f5;--kap-ui-blue:#3574df;--kap-ui-nav:#eef3fe;--kap-ui-width:240px}
+.kap-ui-body{margin:0;background:var(--kap-ui-bg);color:var(--kap-ui-text);font-family:system-ui,-apple-system,"Noto Sans Thai",Tahoma,sans-serif;font-size:14px;line-height:1.55}
+.kap-ui-body *{box-sizing:border-box}
+.kap-ui-layout{display:flex;min-height:100vh}
+.kap-ui-sidebar{width:var(--kap-ui-width);flex:none;background:#fff;border-right:1px solid var(--kap-ui-border);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow-y:auto;z-index:12}
+.kap-ui-brand{display:flex;align-items:center;gap:12px;padding:20px 18px;margin:0 12px;border-bottom:1px solid var(--kap-ui-border)}
+.kap-ui-logo{display:grid;place-items:center;background:#99abfa;color:#fff;border-radius:13px;font-size:22px;font-weight:700;width:43px;height:43px;flex:none}
+.kap-ui-brand strong{font-size:18px;display:block;line-height:1.15}.kap-ui-brand small{display:block;font-size:11px;color:#8492ae;white-space:nowrap}
+.kap-ui-nav{padding:12px 10px 26px;flex:1}.kap-ui-nav-group{margin:0 0 15px}.kap-ui-nav-heading{color:var(--kap-ui-muted);font-size:11px;font-weight:700;margin:14px 12px 5px}
+.kap-ui-nav-item{display:flex;align-items:center;gap:12px;padding:10px 13px;min-height:42px;border-radius:12px;color:#576986;text-decoration:none;font-weight:600;line-height:1.45}
+.kap-ui-nav-item svg{flex:none;opacity:.85}.kap-ui-nav-item:hover:not(.kap-ui-disabled){background:#f4f7ff;color:#235dc7}.kap-ui-nav-item.kap-ui-active{background:#e6eeff;color:#245dc2}
+.kap-ui-disabled{color:#afb9cb;cursor:not-allowed;font-weight:400}.kap-ui-disabled svg{opacity:.55}.kap-ui-sidebar-foot{font-size:11px;color:#8b9ab4;margin:10px;padding:11px;border-radius:10px;background:#f4f7fd;border:1px solid #e4eaf7}
+.kap-ui-right{flex:1;min-width:0}.kap-ui-topbar{display:flex;align-items:center;gap:18px;justify-content:space-between;min-height:68px;padding:12px 25px;background:#fafbff;border-bottom:1px solid var(--kap-ui-border)}
+.kap-ui-school{flex:1;min-width:0}.kap-ui-school strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.kap-ui-school small{color:#8090ac;display:block;font-size:12px}
+.kap-ui-account{display:flex;align-items:center;gap:10px}.kap-ui-user{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--kap-ui-border);border-radius:25px;padding:6px 12px;background:#fff;white-space:nowrap;font-weight:600}.kap-ui-user svg{width:17px;height:17px}
+.kap-ui-account form{margin:0}.kap-ui-logout{border:1px solid #aebacb;background:#fff;border-radius:11px;padding:8px 13px;color:#344861;cursor:pointer;font:inherit}.kap-ui-logout:hover{background:#f1f5ff}
+.kap-ui-main{max-width:1800px;margin:auto;padding:24px 26px 40px;min-width:0}.kap-ui-heading{margin-bottom:19px}.kap-ui-heading h1{font-size:23px;line-height:1.35;margin:0;font-weight:750}.kap-ui-heading p{margin:4px 0 0;color:var(--kap-ui-muted)}
+.kap-ui-main .kap-ui-panel{background:white;border:1px solid var(--kap-ui-border);border-radius:16px;padding:20px;margin:0 0 16px;box-shadow:0 2px 7px rgba(30,61,113,.035)}
+.kap-ui-toggle{display:none;border:1px solid var(--kap-ui-border);padding:8px 12px;border-radius:8px;background:#fff;font-size:18px;color:var(--kap-ui-text)}
+@media(max-width:900px){.kap-ui-sidebar{width:214px}.kap-ui-main{padding:18px}}
+@media(max-width:720px){.kap-ui-sidebar{position:fixed;left:-260px;top:0;width:245px;height:100dvh;box-shadow:4px 0 20px #0001;transition:left .18s}.kap-ui-sidebar.kap-ui-open{left:0}.kap-ui-toggle{display:block}.kap-ui-topbar{padding:10px 14px}.kap-ui-user{font-size:12px;padding:6px 7px}.kap-ui-school{font-size:12px}.kap-ui-school small{display:none}.kap-ui-main{padding:15px}.kap-ui-heading h1{font-size:21px}}

@@ -1,0 +1,39 @@
+/* KAP: display-only curriculum tables. Scoped to .kct-* to avoid touching existing layout. */
+.kct-overflow{width:100%;overflow-x:auto;margin:8px 0 16px}
+.kct-table{border-collapse:separate;border-spacing:0;width:100%;min-width:780px;border:1px solid #d3dff2;border-radius:10px;overflow:hidden;background:white;font-size:14px;color:#22334e}
+.kct-table th{padding:12px 14px;text-align:left;background:#dce8fa;color:#182d4b;border-bottom:1px solid #d3dff2;white-space:nowrap}
+.kct-table td{vertical-align:top;padding:12px 14px;border-bottom:1px solid #e3eaf5;line-height:1.55}
+.kct-table tr:nth-child(even) td{background:#f7f9fd}
+.kct-table tbody tr:last-child td{border-bottom:none}
+.kct-muted,.kct-period small{display:block;font-size:12px;color:#697d99;margin-top:3px}
+.kct-period{margin-bottom:6px}
+.kct-category{padding:3px 0 3px calc(min(var(--kct-depth), 8) * 14px);overflow-wrap:anywhere}
+.kct-badge{display:inline-block;border-radius:999px;font-size:12px;padding:3px 10px;white-space:nowrap}
+.kct-active{background:#e6f5e9;color:#177044}
+.kct-inactive{background:#fff4dd;color:#805d14}
+.kct-warning{font-size:12px;color:#af5713;margin-left:8px}
+.kct-code{font-family:inherit;background:#eef3fc;padding:2px 6px;border-radius:4px;margin-right:5px;white-space:nowrap}
+.kct-filter{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px}
+.kct-filter select,.kct-filter button{border:1px solid #bdcee7;border-radius:7px;background:white;color:#1f3656;padding:8px 12px;font:inherit}
+.kct-filter button{background:#6693ed;color:white;border-color:#6693ed;cursor:pointer}
+.kct-error{padding:12px;border:1px solid #e3c3c3;background:#fff3f3;border-radius:7px;color:#882}
+
+.kct-action-link{display:inline-block;margin:7px 6px 0 0;padding:3px 8px;border:1px solid #7da5f0;border-radius:6px;color:#255fca;text-decoration:none;font-size:12px}
+.kct-action-link:hover{text-decoration:underline}
+
+/* Production curricula.php integration: scoped, no global menu/Forms changes. */
+.kct-curricula-table{min-width:1090px}
+.kct-curricula-table th:nth-child(1){width:13%}
+.kct-curricula-table th:nth-child(2){width:15%}
+.kct-curricula-table th:nth-child(3){width:15%}
+.kct-curricula-table th:nth-child(4){width:37%}
+.kct-curricula-table th:nth-child(5){width:20%}
+.kct-sections-table{min-width:920px}
+.kct-sections-table th:nth-child(1){width:15%}
+.kct-sections-table th:nth-child(2){width:39%}
+.kct-sections-table th:nth-child(3){width:28%}
+.kct-sections-table th:nth-child(4){width:18%}
+.kct-section-actions .kap-admin-form{margin:0}
+.kct-subject-item{padding:3px 0;border-bottom:1px solid #edf1f9}
+.kct-subject-item:last-child{border-bottom:0}
+.kct-curricula-table .kap-small-check,.kct-sections-table .kap-small-check{font-size:12px}

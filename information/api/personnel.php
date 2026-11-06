@@ -350,7 +350,7 @@ try {
 		}
 	}
 
-	$byPosition = $positionSummary;
+	$byPosition = isset($stats['position']) ? info_personnel_position_stats($stats['position']) : $positionSummary;
 	$testSummary = [
 		'kpiTotal' => $kpiByKey['total_personnel'] ?? ($kpis[0]['value'] ?? null),
 		'genderTotal' => info_personnel_sum($stats['gender'] ?? [], 'count'),

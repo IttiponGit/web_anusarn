@@ -1,0 +1,11 @@
+QA v1.3.1 — SAR Builder Compatibility Fix
+
+สาเหตุ: ฐานเดิมมี qa_sar_reports อยู่แล้ว แต่โครงสร้างใช้ sar_id ไม่ใช่ report_id ทำให้ FK ของ v1.3 อ้างอิงไม่ได้
+
+วิธีติดตั้ง:
+1) ไม่ต้องลบ qa_sar_reports เดิม
+2) Import sql/anusarn_qa_v1.3.1_sar_builder_fix.sql
+3) Upload code v1.3.1 ไปทับ /public_html/qa/
+4) ห้ามทับ includes/config.php
+5) Ctrl+F5
+6) เปิด /qa/reports/sar/index.php

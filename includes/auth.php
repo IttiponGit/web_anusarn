@@ -32,7 +32,11 @@ function startAuthSession(): void
     $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== '' && $_SERVER['HTTPS'] !== 'off';
 
     ini_set('session.use_strict_mode', '1');
-    ini_set('session.use_only_cookies', '1');
+    // Changing session.use_only_cookies at runtime is deprecated in PHP 8.4.
+    // Keep the legacy safeguard for older runtimes; PHP 8.4 must set it in php.ini.
+    if (PHP_VERSION_ID < 80400) {
+        ini_set('session.use_only_cookies', '1');
+    }
     session_name(AUTH_SESSION_NAME);
     session_set_cookie_params([
         'path' => '/',

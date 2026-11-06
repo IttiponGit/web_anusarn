@@ -1,0 +1,55 @@
+QA v1.0.1 - Safe Test Project Cleanup
+
+ไม่ต้อง Import SQL เพิ่ม
+
+อัปเดต:
+1. สำรอง /public_html/qa/ เดิม
+2. แตก qa-website-v1.0.1-php56.zip
+3. นำไฟล์ภายในโฟลเดอร์ qa/ ไปทับ /public_html/qa/
+4. เก็บ /public_html/qa/includes/config.php ตัวจริงไว้
+5. Ctrl+F5
+
+เปิด:
+- /qa/settings/
+หรือ
+- /qa/projects/
+
+เมื่อ Login ด้วย role admin จะเห็นปุ่ม:
+"ล้างข้อมูลโครงการทดสอบ"
+
+ระบบป้องกันการลบผิดด้วย:
+1. Admin only
+2. CSRF
+3. Preview จำนวนข้อมูลที่จะถูกลบ
+4. Checkbox ยืนยันว่าทุกโครงการเป็นข้อมูลทดสอบ
+5. ต้องพิมพ์:
+   ล้างข้อมูลโครงการทดสอบทั้งหมด
+6. ต้องใส่รหัสผ่าน admin ปัจจุบัน
+7. Browser Confirm ขั้นสุดท้าย
+8. Database Transaction / Rollback
+9. ลบไฟล์หลักฐานเฉพาะ path ที่อยู่ใต้ /qa/uploads/evidences/
+
+ข้อมูลที่จะถูกลบ:
+- qa_projects และ child data
+- Workflow / approvals / comments / history
+- KPI / KPI results
+- progress reports
+- activities / budget items
+- expenditures / commitments
+- project results
+- evidences ของโครงการ + evidence indicator links
+- audit logs ที่เกิดจาก module projects
+
+ข้อมูลที่เก็บไว้:
+- ปีงบประมาณ
+- ผู้ใช้ / roles
+- 4 ฝ่าย
+- แผนพัฒนาคุณภาพ
+- วิสัยทัศน์ / พันธกิจ / ค่านิยม
+- กลยุทธ์ / จุดเน้น / เป้าหมาย
+- มาตรฐาน / ตัวชี้วัด สมศ.
+- แหล่งเงิน / budget pools
+- การจัดสรรงบ 4 ฝ่าย
+
+แนะนำ:
+Export ฐาน anusarn_qa สำรอง 1 ชุดก่อนกดล้างครั้งแรก

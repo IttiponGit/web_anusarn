@@ -1,0 +1,15 @@
+QA v1.4.7.3 — Project Detail Typography Consistency
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ไฟล์หลักที่เปลี่ยน:
+- projects/view.php
+- assets/css/app.css
+- includes/footer.php
+
+ตรวจหน้าโครงการ: KPI, ผลผลิต/ผลลัพธ์, ลำดับอนุมัติ, บันทึกข้อเสนอแนะ

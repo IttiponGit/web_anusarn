@@ -1,0 +1,9 @@
+QA v1.2 — Phase 3.6
+
+1) สำรองฐาน anusarn_qa
+2) Import sql/anusarn_qa_v1.2_phase3.6_obec_subactivities.sql
+3) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+4) ห้ามทับ includes/config.php
+5) Ctrl+F5
+
+ทดสอบ: สร้างโครงการ -> เลือก 151-155 -> ส่งเสนอ -> เปิด /qa/reports/obec-workload.php

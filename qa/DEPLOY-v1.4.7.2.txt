@@ -1,0 +1,15 @@
+QA v1.4.7.2 — Approval Sequence & Thai Activity Log
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+ตรวจสอบ:
+- projects/view.php → ลำดับตรวจสอบเป็นภาษาไทย
+- มีคอลัมน์ “ผู้รับผิดชอบ / ผู้ดำเนินการ”
+- pending แสดงผู้ใช้ที่มีสิทธิ์ในขั้นนั้น
+- completed แสดงผู้ดำเนินการจริง
+- บันทึกการดำเนินการแสดงประเภท/ขั้นตอน/วันที่เป็นภาษาไทย

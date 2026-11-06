@@ -1,0 +1,54 @@
+QA v1.1.4 — Admin User Management
+
+SQL
+===
+ไม่ต้อง Import SQL เพิ่ม
+
+ใช้ตารางเดิม:
+- qa_users
+- qa_roles
+- qa_user_roles
+- qa_divisions
+- qa_audit_logs
+
+อัปเดต
+=======
+1) สำรอง /public_html/qa/
+2) แตก qa-website-v1.1.4-php56.zip
+3) นำไฟล์ภายในโฟลเดอร์ qa/ ไปทับ /public_html/qa/
+4) ห้ามเขียนทับ /public_html/qa/includes/config.php
+5) Ctrl+F5
+
+เมนูใหม่สำหรับ Admin
+=====================
+สารสนเทศและระบบ
+  → ตั้งค่าระบบ
+  → จัดการผู้ใช้งาน
+
+URL:
+  /qa/settings/users.php
+
+ทดสอบ
+======
+1) Login ด้วย admin
+2) ต้องเห็นเมนู "จัดการผู้ใช้งาน"
+3) กดเพิ่มผู้ใช้งาน
+4) กำหนด:
+   - username
+   - password อย่างน้อย 8 ตัว
+   - ชื่อ-นามสกุล
+   - ฝ่ายหลัก
+   - role
+5) logout แล้วลอง login ด้วยบัญชีใหม่
+6) กลับ admin แล้วลอง:
+   - แก้ Role
+   - เปลี่ยนฝ่าย
+   - reset password
+   - ปิดใช้งาน
+7) บัญชี inactive ต้อง login ไม่ได้
+
+ข้อควรทราบ
+===========
+- ไม่มีปุ่ม Delete user แบบถาวร
+- ใช้ "ปิดใช้งาน" เพื่อรักษาประวัติ Audit/Workflow
+- ระบบป้องกัน Admin คนสุดท้ายไม่ให้ถูกปิดหรือถอด role admin

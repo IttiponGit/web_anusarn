@@ -1,0 +1,35 @@
+/* KAP Subjects V2: scoped to sv2- classes; never changes legacy admin pages. */
+.sub-v2-tabs {display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.sub-v2-tabs a {border:1px solid #c8d6f4;background:#fff;border-radius:10px;padding:9px 13px;color:#224a8c;text-decoration:none;font-weight:600;font-size:13px}
+.sub-v2-tabs a:hover,.sub-v2-tabs a:focus {background:#edf4ff}
+.sv2-card {border:1px solid #dfe7f5;border-radius:15px;background:#fff;padding:20px;margin-bottom:16px;box-shadow:0 2px 9px #213d6510}
+.sv2-card h2 {font-size:18px;margin:0 0 8px;color:#19345e}
+.sv2-hint {font-size:13px;line-height:1.6;color:#526684;margin:0 0 13px}
+.sv2-form-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.sv2-form-grid label,.sv2-reason {display:flex;flex-direction:column;font-size:13px;font-weight:600;gap:5px;color:#253b5c}
+.sv2-form-grid input,.sv2-form-grid select,.sv2-reason input,.sv2-search input,.sv2-grid input,.sv2-grid select,.sv2-review-form input {border:1px solid #cdd9ec;background:white;border-radius:8px;padding:8px;min-height:37px;color:#172b4b;font:inherit;max-width:100%;width:100%;box-sizing:border-box}
+.sv2-form-grid input:focus,.sv2-form-grid select:focus,.sv2-grid input:focus,.sv2-grid select:focus {outline:2px solid #8ab0f3;outline-offset:1px}
+.sv2-action-span {grid-column:1/-1;display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.sv2-action-span .sv2-notice {flex:1;min-width:220px}
+.sv2-card button {background:#5b88e5;color:white;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.sv2-card button:hover {background:#3b6cd1}
+.sv2-card button:disabled {background:#a6b3c6;cursor:not-allowed}
+.sv2-notice {background:#f0f5ff;border:1px solid #d1e0fc;padding:11px 13px;margin-bottom:14px;border-radius:10px;font-size:13px;line-height:1.5}
+.sv2-ok {background:#e7f7ee;border-color:#b7e3cb;color:#16643d}.sv2-error {background:#fff1f0;border-color:#ffc7c2;color:#a5271a}
+.sv2-split {display:flex;justify-content:space-between;gap:14px;align-items:end;flex-wrap:wrap}
+.sv2-search {display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:13px}.sv2-search a {font-size:13px;color:#4c70b4}
+.sv2-scroll {width:100%;overflow-x:auto;border:1px solid #d7e3f4;border-radius:9px}
+.sv2-grid {width:100%;border-collapse:collapse;font-size:12px;min-width:920px}
+.sv2-grid thead {background:#e3ecfc;color:#263c5d}
+.sv2-grid th,.sv2-grid td {padding:8px;border-bottom:1px solid #dfe6f1;border-right:1px solid #e8edf6;vertical-align:top}
+.sv2-grid tr:last-child td {border-bottom:0}.sv2-grid tr:hover {background:#f8fbff}
+.sv2-grid input,.sv2-grid select {font-size:12px;min-width:85px}.sv2-grid input[data-col=name] {min-width:190px}
+.sv2-grid input[data-col=code] {min-width:90px}.sv2-status {display:block;white-space:nowrap;color:#627595;font-size:11px;margin-top:5px}
+.sv2-grid .sv2-locked {background:#f3f5fa;color:#70809a}.sv2-grid .sv2-locked input,.sv2-grid .sv2-locked select {background:#edf0f5}
+.sv2-grid tr.sv2-modified {background:#fffbe8}.sv2-grid tr.sv2-paste-invalid {background:#ffe8e7}
+.sv2-reason {margin-top:15px;max-width:580px}.sv2-toolbar {display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#53647a}
+.sv2-review-table td:first-child {min-width:160px}.sv2-review-form {display:flex;gap:6px;align-items:center;flex-wrap:wrap}.sv2-review-form select {max-width:150px}.sv2-review-form input {width:220px}
+.sv2-json {white-space:pre-wrap;overflow-wrap:anywhere;color:#173355;background:#f3f6fc;padding:10px;border-radius:8px;max-width:360px;font-size:11px}
+.sv2-grid details {max-width:440px}.sv2-grid summary {cursor:pointer;color:#305da5}
+@media(max-width:990px){.sv2-form-grid {grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.sv2-form-grid {grid-template-columns:1fr}.sv2-card {padding:13px}.sv2-search input {width:100%}}

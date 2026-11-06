@@ -1,0 +1,14 @@
+QA v1.3.3 — Thai Output / Outcome Terminology
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+
+คำที่ผู้ใช้เห็น:
+Output  = ผลผลิต
+Outcome = ผลลัพธ์
+
+ฐานข้อมูลไม่เปลี่ยนแปลง

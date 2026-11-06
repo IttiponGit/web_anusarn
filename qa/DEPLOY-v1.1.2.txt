@@ -1,0 +1,45 @@
+QA v1.1.2 — Dashboard Charts + Main Website Return
+
+SQL
+===
+ไม่ต้อง Import SQL เพิ่ม
+ใช้ฐานข้อมูล v1.1 เดิม
+
+อัปเดต
+=======
+1) สำรอง /public_html/qa/
+2) แตก qa-website-v1.1.2-php56.zip
+3) นำไฟล์ภายในโฟลเดอร์ qa/ ไปทับ /public_html/qa/
+4) ห้ามเขียนทับ /public_html/qa/includes/config.php
+5) Ctrl+F5
+
+ไฟล์ที่เปลี่ยนหลัก
+=================
+- /dashboard.php
+- /includes/sidebar.php
+- /includes/header.php
+- /assets/css/app.css
+- /includes/footer.php
+
+สิ่งที่เพิ่ม
+===========
+1) เมนู "กลับเว็บไซต์หลัก" ด้านล่าง Sidebar
+2) Shortcut "เว็บไซต์หลัก" บน Topbar
+3) Dashboard Charts:
+   - ภาพรวมการใช้งบประมาณ
+   - สถานะโครงการแบบ Donut
+   - งบประมาณ 4 ฝ่ายแบบเปรียบเทียบ 3 ระดับ
+   - ความครอบคลุมตัวชี้วัด สมศ. แบบ Ring Gauge
+   - Coverage รายมาตรฐาน
+
+ทดสอบ
+=====
+- เปิด /qa/dashboard.php
+- เมนู "กลับเว็บไซต์หลัก" ต้องไปที่ /
+- หากยังไม่มีโครงการ Donut จะแสดง placeholder อย่างถูกต้อง
+- หากยังไม่มีงบ กราฟงบประมาณจะแสดง placeholder
+- เมื่อมีข้อมูลจริง กราฟจะเปลี่ยนอัตโนมัติตามฐานข้อมูล
+
+หมายเหตุ
+=======
+Dashboard ไม่ใช้ Chart.js หรือ CDN จึงลดปัญหากราฟไม่ขึ้นเมื่ออินเทอร์เน็ตภายนอกมีปัญหา

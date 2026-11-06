@@ -1,0 +1,18 @@
+QA v1.4.3 — Dashboard Improvements
+
+ไม่ต้อง Import SQL
+
+1) สำรอง /public_html/qa/
+2) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+3) ห้ามทับ includes/config.php
+4) Ctrl+F5
+5) Logout/Login ใหม่ เพื่อทดสอบ Dashboard ตาม Role
+
+ทดสอบ:
+- admin/director/deputy_director: เห็นภาพรวมโรงเรียน
+- plan: เห็นคิว “รอตรวจโดยงานแผน”
+- budget: เห็นคิว “รอตรวจงบประมาณ”
+- director: เห็นคิว “รออนุมัติขั้นสุดท้าย”
+- division_head: ข้อมูลโครงการจำกัดเฉพาะฝ่าย
+- project_owner: ข้อมูลโครงการ own/assigned + งานร่าง/Revision + กิจกรรมที่ต้องรายงาน
+- ผู้ไม่มี budget.view: ไม่เห็นงบประมาณรวมทั้งโรงเรียน

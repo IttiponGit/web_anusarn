@@ -1,6 +1,12 @@
 # Database Configuration
 # ห้ามปล่อยไฟล์นี้ไปที่ Git เพราะมีข้อมูลเชื่อมต่อฐานข้อมูล
 api/config.php
+qa/includes/config.php
+qa/config.php
+kap/config/local.php
+
+# Local safety backups
+.codex-backups/
 
 # Environment files
 .env
@@ -25,6 +31,17 @@ Thumbs.db
 tmp/
 temp/
 cache/
+
+# Runtime PHP sessions (keep ignore metadata only)
+tests/.sessions/*
+!tests/.sessions/.gitignore
+!tests/.sessions/.gitkeep
+
+# User uploads (keep directory placeholders and access rules only)
+uploads/**
+!uploads/.htaccess
+!uploads/**/
+!uploads/**/.gitkeep
 
 # Node modules (ถ้าใช้ npm)
 node_modules/

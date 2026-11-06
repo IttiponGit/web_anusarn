@@ -1,0 +1,95 @@
+QA v1.1 — Phase 3.5 Project Correction & Cancellation Management
+
+สำคัญ: รอบนี้มี SQL Migration
+
+ลำดับอัปเดตที่แนะนำ
+====================
+1) Export ฐานข้อมูล anusarn_qa สำรอง 1 ชุด
+
+2) Import SQL ก่อน:
+   anusarn_qa_v1.1_project_correction.sql
+
+   SQL จะเพิ่มตาราง:
+   qa_project_change_requests
+
+3) สำรอง /public_html/qa/
+
+4) แตก qa-website-v1.1-php56.zip
+
+5) นำไฟล์ "ภายในโฟลเดอร์ qa/" ไปทับ /public_html/qa/
+
+6) ห้ามเขียนทับ:
+   /public_html/qa/includes/config.php
+
+7) Ctrl+F5
+
+เมนูใหม่
+========
+โครงการ / งาน / กิจกรรม
+  → แก้ไข / ยกเลิกโครงการ
+
+สิทธิ์
+======
+ผู้ขอ:
+- เจ้าของโครงการ
+- หัวหน้าฝ่ายของโครงการ
+- admin
+
+ผู้พิจารณา:
+- director
+- admin
+
+Workflow การแก้ไข
+==================
+A) โครงการยังไม่เริ่มดำเนินงาน
+SUBMITTED / PLAN_REVIEW / BUDGET_REVIEW / PENDING_APPROVAL / APPROVED
+→ ส่งคำขอ Correction
+→ ผู้อำนวยการอนุมัติคำขอ
+→ REVISION
+→ Reset Approval
+→ เจ้าของแก้ข้อมูล
+→ ส่งใหม่
+→ งานแผน → งานงบประมาณ → ผู้อำนวยการ
+
+B) โครงการเริ่มดำเนินงานแล้ว / สรุปผลแล้ว
+IN_PROGRESS / WAITING_REPORT / COMPLETED / CLOSED
+→ ส่ง Correction
+→ อนุมัติเป็น Amendment
+→ ไม่เขียนทับข้อมูลเดิม
+→ เก็บเหตุผล + ข้อมูลที่ถูกต้อง + ผู้ขอ + ผู้อนุมัติ + วันที่
+
+Workflow การยกเลิก
+==================
+DRAFT / REVISION / SUBMITTED / PLAN_REVIEW / BUDGET_REVIEW /
+PENDING_APPROVAL / APPROVED / IN_PROGRESS / WAITING_REPORT
+→ Cancellation Request
+→ director/admin อนุมัติ
+→ CANCELLED
+
+ข้อมูลเดิมไม่ถูกลบ:
+- Approval history
+- Progress
+- KPI
+- Expenditure
+- Evidence
+- Output / Outcome
+- Audit trail
+
+การป้องกัน Race / สถานะผิด
+===========================
+ขณะมีคำขอ pending:
+- โครงการไม่เข้า Approval Queue
+- qa_project_active_approval() ไม่คืนขั้นอนุมัติ
+- หน้า Monitoring ไม่ให้ POST ข้อมูลเพิ่ม
+- จึงลดความเสี่ยงที่สถานะเปลี่ยนระหว่างรอพิจารณา
+
+ทดสอบแนะนำ
+===========
+สร้างโครงการทดสอบ 1 รายการ แล้วทดสอบอย่างน้อย:
+1. SUBMITTED → ขอแก้ไข → Approve Request → REVISION
+2. แก้ไขและส่งใหม่ → Approval ใหม่
+3. APPROVED → ขอ Cancellation → Approve → CANCELLED
+4. IN_PROGRESS → ขอ Correction → Approve
+   ผลต้องเป็น Amendment และสถานะ IN_PROGRESS ต้องไม่เปลี่ยน
+5. ระหว่างคำขอ Pending ให้ลองเปิด Approval/Monitoring
+   ระบบต้องพักการดำเนินการ

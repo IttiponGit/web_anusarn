@@ -1,0 +1,64 @@
+QA v0.9 - วิธีอัปเดตจาก v0.8.1
+
+ไม่ต้อง Import SQL เพิ่ม
+ตารางที่ใช้มีอยู่ในฐานข้อมูล 45 ตารางเดิมแล้ว:
+- qa_progress_reports
+- qa_project_kpi_results
+- qa_project_results
+- qa_expenditures
+- qa_evidences
+- qa_evidence_indicator_links
+
+วิธีอัปเดต:
+1) สำรอง /public_html/qa/
+2) แตก qa-website-v0.9-php56.zip
+3) นำไฟล์ภายในโฟลเดอร์ qa/ ไปทับ /public_html/qa/
+4) ห้ามเขียนทับ /public_html/qa/includes/config.php
+5) ตรวจว่า /public_html/qa/uploads/ เขียนไฟล์ได้
+   โดยปกติ Permission 755 เพียงพอ ถ้า server owner ถูกต้อง
+6) ไม่ต้องสร้าง .htaccess เพิ่มใน uploads (ลดความเสี่ยง HTTP 500 บน shared hosting)
+7) Ctrl+F5
+
+ทดสอบกับ PRJ-2570-001 ที่ APPROVED:
+
+1. เปิด
+   /qa/monitoring/index.php
+
+2. กด "ติดตาม" ของ PRJ-2570-001
+
+3. เจ้าของโครงการ/admin:
+   กด "เริ่มดำเนินโครงการ"
+   ผล: APPROVED -> IN_PROGRESS
+
+4. บันทึกรายงานความก้าวหน้า
+   - วันที่
+   - %
+   - กิจกรรม
+   - KPI actual
+
+5. งานการเงิน (role finance) หรือ admin:
+   บันทึกการเบิกจ่ายจริง
+   ระบบห้ามเกินวงเงินอนุมัติรายรายการ
+
+6. เจ้าของโครงการ:
+   เพิ่มหลักฐาน
+   - ไฟล์ PDF/รูป/Word/Excel ไม่เกิน 10 MB
+   หรือ URL
+   - เชื่อมตัวชี้วัด สมศ.
+
+7. เมื่อโครงการเสร็จ:
+   กรอกสรุป Output / Outcome
+   กด "ส่งรายงานผล"
+   ผล: IN_PROGRESS -> WAITING_REPORT
+
+8. director/admin:
+   กด "ผู้อำนวยการรับรองผล / เสร็จสิ้นโครงการ"
+   ผล: WAITING_REPORT -> COMPLETED
+
+9. director/admin:
+   กด "ปิดโครงการ"
+   ผล: COMPLETED -> CLOSED
+
+หมายเหตุ:
+- v0.9 ยังไม่สร้างรายงาน SAR อัตโนมัติ
+- ขั้นต่อไปจะใช้ข้อมูล KPI / Evidence / Result นี้ทำ Dashboard คุณภาพและรายงาน สมศ.

@@ -1,0 +1,33 @@
+QA v0.7.1 - Checkbox Display Fix
+
+แก้การแสดงผล checkbox ในหน้า:
+/qa/projects/create.php
+ส่วน "ความสอดคล้องกับแผนและการประกันคุณภาพ"
+
+สาเหตุ:
+CSS กลางกำหนด input { width:100% } ทำให้ checkbox กินความกว้างทั้งแถว
+และดันข้อความไปชิดด้านขวา
+
+สิ่งที่แก้:
+- checkbox กว้าง/สูง 18px
+- checkbox อยู่ด้านซ้ายของข้อความ
+- ข้อความชิดซ้าย อ่านง่าย
+- label ใช้ Grid 20px + พื้นที่ข้อความ
+- เพิ่ม hover background
+- ใช้ accent-color ตามสีหลักของระบบ
+- ไม่กระทบ input ชนิดอื่น
+
+วิธีอัปเดต:
+ทางเลือก A: อัปโหลดเฉพาะ
+/assets/css/app.css
+ไปทับ:
+/public_html/qa/assets/css/app.css
+
+ทางเลือก B:
+อัปโหลดไฟล์ภายในโฟลเดอร์ qa/ จาก ZIP ไปทับ /public_html/qa/
+โดยเก็บ includes/config.php ตัวจริงไว้
+
+ไม่ต้อง Import SQL เพิ่ม
+
+หลังอัปโหลด:
+กด Ctrl+F5 หรือ Hard Reload เพื่อบังคับ Browser โหลด CSS ใหม่

@@ -1,0 +1,44 @@
+QA v1.4.1 — Permission Architecture & Deputy Director Readiness
+
+ต้อง Import SQL
+===============
+1) สำรองฐาน anusarn_qa
+2) Import:
+   anusarn_qa_v1.4.1_permission_architecture.sql
+
+อัปเดตโค้ด
+===========
+3) สำรอง /public_html/qa/
+4) อัปโหลดไฟล์ภายใน qa/ ไปทับ /public_html/qa/
+5) ห้ามทับ includes/config.php
+6) Ctrl+F5
+7) Logout/Login ใหม่สำหรับทุกบัญชีทดสอบ
+
+Role รองผู้อำนวยการ
+====================
+deputy_director
+- ดูภาพรวมผู้บริหาร
+- ดูแผน / งบ / โครงการ / ติดตาม / รายงาน / SAR
+- ไม่อนุมัติโครงการขั้นสุดท้าย
+- ไม่รับรอง SAR FINAL
+
+ถ้ากำกับฝ่าย:
+deputy_director + division_head
+
+ถ้ารักษาราชการแทน:
+เพิ่ม director เฉพาะช่วงที่ได้รับมอบอำนาจ
+
+เมนูใหม่ Admin
+===============
+ตั้งค่าระบบ → สิทธิ์และ Role
+/qa/settings/permissions.php
+
+ทดสอบ
+======
+project_owner  → เห็นเฉพาะ own/assigned
+division_head  → เห็นเฉพาะฝ่ายหลัก
+deputy_director → เห็นภาพรวม แต่ไม่มี final approval
+plan           → อนุมัติขั้นแผน
+budget         → อนุมัติขั้นงบ
+director       → final approval + SAR final
+admin          → ทุก Permission

@@ -1,0 +1,19 @@
+/* Single-source shell / navigation, shared by every authenticated KAP page. */
+.kap-unified .kap-sidebar{display:flex;flex-direction:column;overflow-y:auto;padding-bottom:12px}
+.kap-unified .kap-sidebar nav{flex:1;display:block}
+.kap-unified .kap-brand{flex-shrink:0}
+.kap-unified .kap-nav-caption{font-size:12px;line-height:1.45;margin:18px 12px 8px;color:#6f819e;font-weight:800}
+.kap-unified .kap-nav{min-height:43px;line-height:1.45;display:flex;gap:12px;align-items:center;border-radius:12px;white-space:normal}
+.kap-unified .kap-nav i{flex:none;width:20px;text-align:center}
+.kap-unified .kap-nav-pending{color:#a2aec1;opacity:.76;cursor:not-allowed;font-weight:400;background:transparent!important}
+.kap-unified .kap-nav-pending:hover{color:#a2aec1}
+.kap-unified .sidebar-note{margin-top:auto;flex:none;line-height:1.6}
+.kap-unified .kap-topbar{min-height:69px}
+.kap-unified .kap-header-ident,.kap-unified .kap-header-account{display:flex;align-items:center;gap:10px;min-width:0}
+.kap-unified .kap-header-ident strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kap-unified .kap-header-account{flex-shrink:0}
+.kap-unified .kap-logout-form{margin:0;display:inline-flex}
+.kap-unified .kap-header-ident .kap-meta{font-size:12px}
+.kap-unified .kap-page{max-width:1700px;width:100%;margin:0 auto}
+@media(max-width:991.98px){.kap-unified .kap-sidebar{z-index:70;box-shadow:8px 0 32px #233b6612}.kap-unified .kap-sidebar.show{left:0}.kap-unified .kap-topbar{padding:13px 16px}.kap-unified .kap-header-account .badge{display:none}}
+@media(max-width:600px){.kap-unified .kap-header-account{gap:5px}.kap-unified .user-chip{padding:6px 9px;font-size:12px;max-width:110px;overflow:hidden;text-overflow:ellipsis}.kap-unified .kap-header-ident strong{font-size:13px}.kap-unified .kap-logout-form button{font-size:12px;padding:6px 8px}}
